@@ -7,7 +7,7 @@
    - members.css
    - groups.html
    - groups.css
-     - groups/
+   - groups/
      - one.html
      - one.css
      - two.html
