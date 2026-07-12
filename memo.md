@@ -5,9 +5,9 @@
  - subpages/
    - members.html
    - members.css
-   - groups.html
-   - groups.css
    - groups/
+     - index.html
+     - index.css
      - one.html
      - one.css
      - two.html
