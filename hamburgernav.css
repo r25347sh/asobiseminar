@@ -1,279 +1,325 @@
 /* ==========================================
-   1. 究極のリセット & 矢印消去
+   1. 矢印・スマホ特有UIの完全消去
    ========================================== */
-.burger-menu summary,
-.submenu-details summary {
+.magic-menu summary,
+.magic-submenu-details summary {
   list-style: none;
   cursor: pointer;
   outline: none;
-  -webkit-tap-highlight-color: transparent; /* スマホのタップ時青枠を消去 */
+  -webkit-tap-highlight-color: transparent;
 }
-.burger-menu summary::-webkit-details-marker,
-.submenu-details summary::-webkit-details-marker {
+.magic-menu summary::-webkit-details-marker,
+.magic-submenu-details summary::-webkit-details-marker {
   display: none;
 }
 
 /* ==========================================
-   2. 進化した左上ハンバーガーアイコン
+   2. 左上の魔導トリガー（ボタン）
    ========================================== */
-.burger-trigger {
+.magic-trigger {
   position: fixed;
   top: 24px;
   left: 24px;
-  z-index: 100;
-  width: 48px;
-  height: 48px;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(8px); /* ボタン自体もすりガラスに */
+  perspective: 1000px; /* 3D空間の定義 */
+}
+
+/* ボタン背景の謎めいたオーブ */
+.trigger-orb {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.9), rgba(241,245,249,0.4));
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12), 
+              inset 0 -4px 12px rgba(15, 23, 42, 0.05);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s;
 }
 
-/* ボタン自体をホバー・タップした時の心地よいバウンド */
-.burger-trigger:hover, .burger-trigger:active {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 1);
+.magic-bar-box {
+  position: relative;
+  width: 24px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* 変幻自在の3本線 */
 .bar, .bar::before, .bar::after {
   position: absolute;
-  width: 22px;
-  height: 2px;
+  width: 24px;
+  height: 2.5px;
   background-color: #0f172a;
-  border-radius: 2px;
-  /* 3本線の形状変化に滑らかなイージングを設定 */
-  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1), 
-              top 0.3s cubic-bezier(0.65, 0, 0.35, 1), 
-              background-color 0.4s;
+  border-radius: 4px;
+  transition: all 0.5s cubic-bezier(0.76, 0, 0.24, 1);
 }
-/* 3本線の初期配置（長さ・位置を変えて絶妙なアシンメトリーに） */
-.bar { transform: translateX(0); }
-.bar::before { content: ""; top: -7px; width: 16px; left: 0; } /* 上の線は少し短く */
-.bar::after  { content: ""; top: 7px; width: 22px; left: 0; }
+.bar::before { content: ""; top: -8px; width: 14px; left: 0; } /* 異なる初期長さ */
+.bar::after  { content: ""; top: 8px; width: 20px; left: 0; }
 
-/* 【変形】メニューが開いた（[open]）時の2回転×印化 */
-.burger-menu[open] .burger-trigger {
-  background: rgba(255, 255, 255, 0.15);
+/* 【トリガーホバー時】魔力が集まるバウンド */
+.magic-trigger:hover .trigger-orb {
+  transform: scale(1.12) rotate(45deg);
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.3);
+}
+.magic-trigger:hover .bar::before { width: 24px; }
+.magic-trigger:hover .bar::after { width: 24px; }
+
+/* ── 開錠状態（[open]）のマジック変形 ── */
+.magic-menu[open] .trigger-orb {
+  background: rgba(15, 23, 42, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
   box-shadow: none;
+  transform: scale(0.9);
 }
-.burger-menu[open] .bar { 
-  transform: rotate(360deg); /* くるっと回転 */
-  background-color: transparent; 
+.magic-menu[open] .magic-bar-box {
+  transform: rotate(180deg); /* ボックス自体を半回転 */
 }
-.burger-menu[open] .bar::before { 
-  transform: rotate(45deg); 
-  top: 0; 
-  width: 24px;
-  background-color: #fff; 
+.magic-menu[open] .bar { background-color: transparent; }
+.magic-menu[open] .bar::before {
+  transform: rotate(45deg);
+  top: 0;
+  width: 26px;
+  background-color: #38bdf8; /* 神秘的なライトブルーに変化 */
+  filter: drop-shadow(0 0 8px #38bdf8);
 }
-.burger-menu[open] .bar::after { 
-  transform: rotate(-45deg); 
-  top: 0; 
-  width: 24px;
-  background-color: #fff; 
+.magic-menu[open] .bar::after {
+  transform: rotate(-45deg);
+  top: 0;
+  width: 26px;
+  background-color: #38bdf8;
+  filter: drop-shadow(0 0 8px #38bdf8);
 }
 
 /* ==========================================
-   3. すりガラス（魔法）を纏った左スライド背景
+   3. 空間を吸い込む「ポータル（背景）」トリック
    ========================================== */
-.menu-overlay {
+/* レイヤー1: 背景を液状に歪める闇 */
+.magic-portal-bg {
   position: fixed;
   inset: 0;
-  z-index: 98;
-  /* 高級感あふれるミッドナイトブルーのグラデーション */
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.98));
-  backdrop-filter: blur(20px); /* 【工夫】背景を極上にぼかす未来感演出 */
-  -webkit-backdrop-filter: blur(20px);
-  opacity: 0;
-  transform: translateX(-100%);
-  /* 閉じる時はシュッと素早く戻る */
-  transition: transform 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97), 
-              opacity 0.4s ease, 
-              display 0.4s allow-keywords;
+  z-index: 998;
+  background: radial-gradient(circle at 0% 0%, #1e1b4b 0%, #090514 100%);
+  clip-path: circle(0% at 28px 52px); /* 左上のボタン中心から広がる円形クリップ */
+  transition: clip-path 0.75s cubic-bezier(0.76, 0, 0.24, 1), display 0.75s allow-keywords;
   display: none;
 }
 
-/* メニュー展開時 */
-.burger-menu[open] .menu-overlay {
-  display: block;
-  opacity: 1;
-  transform: translateX(0);
-  /* 開く時は吸い付くように滑らかに */
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+/* レイヤー2: 追従する極上の時空の歪み（すりガラスシャッター） */
+.magic-glass-shutter {
+  position: fixed;
+  inset: 0;
+  z-index: 997;
+  backdrop-filter: blur(0px) brightness(1);
+  -webkit-backdrop-filter: blur(0px) brightness(1);
+  transition: backdrop-filter 0.6s ease, -webkit-backdrop-filter 0.6s ease, display 0.6s allow-keywords;
+  display: none;
 }
 
+/* ── 開いた時の大魔法展開 ── */
+.magic-menu[open] .magic-portal-bg {
+  display: block;
+  clip-path: circle(150% at 28px 52px); /* 左上から波紋が広がるように全画面を飲み込む */
+}
+.magic-menu[open] .magic-glass-shutter {
+  display: block;
+  backdrop-filter: blur(25px) brightness(0.4);
+  -webkit-backdrop-filter: blur(25px) brightness(0.4);
+}
+
+/* 初期立ち上がり（@starting-style） */
 @starting-style {
-  .burger-menu[open] .menu-overlay {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
+  .magic-menu[open] .magic-portal-bg { clip-path: circle(0% at 28px 52px); }
+  .magic-menu[open] .magic-glass-shutter { backdrop-filter: blur(0px) brightness(1); }
 }
 
 /* ==========================================
-   4. ナビゲーションメニューの配置
+   4. 3Dシアター・ナビゲーション（文字の魔法）
    ========================================== */
-.menu-content {
+.magic-theater {
   position: fixed;
   inset: 0;
-  z-index: 99;
+  z-index: 999;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* 【左手最適化】中央ではなく、少し左寄りに配置 */
-  padding-left: 10%; 
+  justify-content: flex-start;
+  padding-left: 12%; /* 左手親指のベストポジション */
   pointer-events: none;
   overflow-y: auto;
+  perspective: 1200px; /* 文字に圧倒的な奥行きを出す */
 }
-.burger-menu[open] .menu-content {
-  pointer-events: auto;
-}
+.magic-menu[open] .magic-theater { pointer-events: auto; }
 
-.main-menu-list {
+.magic-list {
   list-style: none;
-  text-align: left; /* 【左手最適化】視線と親指に合わせた左寄せ */
-  padding: 0;
+  text-align: left;
+  padding: 40px 0;
   width: 100%;
-  max-width: 320px;
+  max-width: 360px;
 }
 
-/* 1階層目の文字が時間差で「波打つように」浮かび上がる */
-.main-menu-list > li {
-  margin: 30px 0;
+/* 1階層目のアイテム：3D空間の奥から回転しながら現れる */
+.magic-list > li {
+  position: relative;
+  margin: 35px 0;
   opacity: 0;
-  transform: translateX(-30px) scale(0.95);
-  transition: transform 0.4s ease, opacity 0.4s ease;
+  transform: rotateY(-50deg) rotateX(20deg) translate3d(-100px, 0, -200px);
+  transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
-.burger-menu[open] .main-menu-list > li {
+.magic-menu[open] .magic-list > li {
   opacity: 1;
-  transform: translateX(0) scale(1);
-  /* 慣性のある美しいバウンドイージング */
-  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.7s ease;
-  transition-delay: calc(var(--item-index) * 0.06s + 0.2s);
+  transform: rotateY(0) rotateX(0) translate3d(0, 0, 0);
+  /* 魔法のようなしなやかな多重イージング */
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+  transition-delay: calc(var(--item-index) * 0.08s + 0.25s);
 }
 
 @starting-style {
-  .burger-menu[open] .main-menu-list > li {
+  .magic-menu[open] .magic-list > li {
     opacity: 0;
-    transform: translateX(-30px) scale(0.95);
+    transform: rotateY(-50deg) rotateX(20deg) translate3d(-100px, 0, -200px);
   }
 }
 
-/* リンクデザインと超美麗ホバーアニメーション */
-.menu-content a, 
-.submenu-trigger {
-  color: #f8fafc;
-  font-size: 1.8rem;
-  font-weight: 800; /* 太文字でモダンな印象に */
-  letter-spacing: 0.05em;
+/* ── 幻想的なホバー・バックライト・エフェクト ── */
+.menu-backlight {
+  position: absolute;
+  inset: -15px -30px;
+  background: radial-gradient(circle at left, rgba(99, 102, 241, 0.15), transparent 70%);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  border-radius: 50元px;
+}
+.magic-list > li:hover .menu-backlight {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── 2層ホバー文字（ホログラム） ── */
+.magic-theater a, 
+.magic-submenu-trigger {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
   text-decoration: none;
   display: inline-block;
   position: relative;
-  padding: 4px 0;
-  transition: color 0.3s, transform 0.2s;
+  transition: color 0.4s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ホバー時に文字が少し右にシフトする心地よいフィードバック */
-.menu-content a:hover,
-.submenu-trigger:hover {
-  color: #38bdf8;
-  transform: translateX(6px);
-}
-
-/* 【工夫】親指の軌道に合わせた下線（左から右に伸びて、右に消える） */
-.menu-content a::after {
-  content: "";
+/* HTMLの `data-text` を使って、ホバーした瞬間に奥から英語のホログラムが浮かび上がる */
+.magic-theater a::before,
+.magic-submenu-trigger::before {
+  content: attr(data-text);
   position: absolute;
-  bottom: 0;
+  top: -60%;
   left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, #38bdf8, #818cf8);
-  border-radius: 2px;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #6366f1;
+  letter-spacing: 0.3em;
+  opacity: 0;
+  transform: translate3d(0, 10px, -20px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.menu-content a:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+
+/* ホバー時の超覚醒挙動 */
+.magic-list > li:hover a,
+.magic-list > li:hover .magic-submenu-trigger {
+  color: #ffffff;
+  transform: translate3d(15px, 0, 40px); /* 手前に立体的に飛び出す */
+  text-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+}
+.magic-list > li:hover a::before,
+.magic-list > li:hover .magic-submenu-trigger::before {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
 }
 
 /* ==========================================
-   5. メニュー内メニュー（Groups子要素）
+   5. メニュー内メニュー（Groups：多重次元展開）
    ========================================== */
-.submenu-trigger {
-  position: relative;
+.magic-submenu-trigger {
   padding-right: 40px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* ネオンのように光るプラス・マイナスアイコン */
-.submenu-trigger::after {
-  content: "+";
+/* クリスタル・幾何学アロー */
+.magic-submenu-trigger::after {
+  content: "";
   position: absolute;
-  right: 10px;
-  top: 45%;
-  transform: translateY(-50%);
-  font-size: 1.6rem;
-  font-weight: 300;
-  color: #64748b;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
+  right: 15px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(255,255,255,0.4);
+  border-bottom: 2px solid rgba(255,255,255,0.4);
+  transform: translateY(-60%) rotate(-45deg); /* 初期：右向きのシャープな矢印 */
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
 }
-.submenu-trigger:hover::after {
-  color: #38bdf8;
-}
-/* Groupsが開いた時に「＋」が回転して「✕」っぽくなる変形 */
-.submenu-details[open] .submenu-trigger::after {
-  transform: translateY(-50%) rotate(135deg);
-  color: #818cf8;
+.magic-list > li:hover .magic-submenu-trigger::after {
+  border-color: #38bdf8;
 }
 
-/* 2階層目のリスト構造（次世代Gridアコーディオン） */
-.sub-menu-list {
+/* 展開時：ひねりながら下に向きを変えるクリスタル */
+.magic-submenu-details[open] .magic-submenu-trigger::after {
+  transform: translateY(-50%) rotate(45deg) scale(1.2);
+  border-color: #6366f1;
+}
+
+/* 2階層目（2次元配列リスト）：次世代グリッド完全密閉 */
+.magic-sub-list {
   list-style: none;
   padding: 0;
-  margin: 10px 0 0 10px;
-  border-left: 2px solid rgba(255, 255, 255, 0.1); /* 親子関係がひと目でわかるガイド線 */
+  margin: 15px 0 0 10px;
+  border-left: 1px solid rgba(99, 102, 241, 0.2);
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
   opacity: 0;
 }
-
-.submenu-details[open] .sub-menu-list {
+.magic-submenu-details[open] .magic-sub-list {
   grid-template-rows: 1fr;
   opacity: 1;
 }
 
-/* アコーディオンが開くとき、中の文字もさらに時間差でフェードイン */
-.sub-menu-list li {
+/* 展開にシンクロする子メニューの「連鎖フェード」 */
+.magic-sub-list li {
   overflow: hidden;
-  padding-left: 20px;
-  transform: translateY(-10px);
+  padding-left: 24px;
+  transform: translateY(-15px) rotateX(-30deg);
   opacity: 0;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.submenu-details[open] .sub-menu-list li {
-  transform: translateY(0);
+.magic-submenu-details[open] .magic-sub-list li {
+  transform: translateY(0) rotateX(0);
   opacity: 1;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
-  transition-delay: 0.1s; /* 展開が始まってから文字を出す */
+  transition-delay: 0.12s; /* 空間が縦に開いてから精密に流れ出す */
 }
 
-/* 2階層目の洗練された文字デザイン */
-.sub-menu-list a {
+/* 子メニューの幻想的な文字 */
+.magic-sub-list a {
   font-size: 1.3rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #94a3b8;
+  text-shadow: none;
 }
-.sub-menu-list a:hover {
-  color: #818cf8;
-}
-.sub-menu-list a::after {
-  display: none; /* 子メニューは下線なしでシンプルに */
+.magic-sub-list a::before { display: none; } /* 子要素にホログラムは出さない */
+
+.magic-sub-list li:hover a {
+  color: #6366f1;
+  transform: translate3d(8px, 0, 10px);
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
 }
