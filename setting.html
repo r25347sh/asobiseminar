@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>設定 - Asobi Seminar</title>
+  <!-- 既存のCSS読み込みJS -->
+  <script src="/asobiseminar/js/load-css.js"></script>
+</head>
+<body>
+  <main style="padding: 40px; font-family: sans-serif;">
+    <h2>テーマカラー設定</h2>
+    
+    <label>好きなテーマを選択してください：</label>
+    <select id="theme-select" style="margin: 20px 0; width: 100%; max-width: 300px; padding: 10px;">
+      <!-- JavaScriptでここにJSONのテーマが自動で並びます -->
+    </select>
+    
+    <br>
+    <button id="save-btn" style="padding: 10px 20px;">テーマを保存する</button>
+  </main>
+
+  <script>
+    const selectEl = document.getElementById('theme-select');
+    const saveBtn = document.getElementById('save-btn');
+
+    // 1. JSONファイルからテーマ一覧を読み込んでセレクトボックスを作る
+    fetch('/asobiseminar/themecolor.json')
+      .then(response => response.json())
+      .then(themes => {
+        themes.forEach(theme => {
+          const option = document.createElement('option');
+          option.value = theme.name;
+          option.textContent = theme.name;
+          selectEl.appendChild(option);
+        });
+
+        // 現在保存されているテーマがあれば、それを選択状態にする
+        const currentTheme = localStorage.getItem('selectedTheme');
+        if (currentTheme) {
+          selectEl.value = currentTheme;
+        }
+      });
+
+    // 2. 保存ボタンを押したらローカルストレージに保存してページを再読み込み
+    saveBtn.addEventListener('click', () => {
+      localStorage.setItem('selectedTheme', selectEl.value);
+      alert('テーマを保存しました！');
+      location.reload(); // 反映のためにリロード
+    });
+  </script>
+</body>
+</html>
