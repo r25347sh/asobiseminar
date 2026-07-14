@@ -25,7 +25,7 @@
   position: fixed !important;
   top: 20px !important;
   left: 20px !important;
-  z-index: 100000 !important; /* 何があっても最前面 */
+  z-index: 200000000 !important; /* 最前面に固定 */
   width: 50px !important;
   height: 50px !important;
   display: flex !important;
@@ -71,12 +71,16 @@
 .magic-menu[open] .bar::after  { transform: rotate(-45deg) !important; top: 0 !important; width: 22px !important; background-color: var(--balance-color) !important; }
 
 /* ==========================================
-   3. 全画面背景レイヤー
+   3. 【大修正】全画面背景レイヤー（最前面をジャックする）
    ========================================== */
 .magic-portal-bg {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 99998 !important; /* 文字のすぐ真裏 */
+  /* 
+    z-indexを文字レイヤー（9999999）の『すぐ真下』に設定し、
+    外部CSSの白い背景（bodyやmain）を完全に下に敷き詰めます
+  */
+  z-index: 9999998 !important; 
   background: linear-gradient(135deg, var(--accent-color) 0%, var(--main-color) 100%) !important;
   opacity: 0 !important;
   transform: translateX(-100%) !important;
@@ -93,18 +97,19 @@
 .magic-glass-shutter { display: none !important; }
 
 /* ==========================================
-   4. 【大修正】絶対に潰れない文字シアター空間
+   4. 絶対に潰れない文字シアター空間（背景の真上）
    ========================================== */
 .magic-theater {
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
-  width: 100vw !important;  /* 外部CSSに潰されないよう、画面の横幅いっぱいに強制固定 */
-  height: 100vh !important; /* 縦幅も画面いっぱいに強制固定 */
-  z-index: 99999 !important; /* 背景（99998）よりも確実に上に重ねる */
+  width: 100vw !important;  
+  height: 100vh !important; 
+  z-index: 9999999 !important; /* 背景（9999998）よりも絶対に手前に重ねる */
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important; /* 確実に画面の「ド真ん中」に集約 */
+  justify-content: center !important; 
+  background: transparent !important; /* 💡 外部CSSがここに白背景を押し付けてきても透明化する */
   pointer-events: none !important;
 }
 .magic-menu[open] .magic-theater {
@@ -113,17 +118,18 @@
 
 .magic-list {
   list-style: none !important;
-  text-align: center !important; /* 中央揃え */
+  text-align: center !important; 
   padding: 0 !important;
   margin: 0 !important;
   width: 100% !important;
-  max-width: 320px !important; /* 横幅が狭くても絶対に崩れないサイズ */
+  max-width: 320px !important; 
+  background: transparent !important; /* 💡 ここも確実に透明化 */
 }
 
 /* 項目が下からふわっと浮き出る滑らかな出現 */
 .magic-list > li {
   position: relative !important;
-  margin: 24px 0 !important;
+  margin: 28px 0 !important;
   padding: 0 !important;
   opacity: 0 !important;
   transform: translateY(20px) !important;
@@ -139,19 +145,20 @@
 .magic-theater a, 
 .magic-submenu-trigger {
   color: var(--variation-color) !important;
-  font-size: 2rem !important; /* 視認しやすいよう大きく */
+  font-size: 2rem !important; 
   font-weight: 900 !important;
   letter-spacing: 0.05em !important;
   text-decoration: none !important;
   display: inline-block !important;
   padding: 6px 12px !important;
+  background: transparent !important; /* 💡 リンク単体の白背景化も完全阻止 */
   transition: color 0.2s, transform 0.2s !important;
 }
 
 .magic-list > li:hover a,
 .magic-list > li:hover .magic-submenu-trigger {
   color: #ffffff !important;
-  transform: scale(1.08) !important; /* 少しだけ手前に拡大 */
+  transform: scale(1.08) !important; 
   text-shadow: 0 0 15px var(--balance-color) !important;
 }
 
@@ -165,7 +172,6 @@
   content: "+" !important;
   position: absolute !important;
   right: 5px !important;
-  top: 50 !important;
   top: 45% !important;
   transform: translateY(-50%) !important;
   font-size: 1.4rem !important;
@@ -180,7 +186,7 @@
   list-style: none !important;
   padding: 0 !important;
   margin: 10px 0 0 0 !important;
-  background: rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   border-radius: 6px !important;
   display: grid !important;
   grid-template-rows: 0fr !important;
@@ -193,6 +199,6 @@
   padding: 10px 0 !important;
 }
 
-.magic-sub-list li { overflow: hidden !important; margin: 6px 0 !important; padding: 0 !important; }
+.magic-sub-list li { overflow: hidden !important; margin: 6px 0 !important; padding: 0 !important; background: transparent !important; }
 .magic-sub-list a { font-size: 1.3rem !important; color: var(--variation-color) !important; opacity: 0.8 !important; }
 .magic-sub-list li:hover a { color: var(--balance-color) !important; opacity: 1 !important; }
