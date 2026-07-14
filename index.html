@@ -4,27 +4,43 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ホーム | 遊びの探求ゼミ</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="/asobiseminar/style.css">
+    <link rel="stylesheet" href="/asobiseminar/index.css">
   </head>
   <body>
-    <nav>
-      <ul>
-        <li><a href="/asobiseminar/">ホーム</a></li>
-        <li><a href="asobiseminar/subpages/members">メンバー</li>
-        <li>
-          <details>
-            <summary>
-              <p>グループ<a href="/asobiseminar/subpages/groups/">↗</a></p>
-            </summary>
-            <ul>
-              <li><a href="/asobiseminar/subpages/groups/one.html">グループ１</a></li>
-              <li><a href="/asobiseminar/subpages/groups/two.html">グループ２</a></li>
-              <li><a href="/asobiseminar/subpages/groups/three.html">グループ３</a></li>
-            </ul>
-          </details>
-        </li>
-      </ul>
-    </nav>
+    <details class="burger-menu">
+      <!-- メニューを開くメインボタン -->
+      <summary class="burger-trigger">
+        <span class="bar"></span>
+      </summary>
+      <div class="menu-overlay"></div>
+      <!-- ナビゲーションメニュー本体 -->
+      <nav class="menu-content">
+        <ul class="main-menu-list">
+          <!-- ホーム -->
+          <li style="--item-index: 1;">
+            <a href="/asobiseminar/index.html">ホーム</a>
+          </li>
+          <!-- メンバー -->
+          <li style="--item-index: 2;">
+            <a href="/asobiseminar/subpages/members.html">メンバー</a>
+          </li>
+          <!-- グループ（メニューの中のメニュー） -->
+          <li style="--item-index: 3;" class="has-submenu">
+            <details class="submenu-details">
+              <summary class="submenu-trigger">Groups</summary>
+              <!-- 2階層目（2次元配列の中身） -->
+              <ul class="sub-menu-list">
+                <li><a href="/asobiseminar/subpages/groups/index.html">Groups トップ</a></li>
+                <li><a href="/asobiseminar/subpages/groups/one.html">Group 1</a></li>
+                <li><a href="/asobiseminar/subpages/groups/two.html">Group 2</a></li>
+                <li><a href="/asobiseminar/subpages/groups/three.html">Group 3</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+    </details>
+
   </body>
 </html>
