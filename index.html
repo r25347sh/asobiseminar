@@ -8,30 +8,37 @@
     <link rel="stylesheet" href="/asobiseminar/index.css">
   </head>
   <body>
-    <details class="burger-menu">
-      <!-- メニューを開くメインボタン -->
-      <summary class="burger-trigger">
-        <span class="bar"></span>
+    <details class="magic-menu">
+      <!-- 魔法のトリガーボタン（左配置） -->
+      <summary class="magic-trigger" aria-label="メニューを開く">
+        <div class="trigger-orb"></div>
+        <div class="magic-bar-box">
+          <span class="bar"></span>
+        </div>
       </summary>
-      <div class="menu-overlay"></div>
-      <!-- ナビゲーションメニュー本体 -->
-      <nav class="menu-content">
-        <ul class="main-menu-list">
-          <!-- ホーム -->
+      
+      <!-- 空間を歪める多層レイヤー背景 -->
+      <div class="magic-portal-bg"></div>
+      <div class="magic-glass-shutter"></div>
+    
+      <!-- 3Dシアター・ナビゲーション -->
+      <nav class="magic-theater">
+        <ul class="magic-list">
+          <!-- 各項目に背景発光用の空のspanを配置 -->
           <li style="--item-index: 1;">
-            <a href="/asobiseminar/index.html">ホーム</a>
+            <span class="menu-backlight"></span>
+            <a href="/asobiseminar/index.html" data-text="HOME">ホーム</a>
           </li>
-          <!-- メンバー -->
           <li style="--item-index: 2;">
-            <a href="/asobiseminar/subpages/members.html">メンバー</a>
+            <span class="menu-backlight"></span>
+            <a href="/asobiseminar/subpages/members.html" data-text="MEMBERS">メンバー</a>
           </li>
-          <!-- グループ（メニューの中のメニュー） -->
-          <li style="--item-index: 3;" class="has-submenu">
-            <details class="submenu-details">
-              <summary class="submenu-trigger">Groups</summary>
-              <!-- 2階層目（2次元配列の中身） -->
-              <ul class="sub-menu-list">
-                <li><a href="/asobiseminar/subpages/groups/index.html">Groups トップ</a></li>
+          <li style="--item-index: 3;" class="magic-has-submenu">
+            <span class="menu-backlight"></span>
+            <details class="magic-submenu-details">
+              <summary class="magic-submenu-trigger" data-text="GROUPS">Groups（グループ）</summary>
+              <ul class="magic-sub-list">
+                <li><a href="/asobiseminar/subpages/groups/index.html">Group トップ</a></li>
                 <li><a href="/asobiseminar/subpages/groups/one.html">Group 1</a></li>
                 <li><a href="/asobiseminar/subpages/groups/two.html">Group 2</a></li>
                 <li><a href="/asobiseminar/subpages/groups/three.html">Group 3</a></li>
@@ -41,6 +48,5 @@
         </ul>
       </nav>
     </details>
-
   </body>
 </html>
