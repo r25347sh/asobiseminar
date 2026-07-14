@@ -1,16 +1,86 @@
 [
   {
-    "name": "HalloweenNight",
+    "name": "HalloweenNight (ハロウィンの怪異)",
     "maincolor": "#d65f01",
     "balancecolor": "#b1c586",
     "variationcolor": "#fff7d4",
     "accentcolor": "#090000"
   },
   {
-    "name": "MidnightMagic",
+    "name": "MidnightMagic (深淵の魔導)",
     "maincolor": "#1e1b4b",
     "balancecolor": "#38bdf8",
     "variationcolor": "#f8fafc",
-    "accentcolor": "#6366f1"
+    "accentcolor": "#060414"
+  },
+  {
+    "name": "CyberNeon (電脳ネオン都市)",
+    "maincolor": "#00f5ff",
+    "balancecolor": "#ff007f",
+    "variationcolor": "#ffffff",
+    "accentcolor": "#0a0a14"
+  },
+  {
+    "name": "SakuraBlossom (深窓の千本桜)",
+    "maincolor": "#ffb7c5",
+    "balancecolor": "#f43f5e",
+    "variationcolor": "#ffe4e1",
+    "accentcolor": "#2e1216"
+  },
+  {
+    "name": "OceanAbyss (深海のアトランティス)",
+    "maincolor": "#0ea5e9",
+    "balancecolor": "#00ffcc",
+    "variationcolor": "#e0f2fe",
+    "accentcolor": "#030712"
+  },
+  {
+    "name": "ForestWhisper (いにしえの聖霊の森)",
+    "maincolor": "#10b981",
+    "balancecolor": "#a3e635",
+    "variationcolor": "#f0fdf4",
+    "accentcolor": "#022c22"
+  },
+  {
+    "name": "RetroArcade (80'sゲームセンター)",
+    "maincolor": "#facc15",
+    "balancecolor": "#3b82f6",
+    "variationcolor": "#f8fafc",
+    "accentcolor": "#7c3aed"
+  },
+  {
+    "name": "RoyalChrono (王宮のクロノグラフ)",
+    "maincolor": "#d4af37",
+    "balancecolor": "#ffffff",
+    "variationcolor": "#fcf8e3",
+    "accentcolor": "#1c2841"
+  },
+  {
+    "name": "VampireCastle (吸血鬼の晩餐会)",
+    "maincolor": "#991b1b",
+    "balancecolor": "#f87171",
+    "variationcolor": "#fca5a5",
+    "accentcolor": "#050001"
+  },
+  {
+    "name": "MatchaLatte (京都和モダン和菓子)",
+    "maincolor": "#606c38",
+    "balancecolor": "#dda15e",
+    "variationcolor": "#fefae0",
+    "accentcolor": "#283618"
+  },
+  {
+    "name": "CosmicNebula (未知なる銀河の星雲)",
+    "maincolor": "#ec4899",
+    "balancecolor": "#8b5cf6",
+    "variationcolor": "#fdf2f8",
+    "accentcolor": "#180029"
+  },
+  {
+    "name": "PolarAurora (最北の極光オーロラ)",
+    "maincolor": "#22d3ee",
+    "balancecolor": "#34d399",
+    "variationcolor": "#f0fdfa",
+    "accentcolor": "#0f172a"
   }
 ]
