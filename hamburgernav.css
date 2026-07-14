@@ -1,147 +1,133 @@
 /* ==========================================
-   1. 矢印・スマホ特有UIの完全消去
+   1. 安全第一のリセット & デフォルト矢印消去
    ========================================== */
+.magic-menu,
+.magic-menu *,
+.magic-submenu-details,
+.magic-submenu-details * {
+  box-sizing: border-box; /* レイアウト崩れを完全に防ぐ */
+}
+
 .magic-menu summary,
 .magic-submenu-details summary {
   list-style: none;
   cursor: pointer;
   outline: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent; /* スマホの青枠消去 */
 }
+
 .magic-menu summary::-webkit-details-marker,
 .magic-submenu-details summary::-webkit-details-marker {
   display: none;
 }
 
 /* ==========================================
-   2. 左上の魔導トリガー（ボタン）
+   2. 左上に固定されるスマートな丸型ボタン
    ========================================== */
 .magic-trigger {
   position: fixed;
-  top: 24px;
-  left: 24px;
+  top: 20px;
+  left: 20px;
   z-index: 1000;
-  width: 56px;
-  height: 56px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 1000px; /* 3D空間の定義 */
-}
-
-/* ボタン背景の謎めいたオーブ */
-.trigger-orb {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.9), rgba(241,245,249,0.4));
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   border-radius: 50%;
-  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12), 
-              inset 0 -4px 12px rgba(15, 23, 42, 0.05);
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
 }
 
+/* タップした時に心地よく凹むフィードバック */
+.magic-trigger:active {
+  transform: scale(0.92);
+}
+
+/* 計算されたアシンメトリーな3本線 */
 .magic-bar-box {
   position: relative;
-  width: 24px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: 22px;
+  height: 14px;
 }
 
-/* 変幻自在の3本線 */
 .bar, .bar::before, .bar::after {
   position: absolute;
-  width: 24px;
-  height: 2.5px;
+  left: 0;
+  height: 2px;
   background-color: #0f172a;
-  border-radius: 4px;
-  transition: all 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+  border-radius: 2px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              top 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              width 0.3s ease, 
+              background-color 0.4s;
 }
-.bar::before { content: ""; top: -8px; width: 14px; left: 0; } /* 異なる初期長さ */
-.bar::after  { content: ""; top: 8px; width: 20px; left: 0; }
+.bar { top: 6px; width: 22px; }
+.bar::before { content: ""; top: -6px; width: 14px; } /* 上は少し短く */
+.bar::after  { content: ""; top: 6px; width: 18px; }  /* 真ん中も少し短く */
 
-/* 【トリガーホバー時】魔力が集まるバウンド */
-.magic-trigger:hover .trigger-orb {
-  transform: scale(1.12) rotate(45deg);
-  background: #ffffff;
-  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.3);
-}
-.magic-trigger:hover .bar::before { width: 24px; }
-.magic-trigger:hover .bar::after { width: 24px; }
-
-/* ── 開錠状態（[open]）のマジック変形 ── */
-.magic-menu[open] .trigger-orb {
-  background: rgba(15, 23, 42, 0.3);
-  border-color: rgba(255, 255, 255, 0.15);
+/* 【変形】メニューが開いた（[open]）時の綺麗な✕印化 */
+.magic-menu[open] .magic-trigger {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.1);
   box-shadow: none;
-  transform: scale(0.9);
-}
-.magic-menu[open] .magic-bar-box {
-  transform: rotate(180deg); /* ボックス自体を半回転 */
 }
 .magic-menu[open] .bar { background-color: transparent; }
 .magic-menu[open] .bar::before {
   transform: rotate(45deg);
   top: 0;
-  width: 26px;
-  background-color: #38bdf8; /* 神秘的なライトブルーに変化 */
-  filter: drop-shadow(0 0 8px #38bdf8);
+  width: 22px;
+  background-color: #38bdf8; /* 鮮やかなライトブルーに変色 */
 }
 .magic-menu[open] .bar::after {
   transform: rotate(-45deg);
   top: 0;
-  width: 26px;
+  width: 22px;
   background-color: #38bdf8;
-  filter: drop-shadow(0 0 8px #38bdf8);
 }
 
 /* ==========================================
-   3. 空間を吸い込む「ポータル（背景）」トリック
+   3. 安全に左からスライド＆フェードインする極上すりガラス背景
    ========================================== */
-/* レイヤー1: 背景を液状に歪める闇 */
 .magic-portal-bg {
   position: fixed;
   inset: 0;
-  z-index: 998;
-  background: radial-gradient(circle at 0% 0%, #1e1b4b 0%, #090514 100%);
-  clip-path: circle(0% at 28px 52px); /* 左上のボタン中心から広がる円形クリップ */
-  transition: clip-path 0.75s cubic-bezier(0.76, 0, 0.24, 1), display 0.75s allow-keywords;
-  display: none;
-}
-
-/* レイヤー2: 追従する極上の時空の歪み（すりガラスシャッター） */
-.magic-glass-shutter {
-  position: fixed;
-  inset: 0;
   z-index: 997;
-  backdrop-filter: blur(0px) brightness(1);
-  -webkit-backdrop-filter: blur(0px) brightness(1);
-  transition: backdrop-filter 0.6s ease, -webkit-backdrop-filter 0.6s ease, display 0.6s allow-keywords;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.98));
+  backdrop-filter: blur(20px); /* 元の画面を美しくぼかす */
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  transform: translateX(-100%); /* 画面の左外に隠す */
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, display 0.5s allow-keywords;
   display: none;
 }
 
-/* ── 開いた時の大魔法展開 ── */
+/* メニューが展開された時 */
 .magic-menu[open] .magic-portal-bg {
   display: block;
-  clip-path: circle(150% at 28px 52px); /* 左上から波紋が広がるように全画面を飲み込む */
-}
-.magic-menu[open] .magic-glass-shutter {
-  display: block;
-  backdrop-filter: blur(25px) brightness(0.4);
-  -webkit-backdrop-filter: blur(25px) brightness(0.4);
+  opacity: 1;
+  transform: translateX(0); /* ぴったり画面に収まる */
 }
 
-/* 初期立ち上がり（@starting-style） */
+/* 新機能：開く瞬間の初期状態をカチッと定義 */
 @starting-style {
-  .magic-menu[open] .magic-portal-bg { clip-path: circle(0% at 28px 52px); }
-  .magic-menu[open] .magic-glass-shutter { backdrop-filter: blur(0px) brightness(1); }
+  .magic-menu[open] .magic-portal-bg {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+/* ダミーレイヤー（昔のバグの残骸）は安全のため非表示で無害化 */
+.magic-glass-shutter {
+  display: none !important;
 }
 
 /* ==========================================
-   4. 3Dシアター・ナビゲーション（文字の魔法）
+   4. ナビゲーションメニューの完璧な配置（左手最適化）
    ========================================== */
 .magic-theater {
   position: fixed;
@@ -150,176 +136,160 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 12%; /* 左手親指のベストポジション */
+  padding-left: 12%; /* 左手親指で一番押しやすいエリア */
   pointer-events: none;
-  overflow-y: auto;
-  perspective: 1200px; /* 文字に圧倒的な奥行きを出す */
+  overflow-y: auto; /* メニューが長くなってもスクロールで救済 */
 }
-.magic-menu[open] .magic-theater { pointer-events: auto; }
+.magic-menu[open] .magic-theater {
+  pointer-events: auto; /* 開いている時だけタップ可能に */
+}
 
 .magic-list {
   list-style: none;
   text-align: left;
   padding: 40px 0;
+  margin: 0;
   width: 100%;
-  max-width: 360px;
+  max-width: 320px;
 }
 
-/* 1階層目のアイテム：3D空間の奥から回転しながら現れる */
+/* 1階層目の文字：背景を追いかけて左から綺麗に滑り込む */
 .magic-list > li {
   position: relative;
-  margin: 35px 0;
+  margin: 32px 0;
   opacity: 0;
-  transform: rotateY(-50deg) rotateX(20deg) translate3d(-100px, 0, -200px);
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transform: translateX(-40px);
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .magic-menu[open] .magic-list > li {
   opacity: 1;
-  transform: rotateY(0) rotateX(0) translate3d(0, 0, 0);
-  /* 魔法のようなしなやかな多重イージング */
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
-  transition-delay: calc(var(--item-index) * 0.08s + 0.25s);
+  transform: translateX(0);
+  /* 驚くほど滑らかなイージング */
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
+  transition-delay: calc(var(--item-index) * 0.06s + 0.15s); /* 上から順番に飛び出す */
 }
 
 @starting-style {
   .magic-menu[open] .magic-list > li {
     opacity: 0;
-    transform: rotateY(-50deg) rotateX(20deg) translate3d(-100px, 0, -200px);
+    transform: translateX(-40px);
   }
 }
 
-/* ── 幻想的なホバー・バックライト・エフェクト ── */
-.menu-backlight {
-  position: absolute;
-  inset: -15px -30px;
-  background: radial-gradient(circle at left, rgba(99, 102, 241, 0.15), transparent 70%);
-  opacity: 0;
-  transform: scale(0.6);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  pointer-events: none;
-  border-radius: 50元px;
-}
-.magic-list > li:hover .menu-backlight {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ── 2層ホバー文字（ホログラム） ── */
+/* ── リンクテキスト＆ホバー時の仕掛け ── */
 .magic-theater a, 
 .magic-submenu-trigger {
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 2rem;
-  font-weight: 900;
-  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-decoration: none;
   display: inline-block;
   position: relative;
-  transition: color 0.4s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 4px 0;
+  transition: color 0.3s, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* HTMLの `data-text` を使って、ホバーした瞬間に奥から英語のホログラムが浮かび上がる */
-.magic-theater a::before,
-.magic-submenu-trigger::before {
-  content: attr(data-text);
-  position: absolute;
-  top: -60%;
-  left: 0;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #6366f1;
-  letter-spacing: 0.3em;
-  opacity: 0;
-  transform: translate3d(0, 10px, -20px);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* ホバー時の超覚醒挙動 */
+/* ホバーすると文字が少し右にスライドして光る */
 .magic-list > li:hover a,
 .magic-list > li:hover .magic-submenu-trigger {
   color: #ffffff;
-  transform: translate3d(15px, 0, 40px); /* 手前に立体的に飛び出す */
-  text-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+  transform: translateX(10px);
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
 }
-.magic-list > li:hover a::before,
-.magic-list > li:hover .magic-submenu-trigger::before {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
+
+/* 【仕掛け】ホバー時に左から右へシャーッと伸びる美しい下線 */
+.magic-theater a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.magic-list > li:hover a::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* ==========================================
-   5. メニュー内メニュー（Groups：多重次元展開）
+   5. メニュー内メニュー（Groups：アコーディオン）
    ========================================== */
 .magic-submenu-trigger {
   padding-right: 40px;
   width: 100%;
-  box-sizing: border-box;
 }
 
-/* クリスタル・幾何学アロー */
+/* シャープなプラス（＋）アイコン */
 .magic-submenu-trigger::after {
-  content: "";
+  content: "+";
   position: absolute;
   right: 15px;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid rgba(255,255,255,0.4);
-  border-bottom: 2px solid rgba(255,255,255,0.4);
-  transform: translateY(-60%) rotate(-45deg); /* 初期：右向きのシャープな矢印 */
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
+  top: 45%;
+  transform: translateY(-50%);
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
 }
 .magic-list > li:hover .magic-submenu-trigger::after {
-  border-color: #38bdf8;
+  color: #38bdf8;
 }
 
-/* 展開時：ひねりながら下に向きを変えるクリスタル */
+/* Groupsが開いた時にプラスが45度回転して「✕」に変形するトリック */
 .magic-submenu-details[open] .magic-submenu-trigger::after {
-  transform: translateY(-50%) rotate(45deg) scale(1.2);
-  border-color: #6366f1;
+  transform: translateY(-50%) rotate(135deg);
+  color: #818cf8;
 }
 
-/* 2階層目（2次元配列リスト）：次世代グリッド完全密閉 */
+/* 2階層目のリスト：最新のGrid式で100%滑らかに開閉 */
 .magic-sub-list {
   list-style: none;
   padding: 0;
-  margin: 15px 0 0 10px;
-  border-left: 1px solid rgba(99, 102, 241, 0.2);
+  margin: 10px 0 0 10px;
+  border-left: 2px solid rgba(99, 102, 241, 0.3); /* 親子関係を示す上品な縦線 */
   display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  grid-template-rows: 0fr; /* 初期状態は高さゼロ */
+  transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
   opacity: 0;
 }
 .magic-submenu-details[open] .magic-sub-list {
-  grid-template-rows: 1fr;
+  grid-template-rows: 1fr; /* 開いたら中身の最大高さまで広がる */
   opacity: 1;
 }
 
-/* 展開にシンクロする子メニューの「連鎖フェード」 */
+/* アコーディオンの展開に合わせて、中の文字も時間差で上品に浮き出る */
 .magic-sub-list li {
   overflow: hidden;
-  padding-left: 24px;
-  transform: translateY(-15px) rotateX(-30deg);
+  padding-left: 20px;
+  transform: translateY(-10px);
   opacity: 0;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 .magic-submenu-details[open] .magic-sub-list li {
-  transform: translateY(0) rotateX(0);
+  transform: translateY(0);
   opacity: 1;
-  transition-delay: 0.12s; /* 空間が縦に開いてから精密に流れ出す */
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  transition-delay: 0.1s;
 }
 
-/* 子メニューの幻想的な文字 */
+/* 2階層目の子メニュー文字デザイン */
 .magic-sub-list a {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #94a3b8;
-  text-shadow: none;
 }
-.magic-sub-list a::before { display: none; } /* 子要素にホログラムは出さない */
+.magic-sub-list a::after {
+  display: none; /* 子メニューは下線なしでスッキリ */
+}
 
 .magic-sub-list li:hover a {
-  color: #6366f1;
-  transform: translate3d(8px, 0, 10px);
-  text-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+  color: #818cf8;
+  transform: translateX(6px);
 }
