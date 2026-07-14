@@ -68,5 +68,124 @@
     "balancecolor": "#00ff66",
     "variationcolor": "#f0fdfa",
     "accentcolor": "#060c1a"
+  },
+  {
+    "name": "GirlsSecretParty (秘密のガールズパーティ)",
+    "maincolor": "#eb6d9a",
+    "balancecolor": "#f19bd4",
+    "variationcolor": "#d3ecf3",
+    "accentcolor": "#3f2830"
+  },
+  {
+    "name": "FloralHerbarium (植物標本の小瓶)",
+    "maincolor": "#ea5e6b",
+    "balancecolor": "#6b94cd",
+    "variationcolor": "#bd9fca",
+    "accentcolor": "#8d797d"
+  },
+  {
+    "name": "HarajukuFairytale (原宿メルヘン幻想曲)",
+    "maincolor": "#f4b3c9",
+    "balancecolor": "#bae2f8",
+    "variationcolor": "#e9e5eb",
+    "accentcolor": "#008cd6"
+  },
+  {
+    "name": "NeonStationery (真夜中の文房具店)",
+    "maincolor": "#00a3d1",
+    "balancecolor": "#fff579",
+    "variationcolor": "#c4d2dc",
+    "accentcolor": "#231815"
+  },
+  {
+    "name": "MeringueGlaze (天使のメレンゲ菓子)",
+    "maincolor": "#f6dbe9",
+    "balancecolor": "#fffbd0",
+    "variationcolor": "#fffef8",
+    "accentcolor": "#f5becf"
+  },
+  {
+    "name": "ChampagneCocktail (黄昏のバーカウンター)",
+    "maincolor": "#f7c4b9",
+    "balancecolor": "#f9cfbd",
+    "variationcolor": "# dadadb",
+    "accentcolor": "#375c68"
+  },
+  {
+    "name": "HawaiianBreeze (楽園のハワイアン)",
+    "maincolor": "#008785",
+    "balancecolor": "#69b4a4",
+    "variationcolor": "#f9cfb9",
+    "accentcolor": "#efeb64"
+  },
+  {
+    "name": "RelaxingPastel (微睡みのリラックスルーム)",
+    "maincolor": "#fad9e7",
+    "balancecolor": "#dff1fc",
+    "variationcolor": "#fff4d6",
+    "accentcolor": "#163666"
+  },
+  {
+    "name": "HydrangeaBouquet (雨上がりの紫陽花)",
+    "maincolor": "#bbb3d7",
+    "balancecolor": "#badcf4",
+    "variationcolor": "#bbe1e8",
+    "accentcolor": "#449bb3"
+  },
+  {
+    "name": "SmokyFeminine (霧がかる街の淑女)",
+    "maincolor": "#e3acb9",
+    "balancecolor": "#b1a6c3",
+    "variationcolor": "#f0cdca",
+    "accentcolor": "#103670"
+  },
+  {
+    "name": "LavenderAroma (香るラベンダーソープ)",
+    "maincolor": "#cdc5e1",
+    "balancecolor": "#a994c5",
+    "variationcolor": "#fde9c5",
+    "accentcolor": "#805959"
+  },
+  {
+    "name": "CheerfulLunchtime (ピクニック日和)",
+    "maincolor": "#fbd8a2",
+    "balancecolor": "#88c9e6",
+    "variationcolor": "#c3dfbd",
+    "accentcolor": "#006992"
+  },
+  {
+    "name": "HappyVitamin (弾ける果汁ビタミン)",
+    "maincolor": "#ec6c00",
+    "balancecolor": "#faec00",
+    "variationcolor": "#00aedd",
+    "accentcolor": "#491f4e"
+  },
+  {
+    "name": "ColorfulToybox (夢の玩具箱)",
+    "maincolor": "#e94f40",
+    "balancecolor": "#009b75",
+    "variationcolor": "#e2c7aa",
+    "accentcolor": "#002327"
+  },
+  {
+    "name": "JellyBeans (雨粒のゼリービーンズ)",
+    "maincolor": "#53bfed",
+    "balancecolor": "#ea84b0",
+    "variationcolor": "#c2d968",
+    "accentcolor": "#8a1e3e"
+  },
+  {
+    "name": "RainbowPrism (光を砕くプリズム)",
+    "maincolor": "#e50044",
+    "balancecolor": "#ffe100",
+    "variationcolor": "#ffffff",
+    "accentcolor": "#4c4298"
+  },
+  {
+    "name": "PsychedelicRock (狂気のサイケデリック)",
+    "maincolor": "#df2e8a",
+    "balancecolor": "#ffe100",
+    "variationcolor": "#8ec31e",
+    "accentcolor": "#002f7b"
   }
 ]
