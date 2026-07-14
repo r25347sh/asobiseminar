@@ -1,11 +1,12 @@
 /* ==========================================
-   1. 基本リセット & 矢印消去
+   1. 究極のリセット & 矢印消去
    ========================================== */
 .burger-menu summary,
 .submenu-details summary {
   list-style: none;
   cursor: pointer;
   outline: none;
+  -webkit-tap-highlight-color: transparent; /* スマホのタップ時青枠を消去 */
 }
 .burger-menu summary::-webkit-details-marker,
 .submenu-details summary::-webkit-details-marker {
@@ -13,68 +14,107 @@
 }
 
 /* ==========================================
-   2. 【変更】左上配置のハンバーガーアイコン
+   2. 進化した左上ハンバーガーアイコン
    ========================================== */
 .burger-trigger {
   position: fixed;
-  top: 20px;
-  left: 20px; /* 右(right)から左(left)へ変更：左手操作に最適化 */
+  top: 24px;
+  left: 24px;
   z-index: 100;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px); /* ボタン自体もすりガラスに */
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
+}
+
+/* ボタン自体をホバー・タップした時の心地よいバウンド */
+.burger-trigger:hover, .burger-trigger:active {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 1);
 }
 
 .bar, .bar::before, .bar::after {
   position: absolute;
-  width: 30px;
-  height: 3px;
-  background-color: #333;
-  border-radius: 4px;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 22px;
+  height: 2px;
+  background-color: #0f172a;
+  border-radius: 2px;
+  /* 3本線の形状変化に滑らかなイージングを設定 */
+  transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1), 
+              top 0.3s cubic-bezier(0.65, 0, 0.35, 1), 
+              background-color 0.4s;
 }
-.bar::before { content: ""; top: -10px; }
-.bar::after  { content: ""; top: 10px; }
+/* 3本線の初期配置（長さ・位置を変えて絶妙なアシンメトリーに） */
+.bar { transform: translateX(0); }
+.bar::before { content: ""; top: -7px; width: 16px; left: 0; } /* 上の線は少し短く */
+.bar::after  { content: ""; top: 7px; width: 22px; left: 0; }
 
-/* メニューが【開いた時】の3本線 → ×印変形 */
-.burger-menu[open] .bar { background-color: transparent; }
-.burger-menu[open] .bar::before { transform: rotate(45deg); top: 0; background-color: #fff; }
-.burger-menu[open] .bar::after  { transform: rotate(-45deg); top: 0; background-color: #fff; }
+/* 【変形】メニューが開いた（[open]）時の2回転×印化 */
+.burger-menu[open] .burger-trigger {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: none;
+}
+.burger-menu[open] .bar { 
+  transform: rotate(360deg); /* くるっと回転 */
+  background-color: transparent; 
+}
+.burger-menu[open] .bar::before { 
+  transform: rotate(45deg); 
+  top: 0; 
+  width: 24px;
+  background-color: #fff; 
+}
+.burger-menu[open] .bar::after { 
+  transform: rotate(-45deg); 
+  top: 0; 
+  width: 24px;
+  background-color: #fff; 
+}
 
 /* ==========================================
-   3. 【変更】左からスライドインする全画面背景
+   3. すりガラス（魔法）を纏った左スライド背景
    ========================================== */
 .menu-overlay {
   position: fixed;
   inset: 0;
   z-index: 98;
-  background: linear-gradient(135deg, #1e293b, #0f172a);
+  /* 高級感あふれるミッドナイトブルーのグラデーション */
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.98));
+  backdrop-filter: blur(20px); /* 【工夫】背景を極上にぼかす未来感演出 */
+  -webkit-backdrop-filter: blur(20px);
   opacity: 0;
-  /* 閉じる時のアニメーション：左へ戻りながらフェードアウト */
   transform: translateX(-100%);
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease, display 0.5s allow-keywords;
+  /* 閉じる時はシュッと素早く戻る */
+  transition: transform 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97), 
+              opacity 0.4s ease, 
+              display 0.4s allow-keywords;
   display: none;
 }
 
-/* メニューを開いたとき（[open]時） */
+/* メニュー展開時 */
 .burger-menu[open] .menu-overlay {
   display: block;
-  opacity: 0.98;
-  transform: translateX(0); /* 画面全体に収まる */
+  opacity: 1;
+  transform: translateX(0);
+  /* 開く時は吸い付くように滑らかに */
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
 }
 
-/* 開く瞬間の初期状態（@starting-style） */
 @starting-style {
   .burger-menu[open] .menu-overlay {
     opacity: 0;
-    transform: translateX(-100%); /* 画面の左外側からスタート */
+    transform: translateX(-100%);
   }
 }
 
 /* ==========================================
-   4. 【連動】ナビゲーションメニューの配置とスライド
+   4. ナビゲーションメニューの配置
    ========================================== */
 .menu-content {
   position: fixed;
@@ -82,10 +122,10 @@
   z-index: 99;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* 【左手最適化】中央ではなく、少し左寄りに配置 */
+  padding-left: 10%; 
   pointer-events: none;
   overflow-y: auto;
-  padding: 40px 0;
 }
 .burger-menu[open] .menu-content {
   pointer-events: auto;
@@ -93,48 +133,73 @@
 
 .main-menu-list {
   list-style: none;
-  text-align: center;
+  text-align: left; /* 【左手最適化】視線と親指に合わせた左寄せ */
   padding: 0;
   width: 100%;
-  max-width: 400px;
+  max-width: 320px;
 }
 
-/* 1階層目メニュー項目のアニメーション（背景を追うように左から現れる） */
+/* 1階層目の文字が時間差で「波打つように」浮かび上がる */
 .main-menu-list > li {
-  margin: 25px 0;
+  margin: 30px 0;
   opacity: 0;
-  transform: translateX(-40px); /* スライドインに合わせて左に配置 */
+  transform: translateX(-30px) scale(0.95);
   transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .burger-menu[open] .main-menu-list > li {
   opacity: 1;
-  transform: translateX(0);
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
-  transition-delay: calc(var(--item-index) * 0.08s + 0.15s); /* 背景が少し動いてから順に出現 */
+  transform: translateX(0) scale(1);
+  /* 慣性のある美しいバウンドイージング */
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.7s ease;
+  transition-delay: calc(var(--item-index) * 0.06s + 0.2s);
 }
 
 @starting-style {
   .burger-menu[open] .main-menu-list > li {
     opacity: 0;
-    transform: translateX(-40px);
+    transform: translateX(-30px) scale(0.95);
   }
 }
 
-/* 共通リンクデザイン */
+/* リンクデザインと超美麗ホバーアニメーション */
 .menu-content a, 
 .submenu-trigger {
-  color: #fff;
-  font-size: 1.6rem;
-  font-weight: bold;
+  color: #f8fafc;
+  font-size: 1.8rem;
+  font-weight: 800; /* 太文字でモダンな印象に */
+  letter-spacing: 0.05em;
   text-decoration: none;
   display: inline-block;
-  padding: 5px 10px;
-  transition: color 0.3s;
+  position: relative;
+  padding: 4px 0;
+  transition: color 0.3s, transform 0.2s;
 }
+
+/* ホバー時に文字が少し右にシフトする心地よいフィードバック */
 .menu-content a:hover,
 .submenu-trigger:hover {
   color: #38bdf8;
+  transform: translateX(6px);
+}
+
+/* 【工夫】親指の軌道に合わせた下線（左から右に伸びて、右に消える） */
+.menu-content a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.menu-content a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* ==========================================
@@ -142,48 +207,73 @@
    ========================================== */
 .submenu-trigger {
   position: relative;
-  padding-right: 30px;
-}
-.submenu-trigger::after {
-  content: "▼";
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
-}
-.submenu-details[open] .submenu-trigger::after {
-  transform: translateY(-50%) rotate(180deg);
+  padding-right: 40px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* 2階層目のリスト構造（アコーディオン） */
+/* ネオンのように光るプラス・マイナスアイコン */
+.submenu-trigger::after {
+  content: "+";
+  position: absolute;
+  right: 10px;
+  top: 45%;
+  transform: translateY(-50%);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: #64748b;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s;
+}
+.submenu-trigger:hover::after {
+  color: #38bdf8;
+}
+/* Groupsが開いた時に「＋」が回転して「✕」っぽくなる変形 */
+.submenu-details[open] .submenu-trigger::after {
+  transform: translateY(-50%) rotate(135deg);
+  color: #818cf8;
+}
+
+/* 2階層目のリスト構造（次世代Gridアコーディオン） */
 .sub-menu-list {
   list-style: none;
   padding: 0;
-  margin: 10px auto 0 auto;
-  width: 80%;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  margin: 10px 0 0 10px;
+  border-left: 2px solid rgba(255, 255, 255, 0.1); /* 親子関係がひと目でわかるガイド線 */
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+  transition: grid-template-rows 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
   opacity: 0;
 }
 
 .submenu-details[open] .sub-menu-list {
   grid-template-rows: 1fr;
-  padding: 15px 0;
   opacity: 1;
 }
 
+/* アコーディオンが開くとき、中の文字もさらに時間差でフェードイン */
 .sub-menu-list li {
   overflow: hidden;
-  margin: 8px 0;
+  padding-left: 20px;
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.submenu-details[open] .sub-menu-list li {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+  transition-delay: 0.1s; /* 展開が始まってから文字を出す */
 }
 
+/* 2階層目の洗練された文字デザイン */
 .sub-menu-list a {
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: #cbd5e1;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+.sub-menu-list a:hover {
+  color: #818cf8;
+}
+.sub-menu-list a::after {
+  display: none; /* 子メニューは下線なしでシンプルに */
 }
