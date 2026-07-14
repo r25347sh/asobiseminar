@@ -1,0 +1,179 @@
+/* ==========================================
+   1. 基本リセット & 矢印消去
+   ========================================== */
+.burger-menu summary,
+.submenu-details summary {
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+}
+.burger-menu summary::-webkit-details-marker,
+.submenu-details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ==========================================
+   2. ハンバーガー（3本線）アイコン
+   ========================================== */
+.burger-trigger {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bar, .bar::before, .bar::after {
+  position: absolute;
+  width: 30px;
+  height: 3px;
+  background-color: #333;
+  border-radius: 4px;
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.bar::before { content: ""; top: -10px; }
+.bar::after  { content: ""; top: 10px; }
+
+/* メニューが【開いた時】の3本線 → ×印変形 */
+.burger-menu[open] .bar { background-color: transparent; }
+.burger-menu[open] .bar::before { transform: rotate(45deg); top: 0; background-color: #fff; }
+.burger-menu[open] .bar::after  { transform: rotate(-45deg); top: 0; background-color: #fff; }
+
+/* ==========================================
+   3. 背景オーバーレイ（全画面）
+   ========================================== */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 98;
+  background: radial-gradient(circle at top right, #1e293b, #0f172a); /* 落ち着いたダークトーン */
+  opacity: 0;
+  transition: opacity 0.4s ease, display 0.4s allow-keywords;
+  display: none;
+}
+.burger-menu[open] .menu-overlay {
+  display: block;
+  opacity: 0.95; /* 微かに透ける */
+}
+@starting-style {
+  .burger-menu[open] .menu-overlay { opacity: 0; }
+}
+
+/* ==========================================
+   4. ナビゲーションメニュー配置
+   ========================================== */
+.menu-content {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow-y: auto; /* メニューが画面からはみ出た時のスクロール対策 */
+  padding: 40px 0;
+}
+.burger-menu[open] .menu-content {
+  pointer-events: auto;
+}
+
+.main-menu-list {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* 1階層目メニュー項目のアニメーション（時間差） */
+.main-menu-list > li {
+  margin: 20px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.burger-menu[open] .main-menu-list > li {
+  opacity: 1;
+  transform: translateY(0);
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+  transition-delay: calc(var(--item-index) * 0.08s + 0.1s);
+}
+@starting-style {
+  .burger-menu[open] .main-menu-list > li { opacity: 0; transform: translateY(20px); }
+}
+
+/* 共通リンクデザイン */
+.menu-content a, 
+.submenu-trigger {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  padding: 5px 10px;
+  transition: color 0.3s;
+}
+.menu-content a:hover,
+.submenu-trigger:hover {
+  color: #38bdf8; /* ホバー時に爽やかなブルーに */
+}
+
+/* ==========================================
+   5. メニュー内メニュー（Groups子要素）の工夫
+   ========================================== */
+/* 子メニューのトリガー（親文字）に下向き矢印を付与 */
+.submenu-trigger {
+  position: relative;
+  padding-right: 30px;
+}
+.submenu-trigger::after {
+  content: "▼";
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+/* 子メニューが開いた（open）時に矢印を上に向ける */
+.submenu-details[open] .submenu-trigger::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* 2階層目のリスト構造 */
+.sub-menu-list {
+  list-style: none;
+  padding: 10px 0 0 0;
+  margin: 0;
+  background-color: rgba(255, 255, 255, 0.05); /* 階層がわかりやすいように薄い背景 */
+  border-radius: 8px;
+  /* スムーズな開閉のための設定 */
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+/* 子メニューが開いたとき、高さを滑らかに広げる */
+.submenu-details[open] .sub-menu-list {
+  grid-template-rows: 1fr;
+  padding: 15px 0;
+  opacity: 1;
+}
+
+/* gridの開閉を滑らかにするためのインナーラッパーの役割 */
+.sub-menu-list li {
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+/* 2階層目の文字リンクは少し小さく */
+.sub-menu-list a {
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: #cbd5e1;
+}
