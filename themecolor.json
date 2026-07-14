@@ -20,4 +20,18 @@
     "variationcolor": "#d3ecf3",
     "accentcolor": "#3f2830"
   }
+   {
+    "name": "CyberNeon",
+    "maincolor": "#00f5ff",
+    "balancecolor": "#ff007f",
+    "variationcolor": "#111111",
+    "accentcolor": "#0a0a12"
+  },
+  {
+    "name": "SakuraBlossom",
+    "maincolor": "#ffb7c5",
+    "balancecolor": "#fff0f5",
+    "variationcolor": "#4a2c32",
+    "accentcolor": "#ffe4e1"
+  }
 ]
