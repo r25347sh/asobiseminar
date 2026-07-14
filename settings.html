@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>設定 - Asobi Seminar</title>
-  <!-- 先ほど整理した2つのJSタスク -->
   <script src="/asobiseminar/js/load-css.js"></script>
   <script src="/asobiseminar/js/setThemeColor.js"></script>
 </head>
@@ -14,54 +13,43 @@
     
     <label style="display: block; margin-bottom: 8px; font-weight: bold;">テーマを選択</label>
     <select id="theme-select" style="display: block; width: 100%; margin-bottom: 20px; padding: 12px; background: rgba(255,255,255,0.1); color: var(--variation-color); border: 2px solid var(--main-color); border-radius: 6px; font-size: 1rem; outline: none;">
-      <!-- 💡 ここにJSONの候補が確実かつ自動で追加されます -->
+      <!-- 💡 ここにJSONの候補が確実に全自動で並びます -->
     </select>
     
-    <button id="save-btn" style="width: 100%; padding: 14px; background: var(--main-color); color: var(--accent-color); border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: opacity 0.2s;">
+    <button id="save-btn" style="width: 100%; padding: 14px; background: var(--main-color); color: var(--accent-color); border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer;">
       設定を保存する
     </button>
   </main>
 
   <script>
-    // 画面の準備が完全に整ってから実行する安全ガード
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       const selectEl = document.getElementById('theme-select');
       const saveBtn = document.getElementById('save-btn');
 
-      // 正しいリポジトリパスからJSONを確実に取得
-      fetch('/asobiseminar/themecolor.json')
-        .then(res => {
-          if (!res.ok) throw new Error('JSONファイルの取得に失敗しました');
-          return res.json();
-        })
-        .then(themes => {
-          // 既存の選択肢を一度大掃除
-          selectEl.innerHTML = '';
+      try {
+        // 確実なルート相対パスでJSONを取得して解析を待つ（await）
+        const res = await fetch('/asobiseminar/themecolor.json');
+        if (!res.ok) throw new Error();
+        const themes = await res.json();
 
-          // ループ処理で候補を生成
-          themes.forEach(theme => {
-            const option = document.createElement('option');
-            option.value = theme.name;
-            option.textContent = theme.name;
-            
-            // セレクト内の文字色固定（ブラウザ対策）
-            option.style.backgroundColor = '#1e293b';
-            option.style.color = '#ffffff';
-            selectEl.appendChild(option);
-          });
-
-          // ローカルストレージの値があれば復元
-          const currentTheme = localStorage.getItem('selectedTheme');
-          if (currentTheme) {
-            selectEl.value = currentTheme;
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          alert('テーマ情報の読み込みに失敗しました。パスを確認してください。');
+        selectEl.innerHTML = '';
+        themes.forEach(theme => {
+          const option = document.createElement('option');
+          option.value = theme.name;
+          option.textContent = theme.name;
+          option.style.backgroundColor = '#1e293b';
+          option.style.color = '#ffffff';
+          selectEl.appendChild(option);
         });
 
-      // 保存処理
+        const currentTheme = localStorage.getItem('selectedTheme');
+        if (currentTheme) {
+          selectEl.value = currentTheme;
+        }
+      } catch (err) {
+        console.error('JSONデータの構築タスクに失敗しました:', err);
+      }
+
       saveBtn.addEventListener('click', () => {
         localStorage.setItem('selectedTheme', selectEl.value);
         alert('テーマ設定を脳内に記憶しました！');
