@@ -1,7 +1,7 @@
 // load-css.js (すべてのCSSをここで一括管理)
 const cssFiles = [
   '/asobiseminar/style.css',
-  '/asobiseminar/hamburger.css?v=2', // キャッシュ対策もバッチリ
+  '/asobiseminar/hamburgernav.css?v=2', // キャッシュ対策もバッチリ
 ];
 
 // ループ処理でHTMLの<head>の中に<link>タグを同時にぶち込む
