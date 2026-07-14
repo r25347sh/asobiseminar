@@ -1,0 +1,16 @@
+[
+  {
+    "name": "HalloweenNight",
+    "maincolor": "#d65f01",
+    "balancecolor": "#b1c586",
+    "variationcolor": "#fff7d4",
+    "accentcolor": "#090000"
+  },
+  {
+    "name": "MidnightMagic",
+    "maincolor": "#1e1b4b",
+    "balancecolor": "#38bdf8",
+    "variationcolor": "#f8fafc",
+    "accentcolor": "#6366f1"
+  }
+]
