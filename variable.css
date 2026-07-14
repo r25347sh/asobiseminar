@@ -1,0 +1,8 @@
+/* css/variables.css */
+:root {
+  /* JSが発動するまでの「身代わり」となるデフォルト色 */
+  --main-color: #d65f01;
+  --balance-color: #b1c586;
+  --variation-color: #fff7d4;
+  --accent-color: #090000;
+}
