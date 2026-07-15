@@ -1,45 +1,91 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/asobiseminar/load-css.js"></script>
-    <script src="/asobiseminar/setThemeColor.js"></script>
-    <title>ホーム | 遊びの探求ゼミ</title>
-    <link rel="stylesheet" href="/asobiseminar/index.css?v=2">
-  </head>
-  <body>
-    <details class="magic-menu">
-      <!-- 3本線を捨て、光の特異点となった魔導トリガー（左配置） -->
-      <summary class="magic-trigger" aria-label="空間を開放する">
-        <div class="trigger-rune">
-          <span class="rune-line"></span>
-        </div>
-      </summary>
-      <!-- 空間を飲み込む液状クォーク背景 -->
-      <div class="magic-portal-bg"></div>
-      <!-- 絶対多次元知覚空間 -->
-      <nav class="magic-theater">
-        <ul class="magic-list">
-          <li style="--item-index: 1;">
-            <a href="/asobiseminar/index.html" data-text="HOME">ホーム</a>
-          </li>
-          <li style="--item-index: 2;">
-            <a href="/asobiseminar/subpages/members.html" data-text="MEMBERS">メンバー</a>
-          </li>
-          <li style="--item-index: 3;" class="magic-has-submenu">
-            <details class="magic-submenu-details">
-              <summary class="magic-submenu-trigger" data-text="GROUPS">Groups（グループ）</summary>
-              <ul class="magic-sub-list">
-                <li><a href="/asobiseminar/subpages/groups/index.html">Group トップ</a></li>
-                <li><a href="/asobiseminar/subpages/groups/one.html">Group 1</a></li>
-                <li><a href="/asobiseminar/subpages/groups/two.html">Group 2</a></li>
-                <li><a href="/asobiseminar/subpages/groups/three.html">Group 3</a></li>
-              </ul>
-            </details>
-          </li>
-        </ul>
-      </nav>
-    </details>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asobi Lab. - ホーム</title>
+  
+  <!-- 💡 タスク分割の要：この2行で全ページの共通CSSとテーマ色を完全制御 -->
+  <script src="/asobiseminar/js/load-css.js"></script>
+  <script src="/asobiseminar/js/setThemeColor.js"></script>
+</head>
+<body>
+
+  <!-- ==========================================
+     🔮 世界観と繋がる魔導ハンバーガーナビ（4Dシアター）
+     ========================================== -->
+  <details class="magic-menu">
+    <!-- 左上固定の特異点ボタン -->
+    <summary class="magic-trigger" aria-label="空間を開放する">
+      <div></div>
+      <span></span>
+    </summary>
+    
+    <!-- 27色と連動する全画面マット背景 -->
+    <div class="magic-portal-bg"></div>
+
+    <!-- 1ミリも場外にズレない絶対中央の文字空間 -->
+    <nav class="magic-theater">
+      <ul class="magic-list">
+        <li style="--item-index: 1;"><a href="/asobiseminar/index.html">ホーム</a></li>
+        <li style="--item-index: 2;"><a href="/asobiseminar/subpages/members.html">メンバー</a></li>
+        <li style="--item-index: 3;" class="magic-has-submenu">
+          <details class="magic-submenu-details">
+            <summary class="magic-submenu-trigger">Groups（グループ）</summary>
+            <ul class="magic-sub-list">
+              <li><a href="/asobiseminar/subpages/groups/index.html">Group トップ</a></li>
+              <li><a href="/asobiseminar/subpages/groups/one.html">Group 1</a></li>
+              <li><a href="/asobiseminar/subpages/groups/two.html">Group 2</a></li>
+              <li><a href="/asobiseminar/subpages/groups/three.html">Group 3</a></li>
+            </ul>
+          </details>
+        </li>
+        <!-- 💡 ご要望の2リンクをハンバーガー内に完全融合 -->
+        <li style="--item-index: 4;"><a href="/asobiseminar/subpages/aboutsite.html">このサイトについて</a></li>
+        <li style="--item-index: 5;"><a href="/asobiseminar/settings.html">テーマ設定</a></li>
+      </ul>
+    </nav>
+  </details>
+
+  <!-- ==========================================
+     🏛️ メインコンテンツエリア（Asobi Lab. 本文）
+     ========================================== */ -->
+  <main class="app-container">
+    
+    <!-- メインヒーローヘッダー -->
+    <header style="text-align: center; margin-bottom: 60px;">
+      <h1 style="color: var(--main-color); font-size: 3rem; font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em;">Asobi Lab.</h1>
+      <p style="opacity: 0.8; font-size: 1.1rem; margin-top: 10px;">27色の色彩と技術が交差する、実験的クリエイティブ空間</p>
+    </header>
+
+    <!-- セクション1：私たちについて -->
+    <section style="margin-bottom: 50px; line-height: 1.8;">
+      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">私たちについて</h2>
+      <p>Asobi Lab.（アソビラボ）は、Webフロントエンドの可能性を限界まで引き出すための実験場です。「遊び心」を最大の原動力とし、退屈なWEBの常識を破壊するデザインと言語の調和を研究しています。</p>
+    </section>
+
+    <!-- セクション2：メンバー -->
+    <section style="margin-bottom: 50px; line-height: 1.8;">
+      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">メンバー</h2>
+      <p>当ラボには、キレキレのファイル分割センスを持つエンジニアをはじめ、独自の美学を持ったクリエイターが集結しています。それぞれの個性が独立したタスクとして機能し、1つの大きな現象を創り出します。</p>
+      <a href="/asobiseminar/subpages/members.html" style="display: inline-block; margin-top: 8px; font-weight: bold; text-decoration: none;">➔ メンバー一覧を覗く</a>
+    </section>
+
+    <!-- セクション3：グループ活動 -->
+    <section style="margin-bottom: 50px; line-height: 1.8;">
+      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">グループ活動</h2>
+      <p>多次元的な研究を行うため、ラボ内には複数の専門グループ（2次元配列構造）が存在します。UIの変形トリックの追求から、バックエンドデータとの完全同期まで、日夜熱い開発が繰り広げられています。</p>
+      <a href="/asobiseminar/subpages/groups/index.html" style="display: inline-block; margin-top: 8px; font-weight: bold; text-decoration: none;">➔ グループのアクティビティを見る</a>
+    </section>
+
+    <!-- セクション4：このサイトについて -->
+    <section style="margin-bottom: 60px; line-height: 1.8;">
+      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">このサイトについて</h2>
+      <p>このシステムは、JavaScriptを完全に排除したCSS変数とモダンアニメーションの融合体です。あなたが選択した「世界の概念（テーマカラー）」はブラウザの脳内（ローカルストレージ）に完全に記憶され、すべてのページへ瞬時に波及します。</p>
+      <a href="/asobiseminar/subpages/aboutsite.html" style="display: inline-block; margin-top: 8px; font-weight: bold; text-decoration: none;">➔ システムのタネ明かしへ</a>
+    </section>
+
+  </main>
+
+</body>
 </html>
