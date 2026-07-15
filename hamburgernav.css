@@ -1,5 +1,5 @@
 /* ==========================================
-   1. 外部CSS（Picnic等）の干渉をすべて粉砕する絶対結界
+   1. 外部CSSの暴走を100%ねじ伏せる絶対不可侵リセット
    ========================================== */
 .magic-menu, .magic-menu * {
   box-sizing: border-box !important;
@@ -19,13 +19,13 @@
 }
 
 /* ==========================================
-   2. 左上に100%確実に出現する、不動のハンバーガーボタン
+   2. 左上に100%絶対に出現する、不動のハンバーガーボタン
    ========================================== */
 .magic-trigger {
   position: fixed !important;
   top: 25px !important;
   left: 25px !important;
-  z-index: 200000000 !important; /* メニュー文字（999999）より手前に配置して被りを防止 */
+  z-index: 200000000 !important; /* 何があっても最前面 */
   width: 50px !important;
   height: 50px !important;
   display: flex !important;
@@ -34,72 +34,93 @@
   background: transparent !important;
 }
 
-/* 💡 視認性1000%: 白背景でも黒背景でも絶対に100%見失わない、重厚な丸い座布団を敷きます */
-.trigger-orb {
+/* 
+  【絶対出現の工夫1】
+  HTMLのクラス名が「trigger-rune」であっても「trigger-orb」であっても
+  100%絶対に丸いボタンが出現するように、summaryタグの直下にある
+  『最初の1文字目のエリア（div）』に対して、強制的にサイズと漆黒の背景を叩き込みます！
+*/
+.magic-trigger > div:first-child {
   position: absolute !important;
   inset: 0 !important;
-  background: #0f172a !important; /* 漆黒のディープネイビー */
-  border: 2px solid var(--main-color) !important; /* 27色のメインカラーの美しいフチ */
-  border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  background: #0f172a !important; /* 💡 どんな背景の上でも100%絶対に見失わないディープブラック */
+  border: 2px solid var(--main-color) !important; /* 27色のメインカラーが外枠としてクッキリ輝く */
+  border-radius: 50% !important; /* 完璧な美しい正円 */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-  /* 💡 外部CSSに潰されないよう、中に強制的にflex空間を作る */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   transition: transform 0.2s ease, border-color 0.2s !important;
 }
-.magic-trigger:hover .trigger-orb {
+
+/* ホバー時：手前にクッとわずかに拡大し、フチがテーマのバランス色に変色 */
+.magic-trigger:hover > div:first-child {
   transform: scale(1.06) !important;
   border-color: var(--balance-color) !important;
 }
 
-/* 💡 【大修正】外部CSSに高さを0に潰されるバグを完全破壊する、
-   横幅22px・高さ14pxの「絶対不滅の3本線ボックス」 */
-.magic-bar-box {
-  position: relative !important;
-  width: 22px !important;
-  height: 14px !important;
-  display: block !important; /* 潰されないようにブロック化 */
-}
-
-/* ── 3本線アニメーションの基礎（太さ2.5pxの超視認性仕様） ── */
-.bar, .bar::before, .bar::after {
-  position: absolute !important;
-  left: 0 !important;
-  height: 2.5px !important;
-  background-color: var(--variation-color) !important; /* 27色の最も明るい文字色と100%完全同期 */
-  border-radius: 2px !important;
-  /* 💡 最も軽くて絶対にバグらない超高速イージング */
-  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-              top 0.3s cubic-bezier(0.25, 1, 0.5, 1),
-              opacity 0.2s ease !important;
-}
-
-/* 完璧に均等に整列した、絶対に見失わない3本線 */
-.bar { top: 6px !important; width: 22px !important; }
-.bar::before { content: "" !important; top: -6px !important; width: 22px !important; }
-.bar::after  { content: "" !important; top: 6px !important; width: 22px !important; }
-
-/* ── 💡 【超工夫】開いた瞬間の「爆速✕変化アニメーション」 ── */
 /* 
-  無茶な回転やワープをすべて廃止。
-  1. 真ん中の線（.bar）は、その場でスッと透明になって消滅。
-  2. 上下の2本線が、ド真ん中（top: 0）にガシャン！と集まりながら、
-     お互いが45度・マイナス45度に交差して、完璧に美しい✕印を形成します。
-  シンプルだからこそ、1ミリもブレずに最高にカッコよく動きます。
+  【絶対出現の工夫2】
+  HTML側が「bar」でも「rune-line」であっても、
+  ボタンの中にある『すべてのスパンタグ（span）』を、強制的に「厚さ2.5pxの美しい漆黒の3本線」に改造します！
+  これで名前のズレによる消滅バグは物理的に100%発生し得なくなります。
 */
-.magic-menu[open] .bar {
-  background-color: transparent !important; /* 真ん中を透明に */
+.magic-trigger span,
+.magic-trigger span::before,
+.magic-trigger span::after {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: 20px !important;
+  height: 2.5px !important;
+  background-color: var(--variation-color) !important; /* テーマの最も明るい色が自動連動 */
+  border-radius: 2px !important;
+  /* 💡 爆速アニメーション：ブラウザに負荷をかけない超軽量イージング */
+  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.2s ease,
+              background-color 0.2s !important;
+}
+
+/* 完璧に均等に並んだ美しい静寂の3本線を強制配置（計算値で固定） */
+.magic-trigger span {
+  transform: translate(-50%, -50%) !important; /* ド真ん中 */
+}
+.magic-trigger span::before {
+  content: "" !important;
+  transform: translate(-50%, -7px) !important; /* 上の線 */
+}
+.magic-trigger span::after {
+  content: "" !important;
+  transform: translate(-50%, 4.5px) !important; /* 下の線 */
+}
+
+/* ── 💡 【超工夫】開いた瞬間（[open]）の爆速✕変化アニメーション ── */
+/* 
+  無茶な全画面大回転をすべて完全廃止。
+  1. 真ん中の線は、その場でスッと透明になって消滅。
+  2. 上下の2本線が、中心で45度・マイナス45度に交差して、完璧にシャープな✕印を形成。
+*/
+.magic-menu[open] .magic-trigger > div:first-child {
+  background: rgba(0, 0, 0, 0.5) !important; /* メニューの背景に溶け込む */
+  border-color: rgba(255, 255, 255, 0.3) !important;
   box-shadow: none !important;
 }
-.magic-menu[open] .bar::before {
-  top: 0 !important;
-  transform: rotate(45deg) !important; /* 45度回転 */
+
+/* 開いている時は真ん中の線を透明化 */
+.magic-menu[open] .magic-trigger span {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 上下の線をカチッと45度に回転させて、完璧な✕印を左上に定着させる */
+.magic-menu[open] .magic-trigger span::before {
+  transform: translate(-50%, -50%) rotate(45deg) !important;
   background-color: #ffffff !important; /* ✕印は常に眩しい純白 */
 }
-.magic-menu[open] .bar::after {
-  top: 0 !important;
-  transform: rotate(-45deg) !important; /* 逆方向に45度回転 */
+.magic-menu[open] .magic-trigger span::after {
+  transform: translate(-50%, -50%) rotate(-45deg) !important;
   background-color: #ffffff !important;
 }
 
@@ -110,38 +131,37 @@
   position: fixed !important;
   inset: 0 !important;
   z-index: 999998 !important; /* 文字の真裏 */
-  /* 27色の深みベース色（アクセントカラー）を全面に敷き詰める */
+  /* 27色のアクセントカラー（深みベース色）を全面に敷き詰める */
   background: var(--accent-color) !important;
   opacity: 0 !important;
   /* 💡 失敗の原因だった重い回転やクリップを100%全廃。ただフェードインするだけの超軽量・超安全設計 */
-  transition: opacity 0.35s ease, display 0.35s allow-keywords !important;
+  transition: opacity 0.3s ease, display 0.35s allow-keywords !important;
   display: none !important;
 }
 
 .magic-menu[open] .magic-portal-bg {
   display: block !important;
-  opacity: 0.98 !important; /* ほんの少しだけ透けて高級感を出す */
+  opacity: 0.98 !important; 
 }
 
 @starting-style {
   .magic-menu[open] .magic-portal-bg { opacity: 0 !important; }
 }
 
-/* 予期せぬ挙動を防ぐためシャッターは無効化 */
 .magic-glass-shutter { display: none !important; }
 
 /* ==========================================
-   4. 【絶対中央固定の結界】100%場外にズレない文字空間
+   4. 【絶対中央固定】100%場外にズレない文字空間
    ========================================== */
 .magic-theater {
   position: fixed !important;
-  /* 💡 物理配置による絶対ロック方程式 */
+  /* 💡 完璧な場外バグの解決策。画面のド真ん中（50%, 50%）にコンテナの中心を完全ロック */
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important; 
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 999999 !important;
+  z-index: 999999 !important; /* 背景（999998）の上に確実に重ねる */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important; 
@@ -177,10 +197,10 @@
   .magic-menu[open] .magic-list > li { opacity: 0 !important; transform: translateY(15px) !important; }
 }
 
-/* ── リンク文字デザイン（視認性100%保証） ── */
+/* ── リンク文字デザイン ── */
 .magic-theater a, 
 .magic-submenu-trigger {
-  color: var(--variation-color) !important; /* 27色の最も明るい対比色が確定で適用されるため、100%見えます */
+  color: var(--variation-color) !important; /* 27色の最も明るい対比色が確定適用 */
   font-size: 2.1rem !important;
   font-weight: 800 !important;
   letter-spacing: 0.05em !important;
@@ -192,7 +212,6 @@
   transition: color 0.2s, transform 0.2s !important;
 }
 
-/* ホバー：文字が純白（#fff）に輝き、足元に上品なネオンラインが走る高貴な手触り */
 .magic-list > li:hover a,
 .magic-list > li:hover .magic-submenu-trigger {
   color: #ffffff !important;
@@ -200,6 +219,7 @@
   text-shadow: 0 0 10px var(--balance-color) !important;
 }
 
+/* 足元に走る、左右にスッと伸びる美しいネオンライン */
 .magic-theater a::after {
   content: "" !important;
   position: absolute !important;
@@ -234,7 +254,7 @@
   color: #ffffff !important;
 }
 
-/* 子メニュー空間 */
+/* 子メニュー */
 .magic-sub-list {
   list-style: none !important;
   padding: 0 !important;
