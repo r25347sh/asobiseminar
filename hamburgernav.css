@@ -15,14 +15,14 @@
   display: none !important;
 }
 
-/* --- BUTTON AREA --- */
+/* --- THE CORE THREAD (BUTTON) --- */
 .magic-trigger {
   position: fixed !important;
   top: 25px !important;
   left: 25px !important;
   z-index: 200000000 !important;
-  width: 54px !important;
-  height: 54px !important;
+  width: 50px !important;
+  height: 50px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -30,70 +30,74 @@
 }
 .magic-trigger > div:first-child {
   position: absolute !important;
-  width: 48px !important;
-  height: 48px !important;
-  background: #090d16 !important; 
-  border: 2px solid var(--main-color) !important;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+  width: 44px !important;
+  height: 44px !important;
+  background: transparent !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s !important;
-}
-.magic-trigger:hover > div:first-child {
-  transform: scale(1.12) rotate(6deg) !important;
-  border-color: var(--balance-color) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .magic-trigger span {
   position: relative !important;
-  width: 22px !important;
-  height: 14px !important;
-  display: block !important;
-  background: transparent !important;
-}
-.magic-trigger span,
-.magic-trigger span::before,
-.magic-trigger span::after {
-  height: 1.5px !important;
+  width: 16px !important;
+  height: 2px !important;
   background-color: var(--variation-color) !important;
   border-radius: 0px !important;
-  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1),
-              top 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.2s ease !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 0 10px var(--main-color) !important;
 }
 .magic-trigger span::before,
 .magic-trigger span::after {
   content: "" !important;
   position: absolute !important;
   left: 0 !important;
-  width: 22px !important;
+  width: 16px !important;
+  height: 2px !important;
+  background-color: var(--variation-color) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-.magic-trigger span::before { top: 0 !important; }
-.magic-trigger span::after  { bottom: 0 !important; }
+.magic-trigger span::before { top: -5px !important; }
+.magic-trigger span::after  { top: 5px !important; }
 
-/* BUTTON OPEN STATE */
-.magic-menu[open] .magic-trigger > div:first-child {
-  background: rgba(5, 9, 22, 0.8) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
-  transform: scale(0.95) rotate(-30deg) !important;
+/* HOVER SIGNAL */
+.magic-trigger:hover .magic-trigger > div:first-child {
+  transform: scale(1.05) !important;
+}
+.magic-trigger:hover span {
+  width: 28px !important;
+  left: -6px !important;
+  background-color: #ffffff !important;
+  filter: drop-shadow(0 0 8px var(--balance-color)) !important;
+}
+.magic-trigger:hover span::before { width: 28px !important; }
+.magic-trigger:hover span::after  { width: 28px !important; }
+
+/* CORE OPEN STATE */
+.magic-menu[open] .magic-trigger span {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 .magic-menu[open] .magic-trigger span::before {
-  top: 6px !important;
-  transform: rotate(135deg) !important;
+  top: 0 !important;
+  width: 20px !important;
+  left: -2px !important;
+  transform: rotate(45deg) !important;
   background-color: #ffffff !important;
 }
 .magic-menu[open] .magic-trigger span::after {
-  top: 6px !important;
-  transform: rotate(-135deg) !important;
+  top: 0 !important;
+  width: 20px !important;
+  left: -2px !important;
+  transform: rotate(-45deg) !important;
   background-color: #ffffff !important;
 }
 
-/* --- BACKGROUND BACKGROUND --- */
+/* --- THE SLIT SPATIAL (BACKGROUND) --- */
 .magic-portal-bg {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 999998 !important;
+  z-index: 9999998 !important;
   background: linear-gradient(135deg, var(--accent-color) 0%, var(--main-color) 100%) !important;
   opacity: 0 !important;
   clip-path: polygon(0 49.5%, 100% 49.5%, 100% 50.5%, 0 50.5%) !important;
@@ -112,7 +116,7 @@
   }
 }
 
-/* --- MENU INTERFACE --- */
+/* --- THE HOLOGRAM SYSTEM (INTERFACE) --- */
 .magic-theater {
   position: fixed !important;
   top: 50% !important;
@@ -133,76 +137,52 @@
   list-style: none !important;
   text-align: center !important;
   width: 100% !important;
-  padding: 60px 0 !important;
+  padding: 0 !important;
   margin: 0 !important;
-  background: rgba(5, 7, 15, 0.75) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  opacity: 0 !important;
-  transform: scaleY(0.8) !important;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease !important;
-}
-.magic-menu[open] .magic-list {
-  opacity: 1 !important;
-  transform: scaleY(1) !important;
-}
-@starting-style {
-  .magic-menu[open] .magic-list { opacity: 0 !important; transform: scaleY(0.8) !important; }
 }
 
 .magic-list > li {
   position: relative !important;
-  margin: 22px 0 !important;
+  margin: 28px 0 !important;
   padding: 0 !important;
   opacity: 0 !important;
+  transform: scale(0.6) !important;
   letter-spacing: 0.4em !important;
-  transition: letter-spacing 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease !important;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              letter-spacing 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              opacity 0.4s ease !important;
 }
 .magic-menu[open] .magic-list > li {
   opacity: 1 !important;
+  transform: scale(1) !important;
   letter-spacing: 0.08em !important;
-  transition-delay: calc(var(--item-index) * 0.06s + 0.12s) !important;
+  transition-delay: calc(var(--item-index) * 0.05s + 0.1s) !important;
 }
 @starting-style {
-  .magic-menu[open] .magic-list > li { opacity: 0 !important; letter-spacing: 0.4em !important; }
+  .magic-menu[open] .magic-list > li { opacity: 0 !important; transform: scale(0.6) !important; letter-spacing: 0.4em !important; }
 }
 
-/* LINK DESIGN */
+/* TYPOGRAPHY */
 .magic-theater a, 
-.magic-shadow-trigger,
 .magic-submenu-trigger {
   color: var(--variation-color) !important;
-  font-size: 2.1rem !important;
+  font-size: 2.2rem !important;
   font-weight: 900 !important;
   text-decoration: none !important;
   display: inline-block !important;
   padding: 6px 24px !important;
   background: transparent !important;
   position: relative !important;
-  transition: color 0.2s, transform 0.2s !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .magic-list > li:hover a,
 .magic-list > li:hover .magic-submenu-trigger {
   color: #ffffff !important;
-  transform: scale(1.06) !important; 
-  text-shadow: 0 0 12px var(--balance-color) !important;
+  letter-spacing: 0.15em !important;
+  text-shadow: 0 0 15px var(--balance-color) !important;
 }
-.magic-theater a::after {
-  content: "" !important;
-  position: absolute !important;
-  bottom: -2px !important;
-  left: 10% !important;
-  width: 80% !important;
-  height: 2.5px !important;
-  background: linear-gradient(90deg, transparent, var(--main-color), var(--balance-color), transparent) !important;
-  transform: scaleX(0) !important;
-  transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1) !important;
-}
-.magic-list > li:hover a::after { transform: scaleX(1) !important; }
 
-/* SUBMENU */
+/* SUBMENU MULTI-DIMENSION */
 .magic-submenu-trigger { padding-right: 40px !important; }
 .magic-submenu-trigger::after {
   content: "+" !important;
@@ -223,18 +203,17 @@
   list-style: none !important;
   padding: 0 !important;
   margin: 12px auto 0 auto !important;
-  width: 80% !important;
-  background: rgba(0, 0, 0, 0.3) !important; 
-  border-left: 3px solid var(--main-color) !important;
-  border-radius: 6px !important;
+  width: 60% !important;
+  background: rgba(0, 0, 0, 0.2) !important; 
+  border-left: 2px solid var(--main-color) !important;
   display: grid !important;
   grid-template-rows: 0fr !important;
-  transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
   opacity: 0 !important;
 }
 .magic-submenu-details[open] .magic-sub-list { grid-template-rows: 1fr !important; opacity: 1 !important; padding: 10px 0 !important; }
-.magic-sub-list li { overflow: hidden !important; margin: 6px 0 !important; background: transparent !important; transform: translateY(8px) !important; opacity: 0 !important; transition: all 0.3s ease !important; }
-.magic-submenu-details[open] .magic-sub-list li { transform: translateY(0) !important; opacity: 1 !important; transition-delay: 0.05s !important; }
-.magic-sub-list a { font-size: 1.35rem !important; font-weight: 700 !important; color: var(--variation-color) !important; opacity: 0.7 !important; }
+.magic-sub-list li { overflow: hidden !important; margin: 6px 0 !important; background: transparent !important; opacity: 0 !important; transition: opacity 0.3s ease !important; }
+.magic-submenu-details[open] .magic-sub-list li { opacity: 1 !important; transition-delay: 0.05s !important; }
+.magic-sub-list a { font-size: 1.4rem !important; font-weight: 700 !important; color: var(--variation-color) !important; opacity: 0.6 !important; }
 .magic-sub-list a::after { display: none !important; }
 .magic-sub-list li:hover a { color: #ffffff !important; opacity: 1 !important; transform: translateX(6px) !important; }
