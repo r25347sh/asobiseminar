@@ -19,15 +19,15 @@
 }
 
 /* ==========================================
-   2. 魔導特異点：ルーン・トリガー（ボタン）
+   2. 魔導特異点：ルーン・トリガー（極光レーザー仕様）
    ========================================== */
 .magic-trigger {
   position: fixed !important;
   top: 25px !important;
   left: 25px !important;
-  z-index: 200000000 !important;
-  width: 50px !important;
-  height: 50px !important;
+  z-index: 200000000 !important; /* 何があっても最前面 */
+  width: 56px !important;  /* 押しやすいようにサイズを少し拡大 */
+  height: 56px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -35,81 +35,131 @@
 }
 
 /* 
-  【尋常じゃない工夫1】通常時は「正方形の結晶」。
-  テーマのメインカラー（--main-color）を吸い込みながら、
-  呼吸するようにゆっくりとパルス（明滅）し続ける静寂のコア。
+  【尋常じゃない工夫1 / 視認性絶対死守】
+  外部CSSの背景が白だろうが黒だろうが、100%絶対に見失わない、
+  重厚な「超漆黒（または極薄ガラス）」の背景をベースに敷き詰めます。
+  その周囲を、テーマカラー（--main-color）の太い枠線で囲むことで視認性を最大化。
 */
 .trigger-rune {
   position: relative !important;
-  width: 24px !important;
-  height: 24px !important;
-  border: 1.5px solid var(--main-color) !important;
-  transform: rotate(45deg) !important; /* ひし形のクリスタル */
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  animation: runePulse 4s ease-in-out infinite alternate !important;
+  width: 50px !important; /* 押しやすいサイズ */
+  height: 50px !important;
+  background: #0f172a !important; /* 💡 どんな背景の上でも絶対に目立つ「ディープネイビーブラック」 */
+  border: 3px solid var(--main-color) !important; /* テーマのメインカラーが外枠としてクッキリ輝く */
+  border-radius: 12px !important; /* 高級感のあるスマートな角丸 */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 
+              inset 0 0 10px rgba(255, 255, 255, 0.05) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important; /* 内部を走るレーザー光線を切り取るための結界 */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-@keyframes runePulse {
-  0% { transform: rotate(45deg) scale(0.9); opacity: 0.6; border-color: var(--main-color); }
-  100% { transform: rotate(45deg) scale(1.05); opacity: 1; border-color: var(--balance-color); box-shadow: 0 0 15px var(--main-color); }
-}
-
-/* ひし形の中央を貫く、1本の絶対的な光の糸 */
-.rune-line {
-  position: absolute !important;
-  top: 50% !important;
-  left: -4px !important;
-  width: 30px !important;
-  height: 1.5px !important;
-  background-color: var(--variation-color) !important;
-  transform: translateY(-50%) rotate(-45deg) !important; /* 水平に見えるように逆回転で固定 */
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-/* ── ホバーした瞬間：幾何学の覚醒（起動） ── */
 /* 
-  【尋常じゃない工夫2】指先が触れた瞬間、ひし形の外枠が「完全に消滅（消失）」し、
-  中央の光の糸が、まるでレーザーカッターのように真横へシャキーン！と1.5倍（45px）に鋭利に伸長する。
-  余計な3本線のガチャガチャしたダサい動きを過去にする、圧倒的未来感。
+  【尋常じゃない工夫2 / 限界突破ギミック：極光ネオンレーザー】
+  ホバーしていない時は、ボタンの枠線の「裏側」に鋭い光（グラデーション）を仕込んでおきます。
+*/
+.trigger-rune::before {
+  content: "" !important;
+  position: absolute !important;
+  width: 150% !important;
+  height: 150% !important;
+  /* メインカラーとバランスカラーを極限までブレンドした、眩しい光の帯 */
+  background: conic-gradient(from 0deg, transparent 20%, var(--main-color), var(--balance-color), transparent 80%) !important;
+  opacity: 0 !important; /* 通常時は見えない */
+  transition: opacity 0.3s ease !important;
+  animation: laserSpin 1.5s linear infinite !important; /* 常に裏側で超高速回転 */
+}
+
+@keyframes laserSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── ホバーした瞬間：極光シークエンス起動 ── */
+/* 
+  【尋常じゃない工夫3】指先が触れた瞬間、ボタンの外枠がパッとテーマの「バランスカラー」に変色。
+  同時に、ボタンの四角いフチに沿って、ネオンレーザーが【ぐるぐるぐるぐる！！】と
+  超ハイスピードで光の速さで走り出します。視認性が高いだけでなく、お客さんが声を出して驚く圧倒的ギミック。
 */
 .magic-trigger:hover .trigger-rune {
-  border-color: transparent !important;
-  box-shadow: none !important;
-  transform: rotate(225deg) scale(1.2) !important; /* 外枠を回転させながらフェードアウト */
-  opacity: 0 !important;
+  transform: scale(1.08) !important; /* 押しやすく手前に少し拡大 */
+  border-color: var(--balance-color) !important; /* ホバーで枠線が変化 */
+  box-shadow: 0 0 25px var(--main-color), 
+              0 0 50px var(--balance-color) !important; /* 周囲に圧倒的な光のフレアを放出 */
 }
 
+/* ホバーでレーザー光線を表面に一瞬で炸裂させる */
+.magic-trigger:hover .trigger-rune::before {
+  opacity: 1 !important;
+}
+
+/* ── ボタン中央に鎮座する、光の魔導コア（結晶ライン） ── */
+.rune-line {
+  position: relative !important;
+  width: 24px !important;
+  height: 3px !important;
+  background-color: var(--variation-color) !important; /* テーマの文字色に連動 */
+  border-radius: 4px !important;
+  z-index: 3 !important; /* レーザー光線（before）よりも手前に配置して、絶対に見えるように */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 0 8px var(--main-color) !important;
+}
+/* コアラインの上下に、絶対に見失わないシャープな2本線を配置 */
+.rune-line::before,
+.rune-line::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  width: 24px !important;
+  height: 3px !important;
+  background-color: var(--variation-color) !important;
+  border-radius: 4px !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.rune-line::before { top: -8px !important; }
+.rune-line::after  { top: 8px !important; }
+
+/* 💡 【ホバー時のコア変形】3本線が中央に向かって「ギュッ」と凝縮して1本の極太ビームに融合 */
 .magic-trigger:hover .rune-line {
-  left: -10px !important;
-  width: 44px !important; /* 光の線が鋭く伸びる */
+  background-color: #ffffff !important;
+  filter: drop-shadow(0 0 6px var(--balance-color)) !important;
+}
+.magic-trigger:hover .rune-line::before { top: 0 !important; background-color: #ffffff !important; }
+.magic-trigger:hover .rune-line::after  { top: 0 !important; background-color: #ffffff !important; }
+
+/* ── 開錠状態（[open]）：完全なるクロス（✕）定着 ── */
+/* メニューを開いた時、レーザーの回転はピタッと止まり、完璧に美しい「✕」に定着します */
+.magic-menu[open] .magic-trigger {
+  transform: scale(0.9) !important;
+}
+.magic-menu[open] .trigger-rune {
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  background: rgba(0, 0, 0, 0.5) !important; /* メニューの闇に溶け込む */
+  box-shadow: none !important;
+}
+.magic-menu[open] .trigger-rune::before {
+  display: none !important; /* 開いたらレーザーは消灯 */
+}
+.magic-menu[open] .rune-line {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+/* 細い白ネオンの美しい✕印 */
+.magic-menu[open] .rune-line::before {
+  top: 0 !important;
+  transform: rotate(45deg) !important;
+  background-color: #ffffff !important;
+  filter: drop-shadow(0 0 8px var(--balance-color)) !important;
+}
+.magic-menu[open] .rune-line::after {
+  top: 0 !important;
+  transform: rotate(-45deg) !important;
   background-color: #ffffff !important;
   filter: drop-shadow(0 0 8px var(--balance-color)) !important;
 }
 
-/* ── 開錠状態（[open]）：時空の崩壊 ── */
-/* メニューが開かれた時、光の糸は「完全な直線のバツ印（✕）」へと変貌して中央に定着 */
-.magic-menu[open] .trigger-rune {
-  border-color: transparent !important;
-  box-shadow: none !important;
-  animation: none !important;
-  transform: rotate(0deg) !important;
-  opacity: 1 !important;
-}
-.magic-menu[open] .rune-line {
-  top: 50% !important;
-  left: 0 !important;
-  width: 24px !important;
-  height: 2px !important;
-  background-color: #ffffff !important;
-  transform: translateY(-50%) rotate(45deg) !important; /* 45度傾く */
-}
-.magic-menu[open] .rune-line::before {
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  background-color: #ffffff !important;
-  transform: rotate(90deg) !important; /* 十字に交差させて完璧な✕を作る */
-}
 
 /* ==========================================
    3. 生き物のように画面を侵食する「流体カオス」背景
