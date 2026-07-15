@@ -3,7 +3,7 @@ const cssFiles = [
   '/asobiseminar/gaibu/unpkg.css',
   '/asobiseminar/variable.css?v=2',
   '/asobiseminar/style.css',
-  '/asobiseminar/hamburgernav.css?v=16', // キャッシュ対策もバッチリ
+  '/asobiseminar/hamburgernav.css?v=19', // キャッシュ対策もバッチリ
 ];
 
 cssFiles.reverse().forEach(url => {
