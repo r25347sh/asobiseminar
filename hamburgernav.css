@@ -1,5 +1,5 @@
 /* ==========================================
-   1. 外部CSSを灰にする絶対不可侵のリセット
+   1. 外部CSSの存在を世界から消し去る絶対結界
    ========================================== */
 .magic-menu, .magic-menu * {
   box-sizing: border-box !important;
@@ -19,36 +19,40 @@
 }
 
 /* ==========================================
-   2. 魔導トリガー（異次元のコア）
+   2. 魔導特異点：羅針コア（ボタン）
    ========================================== */
 .magic-trigger {
   position: fixed !important;
   top: 25px !important;
   left: 25px !important;
   z-index: 200000000 !important;
-  width: 60px !important;
-  height: 60px !important;
+  width: 64px !important;
+  height: 64px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
 }
 
-/* 【超工夫1】ボタン自体がブラックホールのように空間の光を歪ませる */
+/* ボタン：脈動しながら永久に逆回転を繰り返す魔法陣 */
 .trigger-orb {
   position: absolute !important;
   inset: 0 !important;
   background: var(--accent-color) !important;
-  border: 2px dashed var(--main-color) !important; /* 破線にして魔法陣感を演出 */
+  border: 3px dotted var(--main-color) !important;
   border-radius: 50% !important;
-  box-shadow: 0 0 15px var(--main-color), 
-              inset 0 0 10px var(--balance-color) !important;
+  box-shadow: 0 0 20px var(--main-color), 
+              inset 0 0 15px var(--balance-color) !important;
   transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
-  animation: orbRotate 8s linear infinite !important; /* 常にゆっくり魔法陣が回る */
+  animation: corePulse 3s ease-in-out infinite alternate, coreRotate 16s linear infinite !important;
 }
 
-@keyframes orbRotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes corePulse {
+  0% { transform: scale(1); border-color: var(--main-color); }
+  100% { transform: scale(1.08); border-color: var(--balance-color); box-shadow: 0 0 35px var(--balance-color); }
+}
+@keyframes coreRotate {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
 }
 
 .magic-bar-box {
@@ -58,7 +62,6 @@
   z-index: 2 !important;
 }
 
-/* 3本線自体が脈動（パルス）する */
 .bar, .bar::before, .bar::after {
   position: absolute !important;
   left: 0 !important;
@@ -68,45 +71,46 @@
   transition: all 0.5s cubic-bezier(0.76, 0, 0.24, 1) !important;
   box-shadow: 0 0 8px var(--main-color) !important;
 }
-.bar { top: 6px !important; width: 24px !important; }
+.bar { top: 6.5px !important; width: 24px !important; }
 .bar::before { content: "" !important; top: -8px !important; width: 14px !important; }
 .bar::after  { content: "" !important; top: 8px !important; width: 19px !important; }
 
-/* トリガーホバー時：魔力が臨界点を突破して拡大 */
 .magic-trigger:hover .trigger-orb {
-  transform: scale(1.2) !important;
-  border-style: solid !important;
+  transform: scale(1.25) !important;
+  border-style: double !important;
+  border-width: 4px !important;
   border-color: var(--variation-color) !important;
-  box-shadow: 0 0 30px var(--main-color), 0 0 50px var(--balance-color) !important;
+  box-shadow: 0 0 40px var(--main-color), 0 0 70px var(--balance-color), inset 0 0 20px #fff !important;
 }
 
-/* [open]：異次元が開いた瞬間の大破裂変形 */
+/* [open]：クロス・フラッシュ変形 */
 .magic-menu[open] .magic-trigger {
-  transform: scale(0.9) !important;
+  transform: scale(0.85) !important;
 }
 .magic-menu[open] .trigger-orb {
   border-color: transparent !important;
   background: transparent !important;
   box-shadow: none !important;
+  animation: none !important;
 }
 .magic-menu[open] .bar { background-color: transparent !important; box-shadow: none !important; }
 .magic-menu[open] .bar::before { 
-  transform: rotate(135deg) !important; 
+  transform: rotate(225deg) !important; 
   top: 0 !important; 
   width: 26px !important; 
   background-color: var(--variation-color) !important; 
-  filter: drop-shadow(0 0 10px var(--main-color)) !important;
+  filter: drop-shadow(0 0 12px var(--balance-color)) brightness(2) !important;
 }
 .magic-menu[open] .bar::after { 
-  transform: rotate(-135deg) !important; 
+  transform: rotate(-225deg) !important; 
   top: 0 !important; 
   width: 26px !important; 
   background-color: var(--variation-color) !important; 
-  filter: drop-shadow(0 0 10px var(--main-color)) !important;
+  filter: drop-shadow(0 0 12px var(--balance-color)) brightness(2) !important;
 }
 
 /* ==========================================
-   3. 【超工夫2】生き物のように画面を侵食する「流体カオス」背景
+   3. 生き物のように画面を侵食する「流体カオス」背景
    ========================================== */
 .magic-portal-bg {
   position: fixed !important;
@@ -116,8 +120,7 @@
   overflow: hidden !important;
   transform: scale(0) !important;
   opacity: 0 !important;
-  border-radius: 50% !important; /* 最初は極小の球体 */
-  /* 左上のボタンを起点に宇宙が膨張する */
+  border-radius: 50% !important; 
   transform-origin: 55px 55px !important; 
   transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1), 
               opacity 0.6s ease, 
@@ -126,7 +129,7 @@
   display: none !important;
 }
 
-/* 【超工夫3】背景の内部で、テーマカラーの魔導の霧（グラデーション）がうごめき続ける */
+/* 背景内部：魔導の霧がうごめき続ける */
 .magic-portal-bg::before,
 .magic-portal-bg::after {
   content: "" !important;
@@ -137,7 +140,7 @@
   left: -50vw !important;
   background: radial-gradient(circle, var(--main-color) 0%, transparent 60%),
               radial-gradient(circle, var(--balance-color) 0%, transparent 60%) !important;
-  mix-blend-mode: screen !important; /* 色同士が美しく溶け合うブレンドモード */
+  mix-blend-mode: screen !important; 
   animation: bgNebula 12s infinite linear !important;
   opacity: 0.6 !important;
 }
@@ -157,12 +160,11 @@
   100% { transform: rotate(0deg) translate(0, 0); }
 }
 
-/* 展開された瞬間、完全なる宇宙空間が画面をジャック */
 .magic-menu[open] .magic-portal-bg {
   display: block !important;
   opacity: 1 !important;
   transform: scale(1) !important;
-  border-radius: 0% !important; /* 四角形に変貌して画面を覆いつくす */
+  border-radius: 0% !important; 
 }
 
 @starting-style {
@@ -174,15 +176,18 @@
 }
 
 /* ==========================================
-   4. 【超工夫4】絶対文字空間（ホログラム・シアター）
+   4. 【大修正】絶対文字空間（100%ド真ん中固定）
    ========================================== */
 .magic-theater {
   position: fixed !important;
-  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
   z-index: 9999999 !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: center !important; /* 💡 確実に画面の横方向中央 */
   background: transparent !important;
   pointer-events: none !important;
 }
@@ -193,40 +198,46 @@
   text-align: center !important;
   width: 100% !important;
   max-width: 340px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important; /* 💡 確実に画面の縦方向中央 */
+  height: auto !important;
 }
 
-/* 【超工夫5】文字が暗闇から1つずつ「超高速スピン回転」しながら、光を纏って射出される */
+/* 【修正】縦に跳ね飛ばされないよう、安全な平面ウェーブに強制補正 */
 .magic-list > li {
   position: relative !important;
-  margin: 30px 0 !important;
+  margin: 20px 0 !important; /* 間隔を綺麗に統一 */
+  padding: 0 !important;
   opacity: 0 !important;
-  transform: translateY(60px) rotateX(90deg) scale(0.5) !important; /* 擬似3Dの底から湧き出る */
-  filter: saturate(0) brightness(5) !important; /* 最初は眩しすぎる白い光の塊 */
-  transition: transform 0.7s cubic-bezier(0.34, 1.76, 0.64, 1), 
+  /* 💡 3D回転を廃止し、極小（scale0.3）からフワッとド真ん中に広がるモーションに */
+  transform: scale(0.3) translateY(30px) !important; 
+  filter: blur(15px) brightness(4) !important; /* 光の塊から実体化する演出はキープ */
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
               opacity 0.5s ease, 
-              filter 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .magic-menu[open] .magic-list > li {
   opacity: 1 !important;
-  transform: translateY(0) rotateX(0) scale(1) !important;
-  filter: saturate(1) brightness(1) !important; /* 正しいテーマの色に収束する */
-  transition-delay: calc(var(--item-index) * 0.08s + 0.2s) !important;
+  transform: scale(1) translateY(0) !important;
+  filter: blur(0px) brightness(1) !important; 
+  transition-delay: calc(var(--item-index) * 0.08s + 0.15s) !important;
 }
 
 @starting-style {
   .magic-menu[open] .magic-list > li { 
     opacity: 0 !important; 
-    transform: translateY(60px) rotateX(90deg) scale(0.5) !important;
-    filter: saturate(0) brightness(5) !important;
+    transform: scale(0.3) translateY(30px) !important;
+    filter: blur(15px) brightness(4) !important;
   }
 }
 
-/* ── 【超工夫6】サイバー・グリッチ・ホバー ── */
+/* ── サイバー・グリッチ・ホバー ── */
 .magic-theater a, 
 .magic-submenu-trigger {
   color: var(--variation-color) !important;
-  font-size: 2.3rem !important;
+  font-size: 2.2rem !important;
   font-weight: 900 !important;
   letter-spacing: 0.1em !important;
   text-decoration: none !important;
@@ -237,7 +248,7 @@
   transition: all 0.2s ease !important;
 }
 
-/* ホバー：文字のコピー（残像）がズレて浮かび上がるグリッチ演出（CSSのみ） */
+/* data-text を使った残像分裂 */
 .magic-theater a::before,
 .magic-submenu-trigger::before {
   content: attr(data-text) !important;
@@ -252,17 +263,17 @@
 .magic-list > li:hover a,
 .magic-list > li:hover .magic-submenu-trigger {
   color: #ffffff !important;
-  transform: scale(1.15) !important;
+  transform: scale(1.1) !important;
   text-shadow: 0 0 10px #ffffff,
                0 0 25px var(--balance-color),
                0 0 50px var(--main-color) !important;
-  animation: glitchText 0.3s linear infinite !important; /* ホバー中、電子の妖精のように震える */
+  animation: glitchText 0.3s linear infinite !important; 
 }
 
 @keyframes glitchText {
-  0% { transform: scale(1.15) translate(1px, -1px); }
-  50% { transform: scale(1.15) translate(-1px, 1px); }
-  100% { transform: scale(1.15) translate(0, 0); }
+  0% { transform: scale(1.1) translate(1px, -1px); }
+  50% { transform: scale(1.1) translate(-1px, 1px); }
+  100% { transform: scale(1.1) translate(0, 0); }
 }
 
 .magic-list > li:hover a::before,
@@ -277,7 +288,7 @@
   100% { transform: translate(-1px, -1px); }
 }
 
-/* ── ホバー時に足元で大爆発する光の衝撃波 ── */
+/* 足元で大爆発する光の衝撃波 */
 .magic-theater a::after {
   content: "" !important;
   position: absolute !important;
@@ -295,23 +306,22 @@
 }
 
 /* ==========================================
-   5. メニュー内メニュー（Groups：ディメンション・ゲート）
+   5. メニュー内メニュー（Groups）
    ========================================== */
 .magic-submenu-trigger {
   padding-right: 45px !important;
 }
 .magic-submenu-trigger::after {
-  content: "★" !important; /* 限界突破：星の紋章へ */
-  position: absolute !important;
-  right: 12px !important;
-  top: 50% !important;
-  transform: translateY(-50%) scale(0.8) !important;
-  font-size: 1.2rem !important;
-  color: var(--balance-color) !important;
-  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+content: "★" !important;
+position: absolute !important;
+right: 12px !important;
+top: 50% !important;
+transform: translateY(-50%) scale(0.8) !important;
+font-size: 1.2rem !important;
+color: var(--balance-color) !important;
+transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 text-shadow: 0 0 8px var(--balance-color) !important;
 }
-/* Groupsが開いた時に星が激しく輝いて十字にクロスするトランスフォーム */
 .magic-submenu-details[open] .magic-submenu-trigger::after {
 transform: translateY(-50%) rotate(225deg) scale(1.3) !important;
 color: #ffffff !important;
