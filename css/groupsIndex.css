@@ -1,0 +1,59 @@
+/* css/groupsIndex.css - グループインデックスページ専用スタイル */
+.group-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 32px;
+  border: 2px solid var(--main-color);
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.group-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--main-color), var(--balance-color));
+  transition: width 0.4s ease;
+}
+
+.group-card:hover {
+  transform: translateX(8px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.group-card:hover::after {
+  width: 100%;
+}
+
+.group-title {
+  color: var(--main-color);
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.group-description {
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.group-link {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 20px;
+  background: var(--main-color);
+  color: var(--variation-color);
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.group-link:hover {
+  background: var(--balance-color);
+  transform: scale(1.05);
+}

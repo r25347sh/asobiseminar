@@ -1,0 +1,32 @@
+/* css/settings.css - テーマ設定ページ専用スタイル */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255,255,255,0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(255,255,255,0);
+  }
+}
+
+#save-btn:hover {
+  animation: pulse 0.6s ease-out;
+}
+
+#theme-select:focus {
+  box-shadow: 0 0 0 3px var(--main-color), inset 0 0 0 1px var(--main-color);
+}
+
+#theme-preview {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
