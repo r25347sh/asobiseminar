@@ -1,16 +1,23 @@
  - index.html
- - style.css
- - index.css
+ - settigs.html
+ - themecolor.json
  - sitemap.html
  - subpages/
    - members.html
-   - members.css
    - groups/
      - index.html
-     - index.css
      - one.html
-     - one.css
      - two.html
-     - two.css
      - three.html
-     - three.css
+ - js/
+   - load-css.js
+   - setThemeColor.js
+ - css/
+   - style.css
+   - variable.css
+   - index.css
+   - members.css
+   - groupsIndex.css
+   - one.css
+   - two.css
+   - three.css
