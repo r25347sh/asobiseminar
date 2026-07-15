@@ -1,0 +1,308 @@
+/* マークアッププログラマー 専用CSS */
+
+.programmer-main {
+  padding: 0;
+}
+
+.programmer-hero {
+  background: linear-gradient(135deg, var(--main-color), var(--balance-color));
+  padding: 80px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.programmer-hero::before {
+  content: '💻';
+  position: absolute;
+  font-size: 200px;
+  opacity: 0.08;
+  transform: rotate(-30deg);
+  top: 50%;
+  left: 50%;
+  margin-left: -100px;
+  margin-top: -100px;
+}
+
+.programmer-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.programmer-title {
+  font-size: 3.5rem;
+  margin: 0;
+  color: var(--variation-color);
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.programmer-subtitle {
+  font-size: 1.4rem;
+  margin: 12px 0 20px 0;
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+}
+
+.programmer-tagline {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.programmer-tag {
+  background: rgba(255,255,255,0.2);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--variation-color);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.programmer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+.programmer-mission {
+  background: rgba(255,255,255,0.05);
+  padding: 40px;
+  border-radius: 12px;
+  border-left: 4px solid var(--main-color);
+  margin-bottom: 60px;
+  text-align: center;
+}
+
+.programmer-mission h2 {
+  color: var(--main-color);
+  font-size: 1.8rem;
+  margin-top: 0;
+}
+
+.programmer-mission p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  opacity: 0.9;
+}
+
+.programmer-skills {
+  margin-bottom: 60px;
+}
+
+.programmer-skills h2 {
+  color: var(--main-color);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.programmer-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.programmer-tech-card {
+  background: rgba(255,255,255,0.05);
+  padding: 32px 24px;
+  border-radius: 12px;
+  border: 2px solid var(--balance-color);
+  text-align: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.programmer-tech-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--main-color);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
+
+.programmer-tech-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.programmer-tech-card h3 {
+  color: var(--main-color);
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+}
+
+.programmer-tech-card p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.programmer-projects {
+  margin-bottom: 60px;
+  padding-bottom: 60px;
+  border-bottom: 2px solid var(--balance-color);
+}
+
+.programmer-projects h2 {
+  color: var(--main-color);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.programmer-project-list {
+  display: grid;
+  gap: 16px;
+}
+
+.programmer-project-item {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  border-left: 4px solid var(--main-color);
+  transition: all 0.3s ease;
+}
+
+.programmer-project-item:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateX(8px);
+}
+
+.programmer-project-marker {
+  font-size: 1.5rem;
+  color: var(--main-color);
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.programmer-project-item h4 {
+  margin: 0 0 8px 0;
+  color: var(--main-color);
+  font-size: 1.1rem;
+}
+
+.programmer-project-item p {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
+
+.programmer-philosophy {
+  margin-bottom: 60px;
+}
+
+.programmer-philosophy h2 {
+  color: var(--main-color);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.programmer-philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.programmer-philosophy-item {
+  padding: 32px 24px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  border: 2px solid var(--balance-color);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.programmer-philosophy-item:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: var(--main-color);
+  transform: translateY(-4px);
+}
+
+.programmer-philosophy-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--main-color);
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+.programmer-philosophy-item h4 {
+  color: var(--main-color);
+  margin: 12px 0 8px 0;
+}
+
+.programmer-philosophy-item p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.programmer-tools {
+  background: rgba(255,255,255,0.03);
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--balance-color);
+}
+
+.programmer-tools h2 {
+  color: var(--main-color);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.programmer-tools-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.programmer-tool-badge {
+  background: linear-gradient(135deg, var(--main-color), var(--balance-color));
+  color: var(--variation-color);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.programmer-tool-badge:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+  .programmer-hero {
+    padding: 60px 24px;
+  }
+  
+  .programmer-title {
+    font-size: 2.5rem;
+  }
+  
+  .programmer-container {
+    padding: 40px 24px;
+  }
+  
+  .programmer-tech-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .programmer-philosophy-grid {
+    grid-template-columns: 1fr;
+  }
+}
