@@ -129,7 +129,7 @@
     "name": "ChampagneCocktail (黄昏のバーカウンター)",
     "maincolor": "#f7c4b9",
     "balancecolor": "#f9cfbd",
-    "variationcolor": "# dadadb",
+    "variationcolor": "#dadadb",
     "accentcolor": "#375c68"
   },
   {
@@ -208,5 +208,250 @@
     "balancecolor": "#ffe100",
     "variationcolor": "#8ec31e",
     "accentcolor": "#002f7b"
+  },
+  {
+    "name": "Teacher (教員テーマ)",
+    "maincolor": "#1e40af",
+    "balancecolor": "#7c3aed",
+    "variationcolor": "#f8fafc",
+    "accentcolor": "#082f49"
+  },
+  {
+    "name": "Coordinator (コーディネーター)",
+    "maincolor": "#d97706",
+    "balancecolor": "#10b981",
+    "variationcolor": "#fffbeb",
+    "accentcolor": "#451a03"
+  },
+  {
+    "name": "Group1 (グループ1)",
+    "maincolor": "#06b6d4",
+    "balancecolor": "#0891b2",
+    "variationcolor": "#ecf0f1",
+    "accentcolor": "#164e63"
+  },
+  {
+    "name": "Group2 (グループ2)",
+    "maincolor": "#ec4899",
+    "balancecolor": "#db2777",
+    "variationcolor": "#fce7f3",
+    "accentcolor": "#500724"
+  },
+  {
+    "name": "Group3 (グループ3)",
+    "maincolor": "#22c55e",
+    "balancecolor": "#16a34a",
+    "variationcolor": "#f0fdf4",
+    "accentcolor": "#1b4332"
+  },
+  {
+    "name": "TeacherElite (教員 - エレガント)",
+    "maincolor": "#4f46e5",
+    "balancecolor": "#6366f1",
+    "variationcolor": "#f0f4ff",
+    "accentcolor": "#1e1b4b"
+  },
+  {
+    "name": "CoordinatorWarm (コーディネーター - 温かみ)",
+    "maincolor": "#ea580c",
+    "balancecolor": "#f97316",
+    "variationcolor": "#fff7ed",
+    "accentcolor": "#3f1801"
+  },
+  {
+    "name": "Group1Cool (グループ1 - クール)",
+    "maincolor": "#0369a1",
+    "balancecolor": "#0284c7",
+    "variationcolor": "#e0f2fe",
+    "accentcolor": "#082e4a"
+  },
+  {
+    "name": "Group2Vivid (グループ2 - ビビッド)",
+    "maincolor": "#be185d",
+    "balancecolor": "#ec4899",
+    "variationcolor": "#fce7f3",
+    "accentcolor": "#3f092c"
+  },
+  {
+    "name": "Group3Natural (グループ3 - ナチュラル)",
+    "maincolor": "#15803d",
+    "balancecolor": "#22c55e",
+    "variationcolor": "#f0fdf4",
+    "accentcolor": "#1b4332"
+  },
+  {
+    "name": "FutureTech (近未来技術)",
+    "maincolor": "#00d9ff",
+    "balancecolor": "#b200ff",
+    "variationcolor": "#f0f9ff",
+    "accentcolor": "#0a0e27"
+  },
+  {
+    "name": "SoftDream (柔らかな夢)",
+    "maincolor": "#ffc0cb",
+    "balancecolor": "#ffb6c1",
+    "variationcolor": "#fff0f5",
+    "accentcolor": "#3e1d2e"
+  },
+  {
+    "name": "NaturalWood (自然な木)",
+    "maincolor": "#8b4513",
+    "balancecolor": "#a0826d",
+    "variationcolor": "#faf6f0",
+    "accentcolor": "#2c1810"
+  },
+  {
+    "name": "DeepSpace (深い宇宙)",
+    "maincolor": "#1f2937",
+    "balancecolor": "#3b82f6",
+    "variationcolor": "#e5e7eb",
+    "accentcolor": "#0f172a"
+  },
+  {
+    "name": "BurningFire (燃える炎)",
+    "maincolor": "#ff4500",
+    "balancecolor": "#ffa500",
+    "variationcolor": "#fff8dc",
+    "accentcolor": "#330000"
+  },
+  {
+    "name": "IcebergBlue (氷山ブルー)",
+    "maincolor": "#00bfff",
+    "balancecolor": "#87ceeb",
+    "variationcolor": "#f0ffff",
+    "accentcolor": "#001f3f"
+  },
+  {
+    "name": "RoyalPurple (ロイヤルパープル)",
+    "maincolor": "#663399",
+    "balancecolor": "#9370db",
+    "variationcolor": "#f8f8ff",
+    "accentcolor": "#2d1b4e"
+  },
+  {
+    "name": "SunsetGold (夕焼けゴールド)",
+    "maincolor": "#ffa500",
+    "balancecolor": "#ff6347",
+    "variationcolor": "#fffacd",
+    "accentcolor": "#4d2000"
+  },
+  {
+    "name": "MintGreen (ミントグリーン)",
+    "maincolor": "#98ff98",
+    "balancecolor": "#00fa9a",
+    "variationcolor": "#f0fff0",
+    "accentcolor": "#1a3a2a"
+  },
+  {
+    "name": "ChocolateBrown (チョコレートブラウン)",
+    "maincolor": "#6f4e37",
+    "balancecolor": "#8b6f47",
+    "variationcolor": "#faebd7",
+    "accentcolor": "#2b1810"
+  },
+  {
+    "name": "TurquoiseDream (ターコイズドリーム)",
+    "maincolor": "#40e0d0",
+    "balancecolor": "#20b2aa",
+    "variationcolor": "#e0ffff",
+    "accentcolor": "#0a3a32"
+  },
+  {
+    "name": "RosePetal (バラの花びら)",
+    "maincolor": "#ff69b4",
+    "balancecolor": "#ff1493",
+    "variationcolor": "#fff0f5",
+    "accentcolor": "#3e0014"
+  },
+  {
+    "name": "CloudWhite (雲のホワイト)",
+    "maincolor": "#f5f5f5",
+    "balancecolor": "#dcdcdc",
+    "variationcolor": "#000000",
+    "accentcolor": "#333333"
+  },
+  {
+    "name": "DarkMatter (ダークマター)",
+    "maincolor": "#0a0a0a",
+    "balancecolor": "#1a1a1a",
+    "variationcolor": "#e0e0e0",
+    "accentcolor": "#000000"
+  },
+  {
+    "name": "SilverMoon (銀色の月)",
+    "maincolor": "#c0c0c0",
+    "balancecolor": "#a9a9a9",
+    "variationcolor": "#000000",
+    "accentcolor": "#1a1a1a"
+  },
+  {
+    "name": "SkyBlue (空色)",
+    "maincolor": "#87ceeb",
+    "balancecolor": "#b0e0e6",
+    "variationcolor": "#000080",
+    "accentcolor": "#e0f6ff"
+  },
+  {
+    "name": "DeepRed (深紅)",
+    "maincolor": "#8b0000",
+    "balancecolor": "#dc143c",
+    "variationcolor": "#fff0f5",
+    "accentcolor": "#330000"
+  },
+  {
+    "name": "GoldenHour (ゴールデンアワー)",
+    "maincolor": "#ffd700",
+    "balancecolor": "#ffed4e",
+    "variationcolor": "#8b4513",
+    "accentcolor": "#1a1400"
+  },
+  {
+    "name": "VioletDream (バイオレットドリーム)",
+    "maincolor": "#ee82ee",
+    "balancecolor": "#da70d6",
+    "variationcolor": "#fff8ff",
+    "accentcolor": "#2d0052"
+  },
+  {
+    "name": "TealElegance (ティールエレガンス)",
+    "maincolor": "#008080",
+    "balancecolor": "#20b2aa",
+    "variationcolor": "#f0ffff",
+    "accentcolor": "#0a2e2a"
+  },
+  {
+    "name": "DesertSand (砂漠のサンド)",
+    "maincolor": "#e9967a",
+    "balancecolor": "#f4a460",
+    "variationcolor": "#fff5ee",
+    "accentcolor": "#3b2f1f"
+  },
+  {
+    "name": "NightSky (夜空)",
+    "maincolor": "#191970",
+    "balancecolor": "#4169e1",
+    "variationcolor": "#e6e6fa",
+    "accentcolor": "#000033"
+  },
+  {
+    "name": "OliveGreen (オリーブグリーン)",
+    "maincolor": "#6b8e23",
+    "balancecolor": "#9acd32",
+    "variationcolor": "#fffff0",
+    "accentcolor": "#1a1410"
+  },
+  {
+    "name": "CoralReef (珊瑚礁)",
+    "maincolor": "#ff7f50",
+    "balancecolor": "#ffb6c1",
+    "variationcolor": "#fff0f5",
+    "accentcolor": "#330011"
+  },
+  {
+    "name": "SlateGray (スレートグレー)",
+    "maincolor": "#708090",
+    "balancecolor": "#778899",
+    "variationcolor": "#f8f8ff",
+    "accentcolor": "#1a1a2a"
   }
 ]
