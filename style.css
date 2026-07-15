@@ -1,240 +1,99 @@
-/* ==========================================
-   1. サイト全体のベース設定（27色全自動同期）
-   ========================================== */
+/* css/style.css */
 html, body {
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
   min-height: 100vh !important;
-  /* 💡 27色のアクセントカラー（深みベース色）がサイト全体の背景色に自動適用 */
-  background-color: var(--accent-color) !important;
-  /* 💡 最も明るい対比色が全体の文字色になり、100%の視認性を絶対保証 */
-  color: var(--variation-color) !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--accent-color) !important; /* 27色の背景が自動適用 */
+  color: var(--variation-color) !important; /* 27色の最も明るい文字色が自動適用 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   transition: background-color 0.4s ease, color 0.4s ease !important;
 }
 
-/* リンク文字全体の共通ルール */
+/* 本文エリアのレイアウト固定設定 */
+.app-container {
+  padding: 100px 24px 60px 24px !important;
+  max-width: 680px !important;
+  margin: 0 auto !important;
+}
+
 a {
-  color: var(--main-color) !important; /* メインカラーでリンクを染める */
+  color: var(--main-color) !important;
+  text-decoration: none !important;
   transition: color 0.2s, opacity 0.2s !important;
 }
 a:hover {
-  color: var(--balance-color) !important; /* ホバーするとバランスカラーに変化 */
+  color: var(--balance-color) !important;
+  opacity: 0.9 !important;
 }
 
 /* ==========================================
-   2. 外部CSS（Picnic等）の暴走を100%ねじ伏せるナビリセット
+   🚨 ハンバーガーメニューの絶対安定構造（コピペ用）
    ========================================== */
-.magic-menu, .magic-menu * {
-  box-sizing: border-box !important;
-}
-.magic-menu summary,
-.magic-submenu-details summary {
-  list-style: none !important;
-  cursor: pointer !important;
-  outline: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-}
-.magic-menu summary::-webkit-details-marker,
-.magic-submenu-details summary::-webkit-details-marker {
-  display: none !important;
-}
+.magic-menu, .magic-menu * { box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; }
+.magic-menu summary, .magic-submenu-details summary { list-style: none !important; cursor: pointer !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
+.magic-menu summary::-webkit-details-marker, .magic-submenu-details summary::-webkit-details-marker { display: none !important; }
 
-/* ==========================================
-   3. 不動のハンバーガーボタン（左上完全固定）
-   ========================================== */
 .magic-trigger {
-  position: fixed !important;
-  top: 25px !important;
-  left: 25px !important;
-  z-index: 200000000 !important; 
-  width: 50px !important;
-  height: 50px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: transparent !important;
+  position: fixed !important; top: 25px !important; left: 25px !important; z-index: 200000000 !important;
+  width: 50px !important; height: 50px !important; display: flex !important; align-items: center !important; justify-content: center !important; background: transparent !important;
 }
-
-/* どんな背景の上でも絶対に見失わない、漆黒の丸座布団 */
 .magic-trigger > div:first-child {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 46px !important;
-  height: 46px !important;
-  background: #0f172a !important; 
-  border: 2px solid var(--main-color) !important; 
-  border-radius: 50% !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  position: absolute !important; inset: 0 !important; width: 46px !important; height: 46px !important;
+  background: #0f172a !important; border: 2px solid var(--main-color) !important; border-radius: 50% !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important; display: flex !important; align-items: center !important; justify-content: center !important;
   transition: transform 0.2s ease, border-color 0.2s !important;
 }
-.magic-trigger:hover > div:first-child {
-  transform: scale(1.06) !important;
-  border-color: var(--balance-color) !important;
-}
+.magic-trigger:hover > div:first-child { transform: scale(1.06) !important; border-color: var(--balance-color) !important; }
 
-/* 3本線消滅バグを100%防ぐ強制スパン指定 */
-.magic-trigger span,
-.magic-trigger span::before,
-.magic-trigger span::after {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  width: 20px !important;
-  height: 2.5px !important;
-  background-color: var(--variation-color) !important; 
-  border-radius: 2px !important;
-  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease !important;
+.magic-trigger span, .magic-trigger span::before, .magic-trigger span::after {
+  position: absolute !important; left: 50% !important; top: 50% !important; width: 20px !important; height: 2.5px !important;
+  background-color: var(--variation-color) !important; border-radius: 2px !important; transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease !important;
 }
 .magic-trigger span { transform: translate(-50%, -50%) !important; }
 .magic-trigger span::before { content: "" !important; transform: translate(-50%, -6.5px) !important; }
 .magic-trigger span::after  { content: "" !important; transform: translate(-50%, 4.5px) !important; }
 
-/* 開いた瞬間（[open]）の爆速✕変化 */
-.magic-menu[open] .magic-trigger > div:first-child {
-  background: rgba(0, 0, 0, 0.6) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  box-shadow: none !important;
-}
+.magic-menu[open] .magic-trigger > div:first-child { background: rgba(0, 0, 0, 0.6) !important; border-color: rgba(255, 255, 255, 0.4) !important; box-shadow: none !important; }
 .magic-menu[open] .magic-trigger span { background-color: transparent !important; }
 .magic-menu[open] .magic-trigger span::before { transform: translate(-50%, -50%) rotate(45deg) !important; background-color: #ffffff !important; }
 .magic-menu[open] .magic-trigger span::after  { transform: translate(-50%, -50%) rotate(-45deg) !important; background-color: #ffffff !important; }
 
-/* ==========================================
-   4. メニュー全画面マットフェード背景
-   ========================================== */
 .magic-portal-bg {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 999998 !important; 
+  position: fixed !important; inset: 0 !important; z-index: 999998 !important;
   background: linear-gradient(135deg, var(--accent-color) 0%, var(--main-color) 100%) !important;
-  opacity: 0 !important;
-  transition: opacity 0.3s ease, display 0.3s allow-keywords !important;
-  display: none !important;
+  opacity: 0 !important; transition: opacity 0.3s ease, display 0.3s allow-keywords !important; display: none !important;
 }
-.magic-menu[open] .magic-portal-bg {
-  display: block !important;
-  opacity: 0.98 !important; 
-}
-@starting-style {
-  .magic-menu[open] .magic-portal-bg { opacity: 0 !important; }
-}
+.magic-menu[open] .magic-portal-bg { display: block !important; opacity: 0.98 !important; }
+@starting-style { .magic-menu[open] .magic-portal-bg { opacity: 0 !important; } }
 
-/* ==========================================
-   5. 絶対中央固定・100%文字が消えない空間
-   ========================================== */
 .magic-theater {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important; /* 💡 物理的に画面のド真ん中に完全固定 */
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 999999 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important; 
-  background: transparent !important;
-  pointer-events: none !important;
+  position: fixed !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important;
+  width: 100vw !important; height: 100vh !important; z-index: 999999 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important; background: transparent !important; pointer-events: none !important;
 }
 .magic-menu[open] .magic-theater { pointer-events: auto !important; }
 
-.magic-list {
-  list-style: none !important;
-  text-align: center !important;
-  width: 100% !important;
-  max-width: 320px !important;
-}
+.magic-list { list-style: none !important; text-align: center !important; width: 100% !important; max-width: 320px !important; }
+.magic-list > li { position: relative !important; margin: 24px 0 !important; opacity: 0 !important; transform: translateY(15px) !important; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease !important; }
+.magic-menu[open] .magic-list > li { opacity: 1 !important; transform: translateY(0) !important; transition-delay: calc(var(--item-index) * 0.05s + 0.1s) !important; }
+@starting-style { .magic-menu[open] .magic-list > li { opacity: 0 !important; transform: translateY(15px) !important; } }
 
-/* 文字の洗練されたフェード浮き上がりウェーブ */
-.magic-list > li {
-  position: relative !important;
-  margin: 24px 0 !important;
-  opacity: 0 !important;
-  transform: translateY(15px) !important; 
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease !important;
+.magic-theater a, .magic-submenu-trigger {
+  color: var(--variation-color) !important; font-size: 2rem !important; font-weight: 800 !important; letter-spacing: 0.05em !important;
+  text-decoration: none !important; display: inline-block !important; padding: 6px 20px !important; background: transparent !important; transition: color 0.2s, transform 0.2s !important;
 }
-.magic-menu[open] .magic-list > li {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
-  transition-delay: calc(var(--item-index) * 0.05s + 0.1s) !important;
-}
-@starting-style {
-  .magic-menu[open] .magic-list > li { opacity: 0 !important; transform: translateY(15px) !important; }
-}
-
-/* メニューの文字 */
-.magic-theater .magic-list a, 
-.magic-submenu-trigger {
-  color: var(--variation-color) !important;
-  font-size: 2rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.05em !important;
-  text-decoration: none !important;
-  display: inline-block !important;
-  padding: 6px 20px !important;
-  background: transparent !important;
-  position: relative !important;
-  transition: color 0.2s, transform 0.2s !important;
-}
-.magic-list > li:hover a,
-.magic-list > li:hover .magic-submenu-trigger {
-  color: #ffffff !important;
-  transform: scale(1.04) !important; 
-  text-shadow: 0 0 10px var(--balance-color) !important;
-}
-
-/* 文字の下線 */
-.magic-theater .magic-list a::after {
-  content: "" !important;
-  position: absolute !important;
-  bottom: -2px !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 2px !important;
-  background: linear-gradient(90deg, var(--main-color), var(--balance-color)) !important;
-  box-shadow: 0 0 8px var(--main-color) !important;
-  transform: scaleX(0) !important;
-  transition: transform 0.3s ease !important;
-}
+.magic-list > li:hover a, .magic-list > li:hover .magic-submenu-trigger { color: #ffffff !important; transform: scale(1.04) !important; text-shadow: 0 0 10px var(--balance-color) !important; }
+.magic-theater a::after { content: "" !important; position: absolute !important; bottom: -2px !important; left: 0 !important; width: 100% !important; height: 2px !important; background: linear-gradient(90deg, var(--main-color), var(--balance-color)) !important; box-shadow: 0 0 8px var(--main-color) !important; transform: scaleX(0) !important; transition: transform 0.3s ease !important; }
 .magic-list > li:hover a::after { transform: scaleX(1) !important; }
 
-/* ==========================================
-   6. メキーワード：Groupsアコーディオン
-   ========================================== */
 .magic-submenu-trigger { padding-right: 40px !important; }
-.magic-submenu-trigger::after {
-  content: "+" !important;
-  position: absolute !important;
-  right: 15px !important;
-  top: 45% !important;
-  transform: translateY(-50%) !important;
-  font-size: 1.4rem !important;
-  font-weight: 300 !important;
-  color: var(--balance-color) !important;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-.magic-submenu-details[open] .magic-submenu-trigger::after {
-  transform: translateY(-50%) rotate(135deg) !important;
-  color: #ffffff !important;
-}
+.magic-submenu-trigger::after { content: "+" !important; position: absolute !important; right: 15px !important; top: 45% !important; transform: translateY(-50%) !important; font-size: 1.4rem !important; font-weight: 300 !important; color: var(--balance-color) !important; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important; }
+.magic-submenu-details[open] .magic-submenu-trigger::after { transform: translateY(-50%) rotate(135deg) !important; color: #ffffff !important; }
 
 .magic-sub-list {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 12px auto 0 auto !important;
-  width: 80% !important;
-  background: rgba(255, 255, 255, 0.05) !important; 
-  border-left: 2px solid var(--main-color) !important;
-  border-radius: 6px !important;
-  display: grid !important;
-  grid-template-rows: 0fr !important;
-  transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
-  opacity: 0 !important;
+  list-style: none !important; padding: 0 !important; margin: 12px auto 0 auto !important; width: 80% !important; background: rgba(255, 255, 255, 0.05) !important; border-left: 2px solid var(--main-color) !important; border-radius: 6px !important;
+  display: grid !important; grid-template-rows: 0fr !important; transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important; opacity: 0 !important;
 }
 .magic-submenu-details[open] .magic-sub-list { grid-template-rows: 1fr !important; opacity: 1 !important; padding: 10px 0 !important; }
 .magic-sub-list li { overflow: hidden !important; margin: 6px 0 !important; background: transparent !important; transform: translateY(8px) !important; opacity: 0 !important; transition: all 0.3s ease !important; }
