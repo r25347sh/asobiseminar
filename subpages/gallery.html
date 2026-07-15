@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ギャラリー - Asobi Lab.</title>
+  
+  <!-- 共通スクリプト -->
+  <script src="/asobiseminar/js/load-css.js"></script>
+  <script src="/asobiseminar/js/setThemeColor.js"></script>
+</head>
+<body>
+
+  <!-- ハンバーガーメニュー -->
+  <details class="magic-menu">
+    <summary class="magic-trigger" aria-label="空間を開放する">
+      <div></div>
+      <span></span>
+    </summary>
+    
+    <div class="magic-portal-bg"></div>
+
+    <nav class="magic-theater">
+      <ul class="magic-list">
+        <li style="--item-index: 1;"><a href="/asobiseminar/index.html">ホーム</a></li>
+        <li style="--item-index: 2;"><a href="/asobiseminar/subpages/members.html">メンバー</a></li>
+        <li style="--item-index: 3;" class="magic-has-submenu">
+          <details class="magic-submenu-details">
+            <summary class="magic-submenu-trigger">Groups（グループ）</summary>
+            <ul class="magic-sub-list">
+              <li><a href="/asobiseminar/subpages/groups/index.html">Group トップ</a></li>
+              <li><a href="/asobiseminar/subpages/groups/one.html">Group 1</a></li>
+              <li><a href="/asobiseminar/subpages/groups/two.html">Group 2</a></li>
+              <li><a href="/asobiseminar/subpages/groups/three.html">Group 3</a></li>
+            </ul>
+          </details>
+        </li>
+        <li style="--item-index: 4;"><a href="/asobiseminar/subpages/aboutsite.html">このサイトについて</a></li>
+        <li style="--item-index: 5;"><a href="/asobiseminar/subpages/gallery.html">ギャラリー</a></li>
+        <li style="--item-index: 6;"><a href="/asobiseminar/sitemap.html">サイトマップ</a></li>
+        <li style="--item-index: 7;"><a href="/asobiseminar/settigs.html">テーマ設定</a></li>
+      </ul>
+    </nav>
+  </details>
+
+  <main class="app-container">
+    <header style="margin-bottom: 60px;">
+      <h1 style="color: var(--main-color); font-size: 3rem; font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">📸 ギャラリー</h1>
+      <p style="opacity: 0.8; font-size: 1.1rem; margin: 0;">Asobi Lab. の活動を写真・映像でお届けします</p>
+    </header>
+
+    <section style="margin-bottom: 60px;">
+      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.8rem; font-weight: 800; margin-bottom: 30px;">📷 活動風景</h2>
+      
+      <div class="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px;">
+        <div class="gallery-item" style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; border: 1px solid var(--main-color);">
+          <div style="aspect-ratio: 1; background: linear-gradient(135deg, var(--main-color), var(--balance-color)); display: flex; align-items: center; justify-content: center; font-size: 4rem;">🖼️</div>
+          <div style="padding: 16px;">
+            <h3 style="color: var(--main-color); margin: 0 0 8px 0;">メンバー集合</h3>
+            <p style="opacity: 0.7; margin: 0; font-size: 0.9rem;">チーム全体での活動風景</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; border: 1px solid var(--main-color);">
+          <div style="aspect-ratio: 1; background: linear-gradient(135deg, var(--balance-color), var(--variation-color)); display: flex; align-items: center; justify-content: center; font-size: 4rem;">💻</div>
+          <div style="padding: 16px;">
+            <h3 style="color: var(--main-color); margin: 0 0 8px 0;">開発風景</h3>
+            <p style="opacity: 0.7; margin: 0; font-size: 0.9rem;">コーディングセッションの様子</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.3s ease; border: 1px solid var(--main-color);">
+          <div style="aspect-ratio: 1; background: linear-gradient(135deg, var(--variation-color), var(--main-color)); display: flex; align-items: center; justify-content: center; font-size: 4rem;">🎨</div>
+          <div style="padding: 16px;">
+            <h3 style="color: var(--main-color); margin: 0 0 8px 0;">デザイン会議</h3>
+            <p style="opacity: 0.7; margin: 0; font-size: 0.9rem;">UI/UXについての議論</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 60px;">
+      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.8rem; font-weight: 800; margin-bottom: 30px;">🎬 動画コンテンツ</h2>
+      
+      <div class="video-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; border: 1px solid var(--balance-color);">
+          <div style="aspect-ratio: 16/9; background: linear-gradient(135deg, var(--main-color), var(--balance-color)); display: flex; align-items: center; justify-content: center; font-size: 3rem; cursor: pointer; transition: all 0.3s ease;">▶️</div>
+          <div style="padding: 16px;">
+            <h3 style="color: var(--balance-color); margin: 0 0 8px 0;">Asobi Lab. 紹介</h3>
+            <p style="opacity: 0.7; margin: 0; font-size: 0.9rem;">ラボの日常とビジョンを30秒で</p>
+          </div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; border: 1px solid var(--balance-color);">
+          <div style="aspect-ratio: 16/9; background: linear-gradient(135deg, var(--balance-color), var(--variation-color)); display: flex; align-items: center; justify-content: center; font-size: 3rem; cursor: pointer; transition: all 0.3s ease;">▶️</div>
+          <div style="padding: 16px;">
+            <h3 style="color: var(--balance-color); margin: 0 0 8px 0;">テーマ切り替え実演</h3>
+            <p style="opacity: 0.7; margin: 0; font-size: 0.9rem;">27色のテーマをサクッと体験</p>
+          </div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; border: 1px solid var(--balance-color);">
+          <div style="aspect-ratio: 16/9; background: linear-gradient(135deg, var(--variation-color), var(--main-color)); display: flex; align-items: center; justify-content: center; font-size: 3rem; cursor: pointer; transition: all 0.3s ease;">▶️</div>
+          <div style="padding: 16px;">
+            <h3 style="color: var(--balance-color); margin: 0 0 8px 0;">テクノロジーの未来</h3>
+            <p style="opacity: 0.7; margin: 0; font-size: 0.9rem;">メンバーによるビジョン対談</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--main-color);">
+      <p style="opacity: 0.7; margin-bottom: 16px;">更新されたコンテンツをチェック</p>
+      <a href="/asobiseminar/index.html" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, var(--main-color), var(--balance-color)); color: var(--variation-color); border-radius: 8px; font-weight: bold; text-decoration: none; transition: all 0.3s ease;">➔ ホームに戻る</a>
+    </section>
+  </main>
+
+</body>
+</html>
