@@ -8,7 +8,6 @@
 
   // 2. ブラウザの現在のURLをチェックして、そのページ専用のCSSを自動で追加するタスク
   const currentPath = window.location.pathname;
-
   if (currentPath.includes('members.html')) {
     cssFiles.push('/asobiseminar/css/members.css?v=1');
   } 
