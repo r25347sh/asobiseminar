@@ -1,5 +1,5 @@
 /* ==========================================
-   1. 外部CSSの存在を世界から消し去る絶対結界
+   1. 外部CSSを無害化する、美しきミニマル基盤
    ========================================== */
 .magic-menu, .magic-menu * {
   box-sizing: border-box !important;
@@ -19,293 +19,294 @@
 }
 
 /* ==========================================
-   2. 左上に完全固定・絶対被らない羅針コア（ボタン）
+   2. 左上に孤高に佇む、洗練の極致コア（ボタン）
    ========================================== */
 .magic-trigger {
   position: fixed !important;
   top: 25px !important;
   left: 25px !important;
   z-index: 200000000 !important; /* 最前面を絶対死守 */
-  width: 56px !important;
-  height: 56px !important;
+  width: 50px !important;
+  height: 50px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   background: transparent !important;
 }
 
+/* 
+  ダサいギミック、太い線を完全排除。
+  極薄のガラスを切り出したかのような、凛とした正円。
+*/
 .trigger-rune {
   position: relative !important;
-  width: 48px !important;
-  height: 48px !important;
-  background: #05070f !important; /* どんな背景でもハッキリ浮き出る超漆黒 */
-  border: 2px solid var(--main-color) !important;
+  width: 44px !important;
+  height: 44px !important;
+  background: rgba(15, 23, 42, 0.6) !important; /* 高級な半透明ダーク */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
   border-radius: 50% !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  overflow: hidden !important;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  /* 驚くほど滑らかな、余韻を残すイージング */
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* ボタン内部で超高速回転するネオンの導火線 */
-.trigger-rune::before {
-  content: "" !important;
-  position: absolute !important;
-  width: 160% !important;
-  height: 160% !important;
-  background: conic-gradient(from 0deg, transparent 20%, var(--main-color), var(--balance-color), transparent 80%) !important;
-  opacity: 0 !important;
-  animation: buttonLaser 0.8s linear infinite !important;
-}
-
-@keyframes buttonLaser {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* ホバー時：ボタンから圧倒的なネオンフレアが炸裂する */
+/* ホバー時：枠線がじわっと光をまとい、27色のメインカラーへと静かに染まる */
 .magic-trigger:hover .trigger-rune {
-  transform: scale(1.1) !important;
-  border-color: var(--balance-color) !important;
-  box-shadow: 0 0 25px var(--main-color), 0 0 50px var(--balance-color) !important;
-}
-.magic-trigger:hover .trigger-rune::before {
-  opacity: 1 !important;
+  transform: scale(1.05) !important;
+  border-color: var(--main-color) !important;
+  background: rgba(15, 23, 42, 0.8) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05) !important;
 }
 
-/* コアライン（太さ2.5pxで視認性を強化） */
+/* コアライン（太さを1.5pxまで削ぎ落とし、圧倒的な繊細さを演出） */
 .rune-line {
   position: relative !important;
-  width: 22px !important;
-  height: 2.5px !important;
+  width: 18px !important;
+  height: 1.5px !important;
   background-color: var(--variation-color) !important;
-  border-radius: 2px !important;
-  z-index: 3 !important;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .rune-line::before,
 .rune-line::after {
   content: "" !important;
   position: absolute !important;
   left: 0 !important;
-  width: 22px !important;
-  height: 2.5px !important;
+  width: 18px !important;
+  height: 1.5px !important;
   background-color: var(--variation-color) !important;
-  border-radius: 2px !important;
-  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
-.rune-line::before { top: -7px !important; }
-.rune-line::after  { top: 7px !important; }
+.rune-line::before { top: -5px !important; }
+.rune-line::after  { top: 5px !important; }
 
-/* ホバー時：3本線が一瞬で中央に「ガシャン！」と合体して一本の光線に */
+/* ホバー時：3本線が「スッ」と静かに中央に引き締まるミニマルデザイン */
 .magic-trigger:hover .rune-line::before { top: 0 !important; background-color: #ffffff !important; }
 .magic-trigger:hover .rune-line::after  { top: 0 !important; background-color: #ffffff !important; }
 
-/* ── 開いた時（[open]）：左上に美しく固定される「細い✕」 ── */
+/* ── 開いた時（[open]）：細く、鋭利で、完璧に美しい「✕」 ── */
 .magic-menu[open] .trigger-rune {
-  background: rgba(0, 0, 0, 0.6) !important;
-  border-color: rgba(255, 255, 255, 0.4) !important;
-  box-shadow: none !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
 }
-.magic-menu[open] .trigger-rune::before { display: none !important; }
 .magic-menu[open] .rune-line { background-color: transparent !important; }
-.magic-menu[open] .rune-line::before { top: 0 !important; transform: rotate(45deg) !important; background-color: #ffffff !important; filter: drop-shadow(0 0 5px var(--balance-color)) !important; }
-.magic-menu[open] .rune-line::after  { top: 0 !important; transform: rotate(-45deg) !important; background-color: #ffffff !important; filter: drop-shadow(0 0 5px var(--balance-color)) !important; }
+.magic-menu[open] .rune-line::before { top: 0 !important; transform: rotate(45deg) !important; background-color: #ffffff !important; }
+.magic-menu[open] .rune-line::after  { top: 0 !important; transform: rotate(-45deg) !important; background-color: #ffffff !important; }
 
 /* ==========================================
-   3. 【超復活】27色が激しく連動する「万華鏡・流体カオス」背景
+   3. 【完全新生】空間を美しく染め上げる『アンビエント・リキッド』背景
    ========================================== */
 .magic-portal-bg {
   position: fixed !important;
   inset: 0 !important;
   z-index: 999998 !important;
-  background: var(--accent-color) !important;
-  overflow: hidden !important;
+  background: var(--accent-color) !important; /* 27色の深みベース */
   opacity: 0 !important;
-  /* 開閉時のアニメーション：爆発するように巨大化しながら消えていく */
-  transform: scale(0) !important;
-  transform-origin: 49px 49px !important; /* 左上ボタンの座標を軸に膨張 */
-  transition: transform 0.7s cubic-bezier(0.86, 0, 0.07, 1), 
-              opacity 0.5s ease, 
-              display 0.7s allow-keywords !important;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), display 0.6s allow-keywords !important;
   display: none !important;
+  overflow: hidden !important;
 }
 
-/* 💡 背景内部：27色のテーマカラーを燃料にした「万華鏡・ツイン渦（ボルテックス）」が超高速で対流！ */
-.magic-portal-bg::before,
-.magic-portal-bg::after {
+/* 
+  💡 【大人の工夫】ガチャガチャした回転を完全破壊。
+  メインカラーとバランスカラーが、画面の四隅から「インクが水に溶けるように」
+  永久に形を変えながら、静かに、優しくうごめき続ける極上のオーラ背景。
+*/
+.magic-portal-bg::before {
   content: "" !important;
   position: absolute !important;
-  width: 250vw !important;
-  height: 250vh !important;
-  top: -75vw !important;
-  left: -75vw !important;
-  background: conic-gradient(from 0deg at 50% 50%, var(--main-color) 0%, var(--balance-color) 30%, transparent 60%, var(--main-color) 100%) !important;
-  mix-blend-mode: screen !important; /* 色同士が光を放ちながら混ざり合う */
-  animation: kaledoSpin 14s infinite linear !important;
+  inset: -50% !important;
+  background: radial-gradient(circle at 20% 20%, var(--main-color) 0%, transparent 50%),
+              radial-gradient(circle at 80% 80%, var(--balance-color) 0%, transparent 50%) !important;
+  filter: blur(60px) !important; /* 限界までボカして流体に */
+  animation: ambientFloat 10s ease-in-out infinite alternate !important;
   opacity: 0.6 !important;
-  filter: blur(40px) !important; /* 💡 激重にならない絶妙なボカシ数値に調整（爆速維持） */
-}
-.magic-portal-bg::after {
-  background: conic-gradient(from 0deg at 50% 50%, var(--balance-color) 0%, var(--accent-color) 40%, transparent 70%, var(--balance-color) 100%) !important;
-  animation: kaledoSpinReverse 9s infinite linear !important;
 }
 
-@keyframes kaledoSpin { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
-@keyframes kaledoSpinReverse { 0% { transform: rotate(360deg) scale(1.1); } 50% { transform: rotate(180deg) scale(0.9); } 100% { transform: rotate(0deg) scale(1.1); } }
+@keyframes ambientFloat {
+  0% { transform: scale(1) translate(0, 0) rotate(0deg); }
+  100% { transform: scale(1.1) translate(30px, -30px) rotate(5deg); }
+}
 
-/* 開いた瞬間：左上ボタンから世界がビッグバンを起こすように全画面をジャック */
 .magic-menu[open] .magic-portal-bg {
   display: block !important;
   opacity: 1 !important;
-  transform: scale(1) !important;
 }
-
 @starting-style {
-  .magic-menu[open] .magic-portal-bg { opacity: 0 !important; transform: scale(0) !important; }
+  .magic-menu[open] .magic-portal-bg { opacity: 0 !important; }
 }
 
 /* ==========================================
-   4. 【大修正・絶対中央結界】100%場外にズレない文字空間
+   4. 【視認性絶対死守結界】超高級スモークガラス・シアター
    ========================================== */
 .magic-theater {
   position: fixed !important;
-  /* 💡 従来の四隅指定を破棄。
-     画面のド真ん中（50%, 50%）にコンテナの『中心』を完全に物理ロックする絶対方程式 */
   top: 50% !important;
   left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  transform: translate(-50%, -50%) !important; /* 物理的にド真ん中ロック */
   width: 100vw !important;
   height: 100vh !important;
   z-index: 999999 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: transparent !important;
+  
+  /* 💡 【視認性の解答】文字の後ろにダサい座布団を敷くのではなく、
+     『画面全体に超強力な高級ぼかしガラス』を適用。
+     元のWEBページの文字やボタン（Picnic）が綺麗にスモークされ、文字の浮き立ち方が次元違いに美しくなります */
+  backdrop-filter: blur(35px) brightness(0.6) !important;
+  -webkit-backdrop-filter: blur(35px) brightness(0.6) !important;
+  
+  opacity: 0 !important;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), pointer-events 0.5s !important;
   pointer-events: none !important;
 }
-.magic-menu[open] .magic-theater { pointer-events: auto !important; }
+.magic-menu[open] .magic-theater { 
+  opacity: 1 !important;
+  pointer-events: auto !important; 
+}
+@starting-style {
+  .magic-menu[open] .magic-theater { opacity: 0 !important; }
+}
 
-/* 💡 視認性最大化トリック：文字の後ろに、テーマの闇（accentcolor）を濃縮した「光を吸い込む縦帯プレート」を展開 */
 .magic-list {
   list-style: none !important;
   text-align: center !important;
-  width: 90% !important;
+  width: 100% !important;
   max-width: 340px !important;
-  margin: 0 auto !important;
-  padding: 40px 20px !important;
-  background: rgba(5, 7, 15, 0.85) !important; /* 💡 超漆黒の透過プレートが万華鏡の光を遮断、文字を100%浮き立たせる */
-  backdrop-filter: blur(15px) !important;
-  -webkit-backdrop-filter: blur(15px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 24px !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
-  
-  /* 開閉時のアニメーション：奥から手前にシュッと飛び出して定着する超軽量・超滑らか挙動 */
-  opacity: 0 !important;
-  transform: scale(0.85) !important;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-.magic-menu[open] .magic-list {
-  opacity: 1 !important;
-  transform: scale(1) !important;
-}
-@starting-style {
-  .magic-menu[open] .magic-list { opacity: 0 !important; transform: scale(0.85) !important; }
-}
-
-/* 1階層目の文字の連鎖ウェーブ */
+/* 
+  💡 【出現方法の進化】文字が下から飛んでくるダサい動きを全廃。
+  その場から動かず、文字と文字の間隔（letter-spacing）が
+  フワッと空気を含んで広がりながら実体化する、極めて洗練されたフェードイン。
+*/
 .magic-list > li {
   position: relative !important;
-  margin: 26px 0 !important;
+  margin: 32px 0 !important;
   padding: 0 !important;
   opacity: 0 !important;
-  transform: translateY(15px) !important;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease !important;
+  letter-spacing: -0.2em !important; /* 最初は文字がギュッと縮んでいる */
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 .magic-menu[open] .magic-list > li {
   opacity: 1 !important;
-  transform: translateY(0) !important;
-  transition-delay: calc(var(--item-index) * 0.06s + 0.15s) !important;
+  letter-spacing: 0.1em !important; /* 開いた瞬間に、文字の間隔が美しく広がる */
+  transition-delay: calc(var(--item-index) * 0.05s + 0.15s) !important;
+}
+@starting-style {
+  .magic-menu[open] .magic-list > li { opacity: 0 !important; letter-spacing: -0.2em !important; }
 }
 
-/* ── リンク文字デザイン（ネオン覚醒） ── */
+/* ── リンク文字デザイン（本物の高級ブランドの佇まい） ── */
 .magic-theater a, 
 .magic-submenu-trigger {
-  color: var(--variation-color) !important; /* 27色の最も明るい対比色が確定で当たるので、100%見えます */
-  font-size: 2rem !important;
-  font-weight: 900 !important;
-  letter-spacing: 0.08em !important;
+  color: var(--variation-color) !important; /* 27色の最も明るい文字色が確定で適用 */
+  font-size: 1.9rem !important; /* 繊細で美しいフォントサイズ */
+  font-weight: 700 !important;
   text-decoration: none !important;
   display: inline-block !important;
-  padding: 6px 16px !important;
+  padding: 4px 16px !important;
   background: transparent !important;
   position: relative !important;
-  transition: color 0.2s, transform 0.2s !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* ホバー：文字が完全な純白（#fff）に覚醒し、手前に立体拡大 */
+/* ホバー：ダサいグリッチや震えを完全封印。
+   文字が「純白（#fff）」になり、27色のメインカラーの光が奥にほんのりと灯る、高貴な余韻。 */
 .magic-list > li:hover a,
 .magic-list > li:hover .magic-submenu-trigger {
   color: #ffffff !important;
-  transform: scale(1.08) !important;
-  text-shadow: 0 0 10px #ffffff,
-               0 0 20px var(--main-color) !important;
+  transform: translateY(-2px) !important; /* かすかに上に浮き上がる極上の手触り */
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6) !important;
 }
 
-/* 足元に走る、左右に鋭く炸裂するアンダーライン */
+/* 足元にスッと現れ、じわっと消える繊細な光の糸 */
 .magic-theater a::after {
   content: "" !important;
   position: absolute !important;
   bottom: -2px !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 3px !important;
-  background: linear-gradient(90deg, var(--main-color), var(--balance-color)) !important;
-  box-shadow: 0 0 10px var(--main-color) !important;
-  transform: scaleX(0) !important;
-  transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1) !important;
+  left: 20% !important;
+  width: 60% !important;
+  height: 1px !important; /* 限界まで細く */
+  background: #ffffff !important;
+  opacity: 0 !important;
+  transition: transform 0.4s ease, opacity 0.4s ease !important;
+  transform: scaleX(0.5) !important;
 }
-.magic-list > li:hover a::after { transform: scaleX(1) !important; }
+.magic-list > li:hover a::after { 
+  opacity: 0.8 !important;
+  transform: scaleX(1) !important;
+}
 
 /* ==========================================
-   5. メニュー内メニュー（Groupsアコーディオン）
+   5. メキーワード：メニュー内メニュー（Groupsアコーディオン）
    ========================================== */
-.magic-submenu-trigger { padding-right: 40px !important; }
+.magic-submenu-trigger {
+  padding-right: 35px !important;
+}
+/* 洗練された細いプラス（+） */
 .magic-submenu-trigger::after {
   content: "+" !important;
   position: absolute !important;
   right: 15px !important;
   top: 45% !important;
-transform: translateY(-50%) !important;
-font-size: 1.4rem !important;
-font-weight: 300 !important;
-color: var(--balance-color) !important;
-transition: transform 0.3s !important;
+  transform: translateY(-50%) !important;
+  font-size: 1.3rem !important;
+  font-weight: 200 !important;
+  color: var(--balance-color) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
+/* 開いた瞬間、45度だけブレずに静かに回って美しい「✕」へ */
 .magic-submenu-details[open] .magic-submenu-trigger::after {
-transform: translateY(-50%) rotate(135deg) !important;
-color: #ffffff !important;
+  transform: translateY(-50%) rotate(135deg) !important;
+  color: #ffffff !important;
 }
-/* 子メニュー（空間の裂け目） */
+
+/* 子メニュー（空間の洗練された展開） */
 .magic-sub-list {
-list-style: none !important;
-padding: 0 !important;
-margin: 12px 0 0 0 !important;
-background: rgba(0, 0, 0, 0.4) !important;
-border-left: 3px solid var(--main-color) !important;
-border-radius: 8px !important;
-display: grid !important;
-grid-template-rows: 0fr !important;
-transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
-opacity: 0 !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 12px 0 0 0 !important;
+  background: rgba(255, 255, 255, 0.03) !important; 
+  border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px !important;
+  display: grid !important;
+  grid-template-rows: 0fr !important;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease !important;
+  opacity: 0 !important;
 }
-.magic-submenu-details[open] .magic-sub-list { grid-template-rows: 1fr !important; opacity: 1 !important; padding: 10px 0 !important; }
-.magic-sub-list li { overflow: hidden !important; margin: 6px 0 !important; background: transparent !important; transform: translateY(10px) !important; opacity: 0 !important; transition: all 0.3s ease !important; }
-.magic-submenu-details[open] .magic-sub-list li { transform: translateY(0) !important; opacity: 1 !important; transition-delay: 0.05s !important; }
-.magic-sub-list a { font-size: 1.35rem !important; font-weight: 700 !important; color: var(--variation-color) !important; opacity: 0.7 !important; }
+.magic-submenu-details[open] .magic-sub-list { 
+  grid-template-rows: 1fr !important; 
+  opacity: 1 !important; 
+  padding: 10px 0 !important;
+}
+
+.magic-sub-list li { 
+  overflow: hidden !important; 
+  margin: 6px 0 !important; 
+  background: transparent !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+}
+.magic-submenu-details[open] .magic-sub-list li {
+  opacity: 1 !important;
+  transition-delay: 0.05s !important;
+}
+
+.magic-sub-list a { 
+  font-size: 1.3rem !important; 
+  font-weight: 500 !important;
+  color: var(--variation-color) !important; 
+  opacity: 0.6 !important;
+}
 .magic-sub-list a::after { display: none !important; }
-.magic-sub-list li:hover a { color: #ffffff !important; opacity: 1 !important; transform: translateX(6px) !important; text-shadow: 0 0 8px var(--main-color) !important; }
+.magic-sub-list li:hover a { 
+  color: #ffffff !important; 
+  opacity: 1 !important; 
+  transform: translateX(4px) !important;
+}
