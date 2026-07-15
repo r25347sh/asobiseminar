@@ -19,81 +19,122 @@
 }
 
 /* ==========================================
-   2. 左上に完全固定・絶対に見失わないスマートボタン
+   2. 左上に完全固定・3本線が空間を切り裂く魔導トリガー（ボタン）
    ========================================== */
 .magic-trigger {
   position: fixed !important;
   top: 25px !important;
   left: 25px !important;
-  z-index: 200000000 !important; /* 何があっても文字より前に配置 */
-  width: 50px !important;
-  height: 50px !important;
+  z-index: 200000000 !important; /* 何があっても最前面 */
+  width: 54px !important;
+  height: 54px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   background: transparent !important;
+  /* 💡 尋常じゃない工夫1：ボタンが押された時の衝撃（バウンド）を吸収・増幅する慣性イージング */
+  transition: transform 0.5s cubic-bezier(0.34, 1.76, 0.64, 1) !important;
 }
 
-/* 視認性1000%：周囲がどんな色でも絶対に浮き出る重厚なダークネイビープレート */
+/* 視認性抜群の頑丈なベースプレート */
 .trigger-rune {
   position: relative !important;
-  width: 46px !important;
-  height: 46px !important;
+  width: 48px !important;
+  height: 48px !important;
   background: #0f172a !important; 
-  border: 2px solid var(--main-color) !important; /* 27色のメインカラーが外枠としてハッキリ輝く */
-  border-radius: 50% !important; /* 美しい完璧な正円 */
+  border: 2px solid var(--main-color) !important; 
+  border-radius: 50% !important; 
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  /* 超爆速：スケール（拡大縮小）だけなので一瞬で動きます */
-  transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.25s !important;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1) !important;
 }
 
-/* ホバー時：手前にクッとわずかに拡大し、フチがテーマのバランス色に変色する洗練デザイン */
+/* ホバー時にフチがテーマのバランスカラーへ滑らかに変化 */
 .magic-trigger:hover .trigger-rune {
-  transform: scale(1.06) !important;
+  transform: scale(1.05) !important;
   border-color: var(--balance-color) !important;
   box-shadow: 0 0 15px var(--main-color) !important;
 }
 
-/* ボタン中央の光の結晶コア（太さを2pxに整えて美しく） */
-.rune-line {
+/* 3本線を格納する極小の特異点ボックス */
+.magic-bar-box {
   position: relative !important;
   width: 20px !important;
-  height: 2px !important;
-  background-color: var(--variation-color) !important; /* テーマの最も明るい色が自動適用 */
-  border-radius: 2px !important;
+  height: 14px !important;
   z-index: 3 !important;
-  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  /* 💡 尋常じゃない工夫2：展開時にボックスごと「225度（1回転半近く）」ダイナミックに大回転させるための軸 */
+  transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1) !important;
 }
-.rune-line::before,
-.rune-line::after {
-  content: "" !important;
+
+/* ── 3本線アニメーションの基礎設計（太さ2.5pxのシャープ仕様） ── */
+.bar, .bar::before, .bar::after {
   position: absolute !important;
   left: 0 !important;
-  width: 20px !important;
-  height: 2px !important;
-  background-color: var(--variation-color) !important;
-  border-radius: 2px !important;
-  transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  height: 2.5px !important;
+  background-color: var(--variation-color) !important; /* 27色の最も明るい色に自動連動 */
+  border-radius: 4px !important;
+  /* 💡 尋常じゃない工夫3：変形にかかる時間をわずかに「ズラす」ことで、
+     機械的ではない、生き物のように滑らかで有機的な連鎖モーションを生み出します */
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1),
+              top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease,
+              background-color 0.4s !important;
 }
-.rune-line::before { top: -6px !important; }
-.rune-line::after  { top: 6px !important; }
 
-/* 💡 ホバー時：3本線が「シュッ」と中央に吸い寄せられて、ミニマルな1本の光の線に合体 */
-.magic-trigger:hover .rune-line::before { top: 0 !important; background-color: #ffffff !important; }
-.magic-trigger:hover .rune-line::after  { top: 0 !important; background-color: #ffffff !important; }
+/* 完璧に均等に並んだ美しい静寂の3本線 */
+.bar { top: 6px !important; width: 20px !important; } /* 真ん中の線 */
+.bar::before { content: "" !important; top: -6px !important; width: 20px !important; } /* 上の線 */
+.bar::after  { content: "" !important; top: 6px !important; width: 20px !important; }  /* 下の線 */
 
-/* ── 💡 開いた時（[open]）：左上に美しく完全固定されるシャープな✕印 ── */
+/* ── 💡 【超・覚醒】開いた瞬間の「空間引き裂きトランスフォーム」 ── */
+.magic-menu[open] .magic-trigger {
+  transform: scale(0.95) !important; /* 押した瞬間にクッと凹むリアルな手応え */
+}
+
 .magic-menu[open] .trigger-rune {
-  background: rgba(0, 0, 0, 0.5) !important; /* メニューの背景に自然に溶け込む */
+  background: rgba(0, 0, 0, 0.5) !important;
   border-color: rgba(255, 255, 255, 0.3) !important;
   box-shadow: none !important;
 }
-.magic-menu[open] .rune-line { background-color: transparent !important; box-shadow: none !important; }
-.magic-menu[open] .rune-line::before { top: 0 !important; transform: rotate(45deg) !important; background-color: #ffffff !important; }
-.magic-menu[open] .rune-line::after  { top: 0 !important; transform: rotate(-45deg) !important; background-color: #ffffff !important; }
+
+/* ボックスごと「225度」超高速スピン回転させる */
+.magic-menu[open] .magic-bar-box {
+  transform: rotate(225deg) !important;
+}
+
+/* 
+  【空間引き裂きトリックの全貌】
+  1. 真ん中の線（.bar）は、右側へ向かって弾丸のように凄まじいスピードで射出され、
+     そのまま不透明度が0（透明）になって一瞬で完全消滅（ワープ）します。
+  2. 上下の線（::before, ::after）は、中心（top: 0）に向かってカミソリのようにガシャン！と
+     鋭く吸い寄せられ、ボックスの225度回転と合流することで、
+     お互いがクロス（✕）の形に引き裂かれながら、眩しい白（#ffffff）の光となって最前面に定着します。
+*/
+.magic-menu[open] .bar {
+  width: 0px !important;
+  transform: translateX(30px) !important; /* 右側へハイスピード射出 */
+  opacity: 0 !important;
+  background-color: transparent !important;
+}
+
+.magic-menu[open] .bar::before {
+  top: 0 !important; /* 中心へ合体 */
+  width: 22px !important;
+  transform: rotate(90deg) !important; /* 交差して完璧なクロスを形成 */
+  background-color: #ffffff !important;
+  filter: drop-shadow(0 0 6px var(--balance-color)) !important; /* テーマの光を纏う */
+}
+
+.magic-menu[open] .bar::after {
+  top: 0 !important; /* 中心へ合体 */
+  width: 22px !important;
+  transform: rotate(180deg) !important; /* 逆方向に交差 */
+  background-color: #ffffff !important;
+  filter: drop-shadow(0 0 6px var(--balance-color)) !important;
+}
 
 /* ==========================================
    3. 【超進化】超軽量シネマティック・ズーム背景
