@@ -1,111 +1,102 @@
-/* css/programmer.css - マークアッププログラマー 専用CSS（超々豪華強化版） */
+/* css/programmer.css - 超派手強化版 */
 
 .programmer-main {
   padding: 0;
-  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-family: var(--font-family, system-ui, sans-serif);
 }
 
 .programmer-hero {
-  background: linear-gradient(135deg, var(--main-color), var(--balance-color), #00000088);
-  padding: 160px 40px 120px;
+  background: linear-gradient(135deg, #1a0033, var(--main-color), var(--balance-color), #00ffff22);
+  padding: 180px 40px 140px;
   text-align: center;
   position: relative;
   overflow: hidden;
 }
 
 .programmer-hero::before {
-  content: '💻⚡🌀🔥';
+  content: '';
   position: absolute;
-  font-size: 420px;
-  opacity: 0.06;
-  transform: rotate(-30deg);
-  top: 30%;
-  left: 50%;
-  animation: floatEpic 22s linear infinite;
-  z-index: 0;
+  inset: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.15), transparent 50%);
+  animation: shine 8s linear infinite;
 }
 
-@keyframes floatEpic {
-  0% { transform: rotate(-30deg) translate(0, 0); }
-  100% { transform: rotate(-30deg) translate(120px, -80px); }
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
 }
 
 .programmer-title {
-  font-size: 5rem;
-  margin: 0 0 24px 0;
-  background: linear-gradient(90deg, var(--variation-color), #ffffff);
+  font-size: 5.5rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #fff, #a0f0ff, #fff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 10px 40px rgba(0,0,0,0.7);
-  font-weight: 900;
-  letter-spacing: -4px;
-  animation: titleEpic 5s ease-in-out infinite alternate;
+  text-shadow: 0 0 60px var(--main-color);
+  animation: glowTitle 3s ease-in-out infinite alternate;
 }
 
-@keyframes titleEpic {
-  from { transform: scale(1); }
-  to { transform: scale(1.03); }
+@keyframes glowTitle {
+  from { text-shadow: 0 0 40px var(--main-color); }
+  to { text-shadow: 0 0 80px var(--balance-color), 0 0 120px #ffffff; }
 }
 
 .programmer-subtitle {
-  font-size: 1.8rem;
-  color: rgba(255,255,255,0.9);
-  margin-bottom: 40px;
+  font-size: 1.9rem;
+  color: #ddd;
+  margin: 20px 0 40px;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.6);
 }
 
 .programmer-tagline {
   display: flex;
-  gap: 16px;
+  gap: 18px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .programmer-tag {
-  background: rgba(255,255,255,0.2);
-  padding: 12px 30px;
+  background: rgba(255,255,255,0.15);
+  padding: 14px 34px;
   border-radius: 50px;
-  font-size: 1.1rem;
-  border: 2px solid rgba(255,255,255,0.6);
+  border: 2px solid rgba(255,255,255,0.5);
+  font-size: 1.15rem;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(10px);
 }
 
 .programmer-tag:hover {
-  transform: scale(1.15) rotate(2deg);
-  background: var(--balance-color);
-  color: var(--accent-color);
+  transform: scale(1.2) rotate(3deg);
+  background: white;
+  color: #000;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
 }
 
-/* 以下も大幅強化 */
-.programmer-container { max-width: 1280px; margin: 0 auto; padding: 100px 40px; }
-
-.programmer-mission, .programmer-skills, .programmer-projects, .programmer-philosophy, .programmer-tools {
-  margin-bottom: 100px;
-  animation: fadeUp 0.8s ease backwards;
+/* 他のセクションも派手に */
+.programmer-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 100px 40px;
+  background: linear-gradient(to bottom, #0a001f, #000);
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* 習得言語セクション用に豪華カードを追加 */
-.lang-grid {
+.lang-grid, .programmer-tech-grid, .programmer-philosophy-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
 }
 
-.lang-card {
+.lang-card, .programmer-tech-card, .programmer-philosophy-item {
   background: rgba(255,255,255,0.08);
-  padding: 32px;
-  border-radius: 18px;
+  padding: 36px 28px;
+  border-radius: 20px;
   border: 2px solid var(--balance-color);
-  text-align: center;
-  transition: all 0.5s ease;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-.lang-card:hover {
-  transform: translateY(-20px) scale(1.05);
+.lang-card:hover, .programmer-tech-card:hover, .programmer-philosophy-item:hover {
+  transform: translateY(-25px) scale(1.08);
   border-color: var(--main-color);
-  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 30px 70px rgba(0,0,0,0.6);
 }
