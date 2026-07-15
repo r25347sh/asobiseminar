@@ -7,6 +7,27 @@
     "accentcolor": "#0d0214"
   },
   {
+    "name": "QuantumLab (量子力学実験室)",
+    "maincolor": "#00ffcc",
+    "balancecolor": "#8b5cf6",
+    "variationcolor": "#f8fafc",
+    "accentcolor": "#060814"
+  },
+  {
+    "name": "BioChemical (禁忌の培養フラスコ)",
+    "maincolor": "#adff2f",
+    "balancecolor": "#00ff66",
+    "variationcolor": "#ffffff",
+    "accentcolor": "#0c150c"
+  },
+  {
+    "name": "AbsoluteZero (絶対零度の研究棟)",
+    "maincolor": "#93c5fd",
+    "balancecolor": "#3b82f6",
+    "variationcolor": "#e0f2fe",
+    "accentcolor": "#0b132b"
+  },
+  {
     "name": "MidnightMagic (深淵の魔導書)",
     "maincolor": "#00f0ff",
     "balancecolor": "#7000ff",
