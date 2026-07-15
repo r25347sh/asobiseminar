@@ -19,7 +19,7 @@
 }
 
 /* ==========================================
-   2. 魔導特異点：羅針コア（ボタン）
+   2. 魔導特異点：羅針コア（ボタン限界突破仕様）
    ========================================== */
 .magic-trigger {
   position: fixed !important;
@@ -31,61 +31,107 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  /* ホバー時のバウンドをより鋭くダイナミックにするイージング */
+  transition: transform 0.6s cubic-bezier(0.34, 1.76, 0.64, 1) !important; 
 }
 
-/* ボタン：脈動しながら永久に逆回転を繰り返す魔法陣 */
+/* ボタン背景：ゆっくりとした永久魔法陣回転 */
 .trigger-orb {
   position: absolute !important;
   inset: 0 !important;
   background: var(--accent-color) !important;
-  border: 3px dotted var(--main-color) !important;
+  border: 2px dashed var(--main-color) !important;
   border-radius: 50% !important;
   box-shadow: 0 0 20px var(--main-color), 
-              inset 0 0 15px var(--balance-color) !important;
-  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
-  animation: corePulse 3s ease-in-out infinite alternate, coreRotate 16s linear infinite !important;
+              inset 0 0 12px var(--balance-color) !important;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  animation: coreRotate 20s linear infinite !important;
 }
 
-@keyframes corePulse {
-  0% { transform: scale(1); border-color: var(--main-color); }
-  100% { transform: scale(1.08); border-color: var(--balance-color); box-shadow: 0 0 35px var(--balance-color); }
-}
 @keyframes coreRotate {
-  0% { transform: rotate(360deg); }
-  100% { transform: rotate(0deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
+/* 3本線を格納するコアボックス */
 .magic-bar-box {
   position: relative !important;
-  width: 24px !important;
-  height: 16px !important;
+  width: 28px !important;
+  height: 18px !important;
   z-index: 2 !important;
+  transition: transform 0.6s cubic-bezier(0.34, 1.76, 0.64, 1) !important;
 }
 
+/* ── 尋常じゃない工夫：3本線の初期形状とパルス明滅 ── */
 .bar, .bar::before, .bar::after {
   position: absolute !important;
   left: 0 !important;
   height: 3px !important;
   background-color: var(--variation-color) !important;
   border-radius: 4px !important;
-  transition: all 0.5s cubic-bezier(0.76, 0, 0.24, 1) !important;
+  /* 
+    変形（トランスフォーム）にかかる時間をあえて「ズラす（時間差）」ことで、
+    ホバーした瞬間に生き物のようにウネウネとバラバラに変形を開始させます
+  */
+  transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1),
+              top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease,
+              background-color 0.4s !important;
   box-shadow: 0 0 8px var(--main-color) !important;
 }
-.bar { top: 6.5px !important; width: 24px !important; }
-.bar::before { content: "" !important; top: -8px !important; width: 14px !important; }
-.bar::after  { content: "" !important; top: 8px !important; width: 19px !important; }
 
-.magic-trigger:hover .trigger-orb {
-  transform: scale(1.25) !important;
-  border-style: double !important;
-  border-width: 4px !important;
-  border-color: var(--variation-color) !important;
-  box-shadow: 0 0 40px var(--main-color), 0 0 70px var(--balance-color), inset 0 0 20px #fff !important;
+/* 通常時の3本線：アシンメトリー（あえて長さを変えて不揃いに） */
+.bar { top: 7.5px !important; width: 20px !important; left: 4px !important; } /* 真ん中の線 */
+.bar::before { content: "" !important; top: -7.5px !important; width: 28px !important; left: -4px !important; } /* 上の線 */
+.bar::after  { content: "" !important; top: 7.5px !important; width: 14px !important; left: -4px !important; } /* 下の線 */
+
+/* ── 【尋常じゃないホバートリック】起動シークエンス発動 ── */
+.magic-trigger:hover {
+  transform: scale(1.15) !important; /* ボタン全体が一回り強く拡大 */
 }
 
-/* [open]：クロス・フラッシュ変形 */
+.magic-trigger:hover .trigger-orb {
+  border-style: solid !important;
+  border-color: #ffffff !important;
+  /* 外側に超巨大なフレア（光輪）を炸裂させる */
+  box-shadow: 0 0 30px var(--main-color), 
+              0 0 60px var(--balance-color), 
+              inset 0 0 20px var(--main-color) !important;
+}
+
+/* 
+  ホバー時の3本線の超絶変形トリック：
+  1. 真ん中の線（.bar）は、右側へ超高速で射出され、透明になって一瞬で消滅（ワープ）する。
+  2. 上下の線（::before, ::after）は、長さが「28pxの完全な等長」に揃い、中心に向かって
+     ガシャンと合体（クローズ）しながら、お互いが完全に重なって1本の極太ネオンビームへと融合する。
+*/
+.magic-trigger:hover .bar {
+  width: 0px !important;
+  transform: translateX(40px) !important; /* 右へ弾き飛ぶ残像 */
+  opacity: 0 !important;
+}
+
+.magic-trigger:hover .bar::before {
+  top: 0 !important; /* 中心へ合体 */
+  width: 28px !important;
+  left: 0 !important;
+  background-color: #ffffff !important;
+  /* 眩しい白ネオン発光 */
+  filter: drop-shadow(0 0 6px var(--balance-color)) !important;
+}
+
+.magic-trigger:hover .bar::after {
+  top: 0 !important; /* 中心へ合体 */
+  width: 28px !important;
+  left: 0 !important;
+  background-color: #ffffff !important;
+  filter: drop-shadow(0 0 6px var(--balance-color)) !important;
+}
+
+/* ── 【展開時（[open]）】異次元が開放された時の真・完全クロス変形 ── */
 .magic-menu[open] .magic-trigger {
-  transform: scale(0.85) !important;
+  transform: scale(0.9) !important;
 }
 .magic-menu[open] .trigger-orb {
   border-color: transparent !important;
@@ -93,20 +139,32 @@
   box-shadow: none !important;
   animation: none !important;
 }
-.magic-menu[open] .bar { background-color: transparent !important; box-shadow: none !important; }
+.magic-menu[open] .magic-bar-box {
+  transform: rotate(360deg) !important; /* メニューが開いたらボックスごと360度大回転 */
+}
+.magic-menu[open] .bar { 
+  background-color: transparent !important; 
+  box-shadow: none !important; 
+  transform: none !important;
+}
+/* ホバーを外してメニューを開いた時も、綺麗な45度（225度）のクロス（✕）に定着 */
 .magic-menu[open] .bar::before { 
+  top: 0 !important;
+  width: 28px !important;
+  left: 0 !important;
+  opacity: 1 !important;
   transform: rotate(225deg) !important; 
-  top: 0 !important; 
-  width: 26px !important; 
   background-color: var(--variation-color) !important; 
-  filter: drop-shadow(0 0 12px var(--balance-color)) brightness(2) !important;
+  filter: drop-shadow(0 0 10px var(--balance-color)) brightness(1.5) !important;
 }
 .magic-menu[open] .bar::after { 
+  top: 0 !important;
+  width: 28px !important;
+  left: 0 !important;
+  opacity: 1 !important;
   transform: rotate(-225deg) !important; 
-  top: 0 !important; 
-  width: 26px !important; 
   background-color: var(--variation-color) !important; 
-  filter: drop-shadow(0 0 12px var(--balance-color)) brightness(2) !important;
+  filter: drop-shadow(0 0 10px var(--balance-color)) brightness(1.5) !important;
 }
 
 /* ==========================================
