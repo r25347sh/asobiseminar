@@ -3,13 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Group 1 - Asobi Lab.</title>
+  <title>Group 1 - スケートボード - Asobi Lab.</title>
   
+  <!-- 共通スクリプト -->
   <script src="/asobiseminar/js/load-css.js"></script>
   <script src="/asobiseminar/js/setThemeColor.js"></script>
+  
+  <!-- Group 1 専用CSS -->
+  <link rel="stylesheet" href="/asobiseminar/css/group1.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;600&family=M+PLUS+1:wght@300;400;600;700&family=Zen+Kaku+Gothic+New:wght@400;600;700&family=IBM+Plex+Sans+JP:wght@400;600&family=Roboto:wght@300;400;500;700&family=Inter:wght@300;400;600;700&family=Raleway:wght@300;400;600;700&family=Poppins:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@400;700&family=Montserrat:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+      color: var(--variation-color);
+      background: var(--accent-color);
+      min-height: 100vh;
+    }
+    
+    :root {
+      --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+  </style>
 </head>
 <body>
-
+  <!-- ハンバーガーメニュー -->
   <details class="magic-menu">
     <summary class="magic-trigger" aria-label="空間を開放する">
       <div></div>
@@ -27,46 +49,112 @@
             <summary class="magic-submenu-trigger">Groups（グループ）</summary>
             <ul class="magic-sub-list">
               <li><a href="/asobiseminar/subpages/groups/index.html">Group トップ</a></li>
-              <li><a href="/asobiseminar/subpages/groups/one.html">Group 1</a></li>
-              <li><a href="/asobiseminar/subpages/groups/two.html">Group 2</a></li>
-              <li><a href="/asobiseminar/subpages/groups/three.html">Group 3</a></li>
+              <li><a href="/asobiseminar/subpages/groups/one.html">Group 1 - スケートボード</a></li>
+              <li><a href="/asobiseminar/subpages/groups/two.html">Group 2 - 割り箸建築</a></li>
+              <li><a href="/asobiseminar/subpages/groups/three.html">Group 3 - ファッション</a></li>
             </ul>
           </details>
         </li>
-        <li style="--item-index: 4;"><a href="/asobiseminar/subpages/aboutsite.html">このサイトについて</a></li>
-        <li style="--item-index: 5;"><a href="/asobiseminar/subpages/gallery.html">ギャラリー</a></li>
-        <li style="--item-index: 6;"><a href="/asobiseminar/sitemap.html">サイトマップ</a></li>
-        <li style="--item-index: 7;"><a href="/asobiseminar/settigs.html">テーマ設定</a></li>
+        <li style="--item-index: 4;"><a href="/asobiseminar/subpages/programmer.html">マー���アッププログラマー</a></li>
+        <li style="--item-index: 5;"><a href="/asobiseminar/subpages/aboutsite.html">このサイトについて</a></li>
+        <li style="--item-index: 6;"><a href="/asobiseminar/subpages/gallery.html">ギャラリー</a></li>
+        <li style="--item-index: 7;"><a href="/asobiseminar/sitemap.html">サイトマップ</a></li>
+        <li style="--item-index: 8;"><a href="/asobiseminar/settigs.html">テーマ・フォント設定</a></li>
       </ul>
     </nav>
   </details>
 
-  <main class="app-container group-content">
-    <header style="margin-bottom: 60px;">
-      <h1 style="color: var(--main-color); font-size: 3rem; font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">🚀 Group 1</h1>
-      <p style="opacity: 0.8; font-size: 1.1rem; margin: 0;">フロントエンド極限実験班</p>
-    </header>
-
-    <section style="margin-bottom: 60px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">プロジェクト概要</h2>
-      <p>Group 1 では、CSSアニメーションとJavaScriptを組み合わせた最高水準のUI/UXを追求しています。ブラウザの隠れた機能を発掘し、「退屈なWEB」を「ワクワクするWEB」に変える実験を日々行っています。</p>
+  <main class="group1-main">
+    <section class="group1-hero">
+      <div class="group1-hero-content">
+        <h1 class="group1-title">🛹 Group 1</h1>
+        <p class="group1-subtitle">スケートボードプロジェクト</p>
+      </div>
     </section>
 
-    <section style="margin-bottom: 60px;">
-      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">実装テーマ</h2>
-      <ul class="activity-list">
-        <li class="activity-item">3Dトランスフォーメーション and Perspective</li>
-        <li class="activity-item">Keyframes アニメーションの極み</li>
-        <li class="activity-item">SVG & Canvas インタラクティブ実験</li>
-        <li class="activity-item">シェーダーエフェクト��再現</li>
-        <li class="activity-item">パフォーマンスを損なわないアニメーション設計</li>
-      </ul>
-    </section>
+    <section class="group1-container">
+      <div class="group1-intro">
+        <h2>プロジェクト概要</h2>
+        <p>スケートボードの技術や文化を通じて、チームワークとイノベーションを学ぶグループです。</p>
+      </div>
 
-    <section style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--main-color);">
-      <a href="/asobiseminar/subpages/groups/index.html" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, var(--main-color), var(--balance-color)); color: var(--variation-color); border-radius: 8px; font-weight: bold; text-decoration: none;">➔ グループ一覧に戻る</a>
+      <div class="group1-grid">
+        <article class="group1-card">
+          <div class="group1-card-icon">📊</div>
+          <h3>技術研究</h3>
+          <p>スケートボードの設計や機能性についての深掘り研究</p>
+        </article>
+
+        <article class="group1-card">
+          <div class="group1-card-icon">🎨</div>
+          <h3>デザイン開発</h3>
+          <p>グラフィックデザインとカラースキームの創作</p>
+        </article>
+
+        <article class="group1-card">
+          <div class="group1-card-icon">👥</div>
+          <h3>コミュニティ</h3>
+          <p>スケーター文化の探求とコミュニティ形成</p>
+        </article>
+
+        <article class="group1-card">
+          <div class="group1-card-icon">🚀</div>
+          <h3>イノベーション</h3>
+          <p>新しい技術トレンドの発掘と実践</p>
+        </article>
+      </div>
+
+      <section class="group1-timeline">
+        <h2>プロジェクト進行状況</h2>
+        <div class="group1-timeline-item">
+          <div class="group1-timeline-marker"></div>
+          <div class="group1-timeline-content">
+            <h4>Phase 1: リサーチ</h4>
+            <p>市場調査とトレンド分析を実施</p>
+          </div>
+        </div>
+        <div class="group1-timeline-item">
+          <div class="group1-timeline-marker"></div>
+          <div class="group1-timeline-content">
+            <h4>Phase 2: 開発</h4>
+            <p>プロトタイプの設計と製作</p>
+          </div>
+        </div>
+        <div class="group1-timeline-item">
+          <div class="group1-timeline-marker"></div>
+          <div class="group1-timeline-content">
+            <h4>Phase 3: 発表</h4>
+            <p>成果物の展示とプレゼンテーション</p>
+          </div>
+        </div>
+      </section>
     </section>
   </main>
 
+  <script>
+    // フォント設定を適用
+    const selectedFont = localStorage.getItem('selectedFont') || 'Noto Sans JP - モダン標準';
+    const fontMap = {
+      'Noto Sans JP - モダン標準': "'Noto Sans JP', sans-serif",
+      'Noto Serif JP - エレガント正体': "'Noto Serif JP', serif",
+      'M PLUS 1 - ゴシック体': "'M PLUS 1', sans-serif",
+      'Zen Kaku Gothic New - 明朝体': "'Zen Kaku Gothic New', sans-serif",
+      'IBM Plex Sans JP - ビジネス': "'IBM Plex Sans JP', sans-serif",
+      'Roboto - モダンミニマル': "'Roboto', sans-serif",
+      'Inter - 幾何学的': "'Inter', sans-serif",
+      'Poppins - ポップ': "'Poppins', sans-serif",
+      'Montserrat - ウルバン': "'Montserrat', sans-serif",
+      'Space Grotesk - SF未来的': "'Space Grotesk', sans-serif",
+      'Playfair Display - グラマー': "'Playfair Display', serif",
+      'Merriweather - 古典的': "'Merriweather', serif",
+      'Lato - バランス型': "'Lato', sans-serif",
+      'Raleway - スタイリッシュ': "'Raleway', sans-serif",
+      'Outfit - 実験的': "'Outfit', sans-serif"
+    };
+    
+    const fontFamily = fontMap[selectedFont] || "'Noto Sans JP', sans-serif";
+    document.documentElement.style.setProperty('--font-family', fontFamily);
+    document.body.style.fontFamily = fontFamily;
+  </script>
 </body>
 </html>
