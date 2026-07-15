@@ -3,6 +3,8 @@
  - themecolor.json
  - sitemap.html
  - subpages/
+   - aboutsite.html
+   - gallery.html
    - members.html
    - groups/
      - index.html
@@ -23,3 +25,6 @@
    - three.css
  - gaibu/
    - unpkg.css
+ - imagesAndVideos/
+   - （各メンバーの写真）
+   - （活動動画）
