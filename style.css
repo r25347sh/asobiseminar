@@ -1,10 +1,33 @@
 /* ==========================================
-   1. 外部CSS（Picnic等）の暴走を100%ねじ伏せるリセット
+   1. サイト全体のベース設定（27色全自動同期）
+   ========================================== */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  /* 💡 27色のアクセントカラー（深みベース色）がサイト全体の背景色に自動適用 */
+  background-color: var(--accent-color) !important;
+  /* 💡 最も明るい対比色が全体の文字色になり、100%の視認性を絶対保証 */
+  color: var(--variation-color) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease !important;
+}
+
+/* リンク文字全体の共通ルール */
+a {
+  color: var(--main-color) !important; /* メインカラーでリンクを染める */
+  transition: color 0.2s, opacity 0.2s !important;
+}
+a:hover {
+  color: var(--balance-color) !important; /* ホバーするとバランスカラーに変化 */
+}
+
+/* ==========================================
+   2. 外部CSS（Picnic等）の暴走を100%ねじ伏せるナビリセット
    ========================================== */
 .magic-menu, .magic-menu * {
   box-sizing: border-box !important;
-  margin: 0 !important;
-  padding: 0 !important;
 }
 .magic-menu summary,
 .magic-submenu-details summary {
@@ -19,13 +42,13 @@
 }
 
 /* ==========================================
-   2. 左上に100%絶対出現する不動のハンバーガーボタン
+   3. 不動のハンバーガーボタン（左上完全固定）
    ========================================== */
 .magic-trigger {
   position: fixed !important;
   top: 25px !important;
   left: 25px !important;
-  z-index: 200000000 !important; /* 文字より必ず前に配置 */
+  z-index: 200000000 !important; 
   width: 50px !important;
   height: 50px !important;
   display: flex !important;
@@ -34,14 +57,14 @@
   background: transparent !important;
 }
 
-/* どんな背景（白・黒・グラデーション）の上でも100%絶対に見失わない、漆黒の丸座布団 */
+/* どんな背景の上でも絶対に見失わない、漆黒の丸座布団 */
 .magic-trigger > div:first-child {
   position: absolute !important;
   inset: 0 !important;
   width: 46px !important;
   height: 46px !important;
   background: #0f172a !important; 
-  border: 2px solid var(--main-color) !important; /* 27色のメインカラーのフチ */
+  border: 2px solid var(--main-color) !important; 
   border-radius: 50% !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
   display: flex !important;
@@ -54,7 +77,7 @@
   border-color: var(--balance-color) !important;
 }
 
-/* クラス名のズレによる消滅バグを100%防ぐ、強制スパン指定 */
+/* 3本線消滅バグを100%防ぐ強制スパン指定 */
 .magic-trigger span,
 .magic-trigger span::before,
 .magic-trigger span::after {
@@ -63,16 +86,15 @@
   top: 50% !important;
   width: 20px !important;
   height: 2.5px !important;
-  background-color: var(--variation-color) !important; /* テーマの最も明るい色と連動 */
+  background-color: var(--variation-color) !important; 
   border-radius: 2px !important;
   transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease !important;
 }
-
 .magic-trigger span { transform: translate(-50%, -50%) !important; }
 .magic-trigger span::before { content: "" !important; transform: translate(-50%, -6.5px) !important; }
 .magic-trigger span::after  { content: "" !important; transform: translate(-50%, 4.5px) !important; }
 
-/* ── 開いた瞬間（[open]）の爆速✕変化 ── */
+/* 開いた瞬間（[open]）の爆速✕変化 */
 .magic-menu[open] .magic-trigger > div:first-child {
   background: rgba(0, 0, 0, 0.6) !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
@@ -83,12 +105,12 @@
 .magic-menu[open] .magic-trigger span::after  { transform: translate(-50%, -50%) rotate(-45deg) !important; background-color: #ffffff !important; }
 
 /* ==========================================
-   3. 超軽量・全画面マットフェード背景
+   4. メニュー全画面マットフェード背景
    ========================================== */
 .magic-portal-bg {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 999998 !important; /* 文字のすぐ真裏 */
+  z-index: 999998 !important; 
   background: linear-gradient(135deg, var(--accent-color) 0%, var(--main-color) 100%) !important;
   opacity: 0 !important;
   transition: opacity 0.3s ease, display 0.3s allow-keywords !important;
@@ -103,13 +125,13 @@
 }
 
 /* ==========================================
-   4. 絶対中央固定・100%文字が消えない空間
+   5. 絶対中央固定・100%文字が消えない空間
    ========================================== */
 .magic-theater {
   position: fixed !important;
   top: 50% !important;
   left: 50% !important;
-  transform: translate(-50%, -50%) !important; /* 💡 物理的に画面のド真ん中にロックして場外消滅を防ぐ */
+  transform: translate(-50%, -50%) !important; /* 💡 物理的に画面のド真ん中に完全固定 */
   width: 100vw !important;
   height: 100vh !important;
   z-index: 999999 !important;
@@ -126,15 +148,12 @@
   text-align: center !important;
   width: 100% !important;
   max-width: 320px !important;
-  padding: 0 !important;
-  margin: 0 !important;
 }
 
-/* 文字は下から上へ、かすかにフェードインしながら浮き上がってくる洗練されたウェーブ */
+/* 文字の洗練されたフェード浮き上がりウェーブ */
 .magic-list > li {
   position: relative !important;
   margin: 24px 0 !important;
-  padding: 0 !important;
   opacity: 0 !important;
   transform: translateY(15px) !important; 
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease !important;
@@ -148,10 +167,10 @@
   .magic-menu[open] .magic-list > li { opacity: 0 !important; transform: translateY(15px) !important; }
 }
 
-/* ── リンク文字デザイン（視認性絶対保証） ── */
-.magic-theater a, 
+/* メニューの文字 */
+.magic-theater .magic-list a, 
 .magic-submenu-trigger {
-  color: var(--variation-color) !important; /* 27色の最も明るい対比色が確定で適用 */
+  color: var(--variation-color) !important;
   font-size: 2rem !important;
   font-weight: 800 !important;
   letter-spacing: 0.05em !important;
@@ -169,8 +188,8 @@
   text-shadow: 0 0 10px var(--balance-color) !important;
 }
 
-/* 下線ライン */
-.magic-theater a::after {
+/* 文字の下線 */
+.magic-theater .magic-list a::after {
   content: "" !important;
   position: absolute !important;
   bottom: -2px !important;
@@ -185,7 +204,7 @@
 .magic-list > li:hover a::after { transform: scaleX(1) !important; }
 
 /* ==========================================
-   5. メキーワード：メニュー内メニュー（Groupsアコーディオン）
+   6. メキーワード：Groupsアコーディオン
    ========================================== */
 .magic-submenu-trigger { padding-right: 40px !important; }
 .magic-submenu-trigger::after {
