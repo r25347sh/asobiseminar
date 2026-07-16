@@ -1,7 +1,6 @@
 // nav/nav-core.js - 粒子メニュー注入コア（実行順序ガード強化）
 function injectNavElements() {
   if (document.getElementById('particleCanvas')) return; // 二重注入防止
-
   // 操作説明
   const ins = document.createElement('div');
   ins.className = 'magic-nav-instruction';
