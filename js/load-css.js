@@ -1,21 +1,26 @@
-// js/load-css.js
+// js/load-css.js - GitHub Pages (asobiseminar) 完全対応版
 (function() {
   'use strict';
+
+  // リポジトリ名固定（asobiseminar）
+  const base = '/asobiseminar';
+
   const cssFiles = [
-    '/asobiseminar/gaibu/unpkg.css',
-    '/asobiseminar/css/style.css?v=2026',
-    '/asobiseminar/nav/nav.css?v=2026'
+    `${base}/gaibu/unpkg.css`,
+    `${base}/css/style.css?v=2026`,
+    `${base}/nav/nav.css?v=2026`
   ];
 
   const currentPath = window.location.pathname;
 
-  if (currentPath.includes('members.html')) cssFiles.push('/asobiseminar/css/members.css?v=1');
-  else if (currentPath.includes('/groups/')) cssFiles.push('/asobiseminar/css/groupsIndex.css?v=1');
-  else if (currentPath.includes('aboutsite.html')) cssFiles.push('/asobiseminar/css/aboutsite.css?v=1');
-  else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) cssFiles.push('/asobiseminar/css/settings.css?v=1');
-  else if (currentPath.includes('programmer.html')) cssFiles.push('/asobiseminar/css/programmer.css?v=2026');
-  else cssFiles.push('/asobiseminar/css/index-main.css?v=1');
+  if (currentPath.includes('members.html')) cssFiles.push(`${base}/css/members.css?v=1`);
+  else if (currentPath.includes('/groups/')) cssFiles.push(`${base}/css/groupsIndex.css?v=1`);
+  else if (currentPath.includes('aboutsite.html')) cssFiles.push(`${base}/css/aboutsite.css?v=1`);
+  else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) cssFiles.push(`${base}/css/settings.css?v=1`);
+  else if (currentPath.includes('programmer.html')) cssFiles.push(`${base}/css/programmer.css?v=2026`);
+  else cssFiles.push(`${base}/css/index-main.css?v=1`);
 
+  // CSSロード
   cssFiles.reverse().forEach(url => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -23,10 +28,10 @@
     document.head.prepend(link);
   });
 
-  // Navシステム厳密ロード
+  // Navシステム（順序厳守）
   const navScripts = [
-    '/asobiseminar/nav/nav-particle.js',
-    '/asobiseminar/nav/nav-core.js'
+    `${base}/nav/nav-particle.js`,
+    `${base}/nav/nav-core.js`
   ];
 
   function loadScript(src) {
@@ -35,12 +40,17 @@
       script.src = src;
       script.async = false;
       script.onload = () => resolve(src);
-      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      script.onerror = () => reject(new Error(`Load failed: ${src}`));
       document.head.appendChild(script);
     });
   }
 
   Promise.all(navScripts.map(loadScript))
-    .then(loaded => console.log('%c✅ Nav System Initialized', 'color:#00ff88;font-weight:bold', loaded))
-    .catch(err => console.error('❌ Nav Load Failed:', err));
+    .then(() => {
+      console.log('%c✅ Asobi Lab. Nav System Ready (asobiseminar)', 'color:#00ff88; font-weight:bold; font-size:14px');
+    })
+    .catch(err => {
+      console.error('❌ Nav Load Error:', err);
+      console.log('Current base path:', base);
+    });
 })();
