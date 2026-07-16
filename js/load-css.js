@@ -1,9 +1,8 @@
-// js/load-css.js - GitHub Pages (asobiseminar) 完全対応版
+// js/load-css.js - GitHub Pages (リポジトリ名: asobiseminar) 最終版
 (function() {
   'use strict';
 
-  // リポジトリ名固定（asobiseminar）
-  const base = '/asobiseminar';
+  const base = '/asobiseminar';   // ← リポジトリ名固定
 
   const cssFiles = [
     `${base}/gaibu/unpkg.css`,
@@ -20,7 +19,6 @@
   else if (currentPath.includes('programmer.html')) cssFiles.push(`${base}/css/programmer.css?v=2026`);
   else cssFiles.push(`${base}/css/index-main.css?v=1`);
 
-  // CSSロード
   cssFiles.reverse().forEach(url => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -28,7 +26,7 @@
     document.head.prepend(link);
   });
 
-  // Navシステム（順序厳守）
+  // Nav JS（Particle → Core の順序厳守）
   const navScripts = [
     `${base}/nav/nav-particle.js`,
     `${base}/nav/nav-core.js`
@@ -40,17 +38,12 @@
       script.src = src;
       script.async = false;
       script.onload = () => resolve(src);
-      script.onerror = () => reject(new Error(`Load failed: ${src}`));
+      script.onerror = () => reject(new Error(`JS Load Failed: ${src}`));
       document.head.appendChild(script);
     });
   }
 
   Promise.all(navScripts.map(loadScript))
-    .then(() => {
-      console.log('%c✅ Asobi Lab. Nav System Ready (asobiseminar)', 'color:#00ff88; font-weight:bold; font-size:14px');
-    })
-    .catch(err => {
-      console.error('❌ Nav Load Error:', err);
-      console.log('Current base path:', base);
-    });
+    .then(() => console.log('%c✅ NAV PARTICLE MENU READY', 'color:#00ff88;font-size:16px;font-weight:bold'))
+    .catch(err => console.error('❌ NAV JS ERROR:', err));
 })();
