@@ -20,7 +20,7 @@ function injectNavElements() {
     const svgNS = "http://w3.org";
     const svg = document.createElementNS(svgNS, 'svg');
     svg.setAttribute('class', 'magic-nav-filter-svg');
-
+    
     svg.innerHTML = `
         <defs>
             <filter id="gooey">
@@ -46,21 +46,20 @@ if (document.readyState === 'loading') {
 }
 
 const menuData = [
-    { text: 'ホーム', url: '/asobiseminar/index.html' },
-    { text: 'メンバー', url: '/asobiseminar/subpages/members.html' },
-    {
-        text: 'Groups',
+    { text: 'ホーム', url: 'sample1.html' },
+    { text: 'メンバー', url: 'sample2.html' },
+    { 
+        text: 'Groups', 
         children: [
-            { text: '目次', url: '/asobiseminar/subpages/groups/index.html' },
-            { text: 'スケボー', url: '/asobiseminar/subpages/groups/one.html' },
-            { text: '建築', url: '/asobiseminar/subpages/groups/two.html' },
-            { text: 'ファッション', url: '/asobiseminar/subpages/groups/three.html' },
-            { text: 'プログラマ', url: '/asobiseminar/subpages/groups/programmer.html' }
-        ]
+            { text: 'グループ1', url: 'groups/sample1.html' },
+            { text: 'グループ2', url: 'groups/sample2.html' },
+            { text: 'グループ3', url: 'groups/sample3.html' },
+            { text: 'プログラマ', url: 'groups/programmer.html' }
+        ] 
     },
-    { text: 'ここについて', url: '/asobiseminar/subpages/aboutsite.html', isLong: true },
-    { text: 'ギャラリー', url: '/asobiseminar/subpages/gallery.html' },
-    { text: 'テーマ設定', url: '/asobiseminar/settigs.html' }
+    { text: 'このサイトについて', url: 'about.html', isLong: true },
+    { text: 'ギャラリー', url: 'gallery.html' },
+    { text: 'テーマ設定', url: 'theme.html' }
 ];
 
 let pressTimer = null;
@@ -68,17 +67,15 @@ let clickCount = 0;
 let lastClickTime = 0;
 let isTouchMode = false;
 let lockEvent = false;
-let isPressing = false; // 新規追加
-let isLongPressMenuOpen = false; // 新規追加
 
 function spawnMenu(centerX, centerY) {
     const container = document.getElementById('menu-container');
     if (!container) return;
-
+    
     clearTimeout(pressTimer);
     isPressing = false;
     menuOpen = true;
-    lockEvent = true;
+    lockEvent = true; 
     container.innerHTML = '';
 
     for (let i = 0; i < 120; i++) {
@@ -106,7 +103,7 @@ function spawnMenu(centerX, centerY) {
 
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (lockEvent) return;
+            if (lockEvent) return; 
             if (item.children) {
                 spawnSubMenu(targetX, targetY, item.children);
             } else {
@@ -126,7 +123,7 @@ function spawnSubMenu(parentX, parentY, children) {
     if (lockEvent) return;
     const container = document.getElementById('menu-container');
     document.querySelectorAll('.sub-menu-item').forEach(el => el.remove());
-
+    
     children.forEach((child, index) => {
         const baseAngle = Math.atan2(parentY - touchY, parentX - touchX);
         const angle = (index / (children.length - 1)) * (Math.PI * 0.8) - (Math.PI * 0.4) + baseAngle;
@@ -174,43 +171,39 @@ function closeMenu(targetX = touchX, targetY = touchY) {
     }, 400);
 }
 
-// startPress 関数を修正
 function startPress(x, y) {
     if (menuOpen || lockEvent) return;
     isPressing = true;
     touchX = x;
     touchY = y;
     particles = [];
-    pressTimer = setTimeout(() => { 
-        if (isPressing) {
-            spawnMenu(touchX, touchY);
-            isLongPressMenuOpen = true; // 長押しでメニューが開かれたことを示すフラグを設定
-        }
-    }, 400);
+    pressTimer = setTimeout(() => { if (isPressing) spawnMenu(touchX, touchY); }, 400);
 }
 
-// endPress 関数を修正
 function endPress() {
-    isPressing = false; // マウス/指が離されたので、押している状態をリセット
-    clearTimeout(pressTimer); // 保留中のタイマーをクリア
-    // メニューが既に開いている場合でも、タイマーをクリアする。
-    // メニューを閉じるロジックはclickイベントリスナーで処理されるため、ここでは何もしない。
+    if (!menuOpen && !lockEvent) {
+        isPressing = false;
+        clearTimeout(pressTimer);
+        particles = [];
+    }
 }
 
 window.addEventListener('contextmenu', e => e.preventDefault());
 window.addEventListener('selectstart', e => e.preventDefault());
 
-// mousedown イベントリスナーを修正: トリプルクリックを削除し、長押しを実装
 window.addEventListener('mousedown', (e) => {
     if (menuOpen || lockEvent || e.button !== 0 || isTouchMode) return;
-    // トリプルクリックの代わりに長押しを開始
-    startPress(e.clientX + window.scrollX, e.clientY + window.scrollY);
+    const now = Date.now();
+    clickCount = (now - lastClickTime < 400) ? clickCount + 1 : 1;
+    lastClickTime = now;
+    if (clickCount === 3) {
+        touchX = e.clientX + window.scrollX;
+        touchY = e.clientY + window.scrollY;
+        spawnMenu(touchX, touchY);
+        clickCount = 0;
+    }
 });
-
-// mouseup イベントリスナーを修正: 常にendPressを呼び出すように変更
-window.addEventListener('mouseup', () => {
-    endPress();
-});
+window.addEventListener('mouseup', () => { if (!menuOpen && !lockEvent) endPress(); });
 
 window.addEventListener('touchstart', (e) => {
     if (!menuOpen && !lockEvent) {
@@ -219,23 +212,9 @@ window.addEventListener('touchstart', (e) => {
         startPress(t[0].clientX + window.scrollX, t[0].clientY + window.scrollY);
     }
 });
-window.addEventListener('touchend', () => { 
-    if (isTouchMode) { // isTouchModeがtrueの場合のみendPressを呼ぶ
-        endPress();
-    }
-});
+window.addEventListener('touchend', () => { if (isTouchMode && !menuOpen && !lockEvent) endPress(); });
 
-// click イベントリスナーを修正: 長押しで開かれたメニューに対する初回のクリックを無視
 window.addEventListener('click', (e) => {
     if (lockEvent) return;
-
-    // 長押しでメニューが開かれた直後のクリックイベントを無視する
-    if (isLongPressMenuOpen) {
-        isLongPressMenuOpen = false; // フラグをリセット
-        return; // イベント処理を中断し、メニューが閉じられるのを防ぐ
-    }
-
-    if (menuOpen && !e.target.classList.contains('menu-item')) {
-        closeMenu();
-    }
+    if (menuOpen && !e.target.classList.contains('menu-item')) closeMenu();
 });
