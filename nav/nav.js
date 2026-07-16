@@ -9,7 +9,6 @@ class LongPressMenu {
         this.startClientY = 0;
         this.init();
     }
-
     init() {
         document.addEventListener('mousedown', this.handlePressStart.bind(this));
         document.addEventListener('touchstart', this.handlePressStart.bind(this));
