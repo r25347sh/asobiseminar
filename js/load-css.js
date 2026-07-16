@@ -1,8 +1,10 @@
 // js/load-css.js
 (function() {
+  // --- 1. CSSファイルのリスト定義と条件分岐 ---
   const cssFiles = [
     '/asobiseminar/gaibu/unpkg.css',
-    '/asobiseminar/css/style.css?v=2026'
+    '/asobiseminar/css/style.css?v=2026',
+    '/asobiseminar/nav/nav.css?v=2026'
   ];
 
   const currentPath = window.location.pathname;
@@ -26,11 +28,24 @@
     cssFiles.push('/asobiseminar/css/index-main.css?v=1');
   }
 
-  // 逆順で優先順位を確保
+  // --- 2. CSSファイルの読み込み実行（逆順・先頭追加） ---
   cssFiles.reverse().forEach(url => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = url;
     document.head.prepend(link);
+  });
+
+  // --- 3. 追加：JSファイルの読み込み実行（正順・末尾追加） ---
+  const jsFiles = [
+    '/asobiseminar/nav/nav-core.js',
+    '/asobiseminar/nav/nav-particle.js'
+  ];
+
+  jsFiles.forEach(url => {
+    const script = document.createElement('script');
+    script.src = url;
+    script.defer = true; // HTMLパースを妨げず、配列の順序通りに実行する設定
+    document.head.appendChild(script);
   });
 })();
