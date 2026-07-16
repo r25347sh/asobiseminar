@@ -1,6 +1,11 @@
 /* css/one.css - Group 1ページ専用スタイル */
-.group-content {
+
+/* ==========================================================================
+   全体のアニメーション・ベース設定
+   ========================================================================== */
+.group1-main {
   animation: slideInRight 0.6s ease-out;
+  width: 100%;
 }
 
 @keyframes slideInRight {
@@ -14,34 +19,87 @@
   }
 }
 
-body{
-  display: flex; /* フレックスボックスを適用 */
-  justify-content: center; /* 横（水平）方向の中央揃え */
-  align-items: center; /* 縦（垂直）方向の中央揃え */
+/* ==========================================================================
+   各セクションの中央寄せレイアウト
+   ========================================================================== */
+
+/* 1. ヒーローエリア（タイトル部分）の中央寄せ */
+.group1-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(0, 0, 0, 0.05); /* 必要に応じて背景を調整 */
 }
 
-.activity-list {
-  list-style: none;
-  padding: 0;
+/* 2. メインコンテナの幅制限と中央寄せ */
+.group1-container {
+  max-width: 1000px;      /* コンテンツが広がりすぎないように制限 */
+  margin: 0 auto;         /* 左右のマージンを自動調整して画面中央に配置 */
+  padding: 40px 20px;     /* スマホ画面での左右の余白を確保 */
 }
 
-.activity-item {
+/* 3. プロジェクト概要の中央寄せ */
+.group1-intro {
+  text-align: center;     /* 文字をすべて中央揃えにする */
+  margin-bottom: 48px;
+}
+
+/* 4. 4つのカード（グリッド）の中央寄せ */
+.group1-grid {
+  display: grid;
+  /* 画面幅に応じて1〜4列に自動折り返し、余ったスペースを中央に寄せる */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  justify-content: center; 
+  margin-bottom: 64px;
+}
+
+/* カード内のテキストやアイコンも中央寄せに整える */
+.group1-card {
+  text-align: center;
+  padding: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05); /* 背景色と薄い枠線でカード化 */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* 最初のコードにあったホバー効果のニュアンスをカードに適用 */
+.group1-card:hover {
+  transform: translateY(-5px);
+  color: var(--main-color);
+}
+
+.group1-card-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+/* 5. プロジェクト進行状況（タイムライン）の中央寄せ */
+.group1-timeline {
+  max-width: 500px;       /* タイムラインは見やすいように幅を細く絞る */
+  margin: 0 auto;         /* 絞ったブロックを画面中央に配置 */
+}
+
+.group1-timeline h2 {
+  text-align: center;     /* タイトルを中央寄せ */
+  margin-bottom: 32px;
+}
+
+/* タイムラインの各項目 */
+.group1-timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
   padding: 16px 0;
-  padding-left: 24px;
-  position: relative;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
 }
 
-.activity-item::before {
-  content: '▸';
-  position: absolute;
-  left: 0;
-  color: var(--main-color);
-  font-size: 1.2rem;
-}
-
-.activity-item:hover {
-  padding-left: 32px;
+/* 最初のコードにあったリストのホバー効果を継承 */
+.group1-timeline-item:hover {
+  padding-left: 8px;
   color: var(--balance-color);
 }
