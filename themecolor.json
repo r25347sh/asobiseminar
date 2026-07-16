@@ -3,204 +3,254 @@
     {
       "name": "HalloweenNight (ハロウィンの怪異)",
       "maincolor": "#ff6600",
-      "balancecolor": "#8811ee",
+      "balancecolor": "#bb00ff",
       "variationcolor": "#ffffff",
-      "accentcolor": "#0d0214"
+      "accentcolor": "#0f001a"
     },
     {
       "name": "QuantumLab (量子力学実験室)",
       "maincolor": "#00ffcc",
       "balancecolor": "#8b5cf6",
-      "variationcolor": "#f8fafc",
-      "accentcolor": "#060814"
+      "variationcolor": "#f0f8ff",
+      "accentcolor": "#05070f"
     },
     {
       "name": "BioChemical (禁忌の培養フラスコ)",
       "maincolor": "#adff2f",
-      "balancecolor": "#00ff66",
+      "balancecolor": "#00ff88",
       "variationcolor": "#ffffff",
-      "accentcolor": "#0c150c"
+      "accentcolor": "#0a140a"
     },
     {
       "name": "AbsoluteZero (絶対零度の研究棟)",
-      "maincolor": "#93c5fd",
+      "maincolor": "#7dd3fc",
       "balancecolor": "#3b82f6",
       "variationcolor": "#e0f2fe",
-      "accentcolor": "#0b132b"
+      "accentcolor": "#0a1428"
     },
     {
       "name": "MidnightMagic (深淵の魔導書)",
       "maincolor": "#00f0ff",
-      "balancecolor": "#7000ff",
-      "variationcolor": "#f0f5ff",
-      "accentcolor": "#02000a"
+      "balancecolor": "#9f00ff",
+      "variationcolor": "#f8f0ff",
+      "accentcolor": "#05020f"
     },
     {
       "name": "CyberNeon (電脳ネオン都市)",
       "maincolor": "#00ff66",
-      "balancecolor": "#ff007f",
+      "balancecolor": "#ff00aa",
       "variationcolor": "#ffffff",
-      "accentcolor": "#050508"
+      "accentcolor": "#0a0a12"
     },
     {
       "name": "SakuraBlossom (深窓の千本桜)",
-      "maincolor": "#ffb7d5",
-      "balancecolor": "#ffffff",
-      "variationcolor": "#4c0519",
-      "accentcolor": "#ffe4e1"
+      "maincolor": "#ff9ec1",
+      "balancecolor": "#f8c1d4",
+      "variationcolor": "#3f0a1f",
+      "accentcolor": "#fff0f5"
     },
     {
       "name": "OceanAbyss (深海のアトランティス)",
-      "maincolor": "#0055ff",
-      "balancecolor": "#00ffcc",
+      "maincolor": "#4d9fff",
+      "balancecolor": "#00e6cc",
       "variationcolor": "#e0f2fe",
-      "accentcolor": "#01040d"
+      "accentcolor": "#02050f"
     },
     {
       "name": "ForestWhisper (いにしえの聖霊の森)",
-      "maincolor": "#00ffaa",
-      "balancecolor": "#115522",
-      "variationcolor": "#f0fdf4",
-      "accentcolor": "#011c10"
+      "maincolor": "#22ffaa",
+      "balancecolor": "#228822",
+      "variationcolor": "#f0fff0",
+      "accentcolor": "#02100a"
     },
     {
       "name": "VampireCastle (吸血鬼の晩餐会)",
-      "maincolor": "#aa0000",
-      "balancecolor": "#4a0404",
-      "variationcolor": "#ffffff",
-      "accentcolor": "#000000"
+      "maincolor": "#cc1122",
+      "balancecolor": "#660000",
+      "variationcolor": "#ffe6e6",
+      "accentcolor": "#0f0000"
     },
     {
       "name": "MatchaLatte (京都和モダン和菓子)",
-      "maincolor": "#283618",
-      "balancecolor": "#606c38",
-      "variationcolor": "#fefae0",
-      "accentcolor": "#fefae0"
+      "maincolor": "#3a4f1f",
+      "balancecolor": "#8a9f5f",
+      "variationcolor": "#fffdf0",
+      "accentcolor": "#f5f0e0"
     },
     {
       "name": "CosmicNebula (未知なる銀河の星雲)",
-      "maincolor": "#ff00bb",
-      "balancecolor": "#6366f1",
-      "variationcolor": "#fdf2f8",
-      "accentcolor": "#0c001c"
+      "maincolor": "#ff00cc",
+      "balancecolor": "#7766ff",
+      "variationcolor": "#f8f0ff",
+      "accentcolor": "#0c001f"
     },
     {
       "name": "PolarAurora (最北の極光オーロラ)",
       "maincolor": "#00ffff",
-      "balancecolor": "#00ff66",
-      "variationcolor": "#f0fdfa",
-      "accentcolor": "#060c1a"
+      "balancecolor": "#00ff99",
+      "variationcolor": "#f0fff9",
+      "accentcolor": "#020c1a"
     },
     {
       "name": "GirlsSecretParty (秘密のガールズパーティ)",
-      "maincolor": "#eb6d9a",
-      "balancecolor": "#f19bd4",
-      "variationcolor": "#d3ecf3",
-      "accentcolor": "#3f2830"
+      "maincolor": "#ff4d94",
+      "balancecolor": "#ff99cc",
+      "variationcolor": "#f0f8ff",
+      "accentcolor": "#2a1f28"
     },
     {
       "name": "FloralHerbarium (植物標本の小瓶)",
-      "maincolor": "#ea5e6b",
-      "balancecolor": "#6b94cd",
-      "variationcolor": "#bd9fca",
-      "accentcolor": "#8d797d"
+      "maincolor": "#e05a6b",
+      "balancecolor": "#6b9fd4",
+      "variationcolor": "#f8f0ff",
+      "accentcolor": "#2a1f24"
     },
     {
       "name": "HarajukuFairytale (原宿メルヘン幻想曲)",
-      "maincolor": "#f4b3c9",
-      "balancecolor": "#bae2f8",
-      "variationcolor": "#e9e5eb",
-      "accentcolor": "#008cd6"
+      "maincolor": "#ff99cc",
+      "balancecolor": "#99ddff",
+      "variationcolor": "#fff0f8",
+      "accentcolor": "#1a0f2a"
     },
     {
       "name": "NeonStationery (真夜中の文房具店)",
-      "maincolor": "#00a3d1",
-      "balancecolor": "#fff579",
-      "variationcolor": "#c4d2dc",
-      "accentcolor": "#231815"
+      "maincolor": "#00aaff",
+      "balancecolor": "#ffdd44",
+      "variationcolor": "#f0f8ff",
+      "accentcolor": "#1f1a24"
     },
     {
       "name": "MeringueGlaze (天使のメレンゲ菓子)",
-      "maincolor": "#f6dbe9",
-      "balancecolor": "#fffbd0",
-      "variationcolor": "#fffef8",
-      "accentcolor": "#f5becf"
+      "maincolor": "#ff99cc",
+      "balancecolor": "#fff0aa",
+      "variationcolor": "#3f2a3a",
+      "accentcolor": "#fff8f0"
     },
     {
       "name": "ChampagneCocktail (黄昏のバーカウンター)",
-      "maincolor": "#f7c4b9",
-      "balancecolor": "#f9cfbd",
-      "variationcolor": "#dadadb",
-      "accentcolor": "#375c68"
+      "maincolor": "#ffaa88",
+      "balancecolor": "#ffddaa",
+      "variationcolor": "#f8f0e8",
+      "accentcolor": "#2a1f24"
     },
     {
       "name": "HawaiianBreeze (楽園のハワイアン)",
-      "maincolor": "#008785",
-      "balancecolor": "#69b4a4",
-      "variationcolor": "#f9cfb9",
-      "accentcolor": "#efeb64"
+      "maincolor": "#00ccaa",
+      "balancecolor": "#ffdd66",
+      "variationcolor": "#fff8e0",
+      "accentcolor": "#1f2a1f"
+    },
+    {
+      "name": "DeepSpace (深宇宙探査)",
+      "maincolor": "#00ccff",
+      "balancecolor": "#aa44ff",
+      "variationcolor": "#f0f8ff",
+      "accentcolor": "#00040f"
+    },
+    {
+      "name": "CherryBlossomNight (夜桜幻想)",
+      "maincolor": "#ff6699",
+      "balancecolor": "#ff99bb",
+      "variationcolor": "#fff0f8",
+      "accentcolor": "#1f0f1f"
+    },
+    {
+      "name": "ElectricDream (エレクトリックドリーム)",
+      "maincolor": "#00ffdd",
+      "balancecolor": "#ff00aa",
+      "variationcolor": "#ffffff",
+      "accentcolor": "#0a0a1f"
+    },
+    {
+      "name": "GoldenHour (黄金の時間)",
+      "maincolor": "#ffaa44",
+      "balancecolor": "#ffdd88",
+      "variationcolor": "#3f2a1f",
+      "accentcolor": "#fff8e8"
+    },
+    {
+      "name": "MysticFog (神秘の霧)",
+      "maincolor": "#88aaff",
+      "balancecolor": "#bb88ff",
+      "variationcolor": "#f0f8ff",
+      "accentcolor": "#0f0f1f"
+    },
+    {
+      "name": "SolarFlare (太陽フレア)",
+      "maincolor": "#ff4400",
+      "balancecolor": "#ffaa00",
+      "variationcolor": "#fff8e0",
+      "accentcolor": "#2a1f0f"
+    },
+    {
+      "name": "MoonlitGarden (月明かりの庭)",
+      "maincolor": "#aaccff",
+      "balancecolor": "#88ffcc",
+      "variationcolor": "#f0f8ff",
+      "accentcolor": "#0f1a2a"
+    },
+    {
+      "name": "NeonTokyo (ネオントーキョー)",
+      "maincolor": "#ff00aa",
+      "balancecolor": "#00ffdd",
+      "variationcolor": "#ffffff",
+      "accentcolor": "#0f0a1f"
+    },
+    {
+      "name": "PastelDream (パステルドリーム)",
+      "maincolor": "#ff99cc",
+      "balancecolor": "#99ffcc",
+      "variationcolor": "#3f2a3a",
+      "accentcolor": "#fff0f8"
+    },
+    {
+      "name": "VolcanicAsh (火山灰)",
+      "maincolor": "#ff6644",
+      "balancecolor": "#884422",
+      "variationcolor": "#f8f0e8",
+      "accentcolor": "#1f0f0a"
+    },
+    {
+      "name": "ArcticLight (北極光)",
+      "maincolor": "#44ddff",
+      "balancecolor": "#88ffaa",
+      "variationcolor": "#f0fff8",
+      "accentcolor": "#0a1f2a"
+    },
+    {
+      "name": "MidnightCafe (深夜のカフェ)",
+      "maincolor": "#cc8866",
+      "balancecolor": "#aa6644",
+      "variationcolor": "#f8f0e8",
+      "accentcolor": "#1f1a1a"
+    },
+    {
+      "name": "CrystalLab (結晶実験室)",
+      "maincolor": "#88ffff",
+      "balancecolor": "#ff88cc",
+      "variationcolor": "#f0ffff",
+      "accentcolor": "#0a1f2a"
+    },
+    {
+      "name": "EmberForge (炎の鍛冶場)",
+      "maincolor": "#ff4422",
+      "balancecolor": "#ffaa66",
+      "variationcolor": "#fff0e0",
+      "accentcolor": "#2a1f1a"
     }
   ],
   "fonts": [
-    {
-      "name": "Noto Sans JP - モダン標準",
-      "fontFamily": "'Noto Sans JP', sans-serif"
-    },
-    {
-      "name": "Noto Serif JP - エレガント正体",
-      "fontFamily": "'Noto Serif JP', serif"
-    },
-    {
-      "name": "M PLUS 1 - ゴシック体",
-      "fontFamily": "'M PLUS 1', sans-serif"
-    },
-    {
-      "name": "Zen Kaku Gothic New - 明朝体",
-      "fontFamily": "'Zen Kaku Gothic New', sans-serif"
-    },
-    {
-      "name": "IBM Plex Sans JP - ビジネス",
-      "fontFamily": "'IBM Plex Sans JP', sans-serif"
-    },
-    {
-      "name": "Roboto - モダンミニマル",
-      "fontFamily": "'Roboto', sans-serif"
-    },
-    {
-      "name": "Inter - 幾何学的",
-      "fontFamily": "'Inter', sans-serif"
-    },
-    {
-      "name": "Poppins - ポップ",
-      "fontFamily": "'Poppins', sans-serif"
-    },
-    {
-      "name": "Montserrat - ウルバン",
-      "fontFamily": "'Montserrat', sans-serif"
-    },
-    {
-      "name": "Space Grotesk - SF未来的",
-      "fontFamily": "'Space Grotesk', sans-serif"
-    },
-    {
-      "name": "Playfair Display - グラマー",
-      "fontFamily": "'Playfair Display', serif"
-    },
-    {
-      "name": "Merriweather - 古典的",
-      "fontFamily": "'Merriweather', serif"
-    },
-    {
-      "name": "Lato - バランス型",
-      "fontFamily": "'Lato', sans-serif"
-    },
-    {
-      "name": "Raleway - スタイリッシュ",
-      "fontFamily": "'Raleway', sans-serif"
-    },
-    {
-      "name": "Outfit - 実験的",
-      "fontFamily": "'Outfit', sans-serif"
-    }
+    {"name": "Noto Sans JP - モダン標準", "fontFamily": "'Noto Sans JP', sans-serif"},
+    {"name": "Noto Serif JP - エレガント正体", "fontFamily": "'Noto Serif JP', serif"},
+    {"name": "M PLUS 1 - ゴシック体", "fontFamily": "'M PLUS 1', sans-serif"},
+    {"name": "Zen Kaku Gothic New - 明朝体", "fontFamily": "'Zen Kaku Gothic New', sans-serif"},
+    {"name": "IBM Plex Sans JP - ビジネス", "fontFamily": "'IBM Plex Sans JP', sans-serif"},
+    {"name": "Roboto - モダンミニマル", "fontFamily": "'Roboto', sans-serif"},
+    {"name": "Inter - 幾何学的", "fontFamily": "'Inter', sans-serif"},
+    {"name": "Poppins - ポップ", "fontFamily": "'Poppins', sans-serif"},
+    {"name": "Montserrat - ウルバン", "fontFamily": "'Montserrat', sans-serif"},
+    {"name": "Space Grotesk - SF未来的", "fontFamily": "'Space Grotesk', sans-serif"},
+    {"name": "Playfair Display - グラマー", "fontFamily": "'Playfair Display', serif"},
+    {"name": "Merriweather - 古典的", "fontFamily": "'Merriweather', serif"}
   ]
 }
