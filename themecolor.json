@@ -44,8 +44,8 @@
     },
     {
       "name": "SakuraBlossom (深窓の千本桜)",
-      "maincolor": "#ff9ec1",
-      "balancecolor": "#f8c1d4",
+      "maincolor": "#ff4d94",
+      "balancecolor": "#ff99cc",
       "variationcolor": "#3f0a1f",
       "accentcolor": "#fff0f5"
     },
@@ -74,7 +74,7 @@
       "name": "MatchaLatte (京都和モダン和菓子)",
       "maincolor": "#3a4f1f",
       "balancecolor": "#8a9f5f",
-      "variationcolor": "#fffdf0",
+      "variationcolor": "#3f2a1f",
       "accentcolor": "#f5f0e0"
     },
     {
@@ -89,7 +89,7 @@
       "maincolor": "#00ffff",
       "balancecolor": "#00ff99",
       "variationcolor": "#f0fff9",
-      "accentcolor": "#020c1a"
+      "accentcolor": "#060c1a"
     },
     {
       "name": "GirlsSecretParty (秘密のガールズパーティ)",
@@ -109,8 +109,8 @@
       "name": "HarajukuFairytale (原宿メルヘン幻想曲)",
       "maincolor": "#ff99cc",
       "balancecolor": "#99ddff",
-      "variationcolor": "#fff0f8",
-      "accentcolor": "#1a0f2a"
+      "variationcolor": "#3f2a3a",
+      "accentcolor": "#fff0f8"
     },
     {
       "name": "NeonStationery (真夜中の文房具店)",
@@ -130,14 +130,14 @@
       "name": "ChampagneCocktail (黄昏のバーカウンター)",
       "maincolor": "#ffaa88",
       "balancecolor": "#ffddaa",
-      "variationcolor": "#f8f0e8",
+      "variationcolor": "#3f2a1f",
       "accentcolor": "#2a1f24"
     },
     {
       "name": "HawaiianBreeze (楽園のハワイアン)",
       "maincolor": "#00ccaa",
       "balancecolor": "#ffdd66",
-      "variationcolor": "#fff8e0",
+      "variationcolor": "#3f2a1f",
       "accentcolor": "#1f2a1f"
     },
     {
@@ -151,7 +151,7 @@
       "name": "CherryBlossomNight (夜桜幻想)",
       "maincolor": "#ff6699",
       "balancecolor": "#ff99bb",
-      "variationcolor": "#fff0f8",
+      "variationcolor": "#3f0a1f",
       "accentcolor": "#1f0f1f"
     },
     {
@@ -186,7 +186,7 @@
       "name": "MoonlitGarden (月明かりの庭)",
       "maincolor": "#aaccff",
       "balancecolor": "#88ffcc",
-      "variationcolor": "#f0f8ff",
+      "variationcolor": "#f0fff8",
       "accentcolor": "#0f1a2a"
     },
     {
