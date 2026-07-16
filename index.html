@@ -89,16 +89,74 @@
   <script src="/asobiseminar/nav/nav-particle.js"></script>
   <script src="/asobiseminar/nav/nav-core.js"></script>
   
+  <!-- === 緊急直接埋め込み Nav粒子メニュー（デバッグ用） === -->
   <script>
-    console.log('🚀 Direct Nav Load Attempted');
-    setTimeout(() => {
-      if (typeof initParticleSystem === 'function') {
-        console.log('✅ Particle System Found');
-      } else {
-        console.log('❌ Particle System Not Found');
+    // nav-particle.jsの内容を直接埋め込み
+    let canvas, ctx;
+    let particles = [];
+    let isPressing = false;
+    let menuOpen = false;
+    let touchX = 0;
+    let touchY = 0;
+
+    function getMagicHue() {
+      return 185;
+    }
+
+    class Particle {
+      constructor(targetX, targetY, forceOrbit = false) {
+        this.targetX = targetX;
+        this.targetY = targetY;
+        if (forceOrbit) {
+          this.angle = Math.random() * Math.PI * 2;
+          this.currentRadius = 135;
+          this.x = targetX + Math.cos(this.angle) * this.currentRadius;
+          this.y = targetY + Math.sin(this.angle) * this.currentRadius;
+          this.isOrbiting = true;
+        } else {
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.angle = Math.atan2(this.y - targetY, this.x - targetX);
+          this.currentRadius = Math.hypot(this.x - targetX, this.y - targetY);
+          this.isOrbiting = false;
+        }
+        this.size = Math.random() * 2.5 + 1.5;
+        this.speed = 0.15;
+        this.orbitRadius = 135;
+        this.rotSpeed = 0.05;
+        this.hue = 185;
+        this.history = [];
       }
-    }, 1000);
+      update() { /* 簡略化 */ }
+      draw() { /* 簡略化 */ }
+    }
+
+    function initParticleSystem() {
+      console.log('🚀 Particle System Started');
+      canvas = document.createElement('canvas');
+      canvas.id = 'particleCanvas';
+      document.body.appendChild(canvas);
+      ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    // nav-core.js の一部簡易版
+    document.addEventListener('mousedown', (e) => {
+      if (e.button === 0) {
+        console.log('Long press detected - starting particle');
+        isPressing = true;
+        touchX = e.clientX;
+        touchY = e.clientY;
+        if (!canvas) initParticleSystem();
+      }
+    });
+
+    console.log('✅ Direct Nav Debug Loaded');
   </script>
+</body>
 </body>
 </body>
 </html>
