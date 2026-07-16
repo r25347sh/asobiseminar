@@ -1,6 +1,7 @@
-// js/load-css.js
+// js/load-css.js - ページ別CSS + Navシステムの確実ロード
 (function() {
-  // --- 1. CSSファイルのリスト定義と条件分岐 ---
+  'use strict';
+
   const cssFiles = [
     '/asobiseminar/gaibu/unpkg.css',
     '/asobiseminar/css/style.css?v=2026',
@@ -11,24 +12,19 @@
 
   if (currentPath.includes('members.html')) {
     cssFiles.push('/asobiseminar/css/members.css?v=1');
-  } 
-  else if (currentPath.includes('/groups/')) {
+  } else if (currentPath.includes('/groups/')) {
     cssFiles.push('/asobiseminar/css/groupsIndex.css?v=1');
-  } 
-  else if (currentPath.includes('aboutsite.html')) {
+  } else if (currentPath.includes('aboutsite.html')) {
     cssFiles.push('/asobiseminar/css/aboutsite.css?v=1');
-  } 
-  else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) {
+  } else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) {
     cssFiles.push('/asobiseminar/css/settings.css?v=1');
-  } 
-  else if (currentPath.includes('programmer.html')) {
-    cssFiles.push('/asobiseminar/css/programmer.css?v=2026');  // ★ 確実ロード
-  } 
-  else {
+  } else if (currentPath.includes('programmer.html')) {
+    cssFiles.push('/asobiseminar/css/programmer.css?v=2026');
+  } else {
     cssFiles.push('/asobiseminar/css/index-main.css?v=1');
   }
 
-  // --- 2. CSSファイルの読み込み実行（逆順・先頭追加） ---
+  // CSSを逆順prependで優先度確保
   cssFiles.reverse().forEach(url => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -36,16 +32,28 @@
     document.head.prepend(link);
   });
 
-  // --- 3. 追加：JSファイルの読み込み実行（正順・末尾追加） ---
-  const jsFiles = [
-    '/asobiseminar/nav/nav-core.js',
-    '/asobiseminar/nav/nav-particle.js'
+  // Navシステムを**厳密な順序**でロード（Particle → Core）
+  const navScripts = [
+    '/asobiseminar/nav/nav-particle.js',
+    '/asobiseminar/nav/nav-core.js'
   ];
 
-  jsFiles.forEach(url => {
-    const script = document.createElement('script');
-    script.src = url;
-    script.defer = true; // HTMLパースを妨げず、配列の順序通りに実行する設定
-    document.head.appendChild(script);
-  });
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = false; // 順序厳守
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(script);
+    });
+  }
+
+  Promise.all(navScripts.map(loadScript))
+    .then(() => {
+      console.log('%c✅ Asobi Lab. Nav System Initialized', 'color:#00ff88;font-weight:bold');
+    })
+    .catch(err => {
+      console.error('❌ Nav System Load Error:', err);
+    });
 })();
