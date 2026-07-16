@@ -1,3 +1,5 @@
+// 描く用スクリプト
+
 let canvas, ctx;
 let particles = [];
 let isPressing = false;
