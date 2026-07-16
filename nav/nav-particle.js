@@ -1,4 +1,6 @@
 // 描く用スクリプト
+// nav-particle.js 先頭
+window.particleSystemReady = true;
 
 let canvas, ctx;
 let particles = [];
