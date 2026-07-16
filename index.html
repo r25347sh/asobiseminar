@@ -84,7 +84,21 @@
       <p>このシステムは、JavaScriptを完全に排除したCSS変数とモダンアニメーションの融合体です。あなたが選択した「世界の概念（テーマカラー）」はブラウザの脳内（ローカルストレージ）に完全に記憶され、すべてのページへ瞬時に波及します。</p>
       <a href="/asobiseminar/subpages/aboutsite.html" style="display: inline-block; margin-top: 8px; font-weight: bold; text-decoration: none;">➔ システムのタネ明かしへ</a>
     </section>
-
   </main>
+    <!-- 緊急デバッグ用：nav粒子メニュー直接ロード -->
+  <script src="/asobiseminar/nav/nav-particle.js"></script>
+  <script src="/asobiseminar/nav/nav-core.js"></script>
+  
+  <script>
+    console.log('🚀 Direct Nav Load Attempted');
+    setTimeout(() => {
+      if (typeof initParticleSystem === 'function') {
+        console.log('✅ Particle System Found');
+      } else {
+        console.log('❌ Particle System Not Found');
+      }
+    }, 1000);
+  </script>
+</body>
 </body>
 </html>
