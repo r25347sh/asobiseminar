@@ -1,3 +1,9 @@
+function injectNavElements() {
+  if (document.getElementById('particleCanvas') || typeof initParticleSystem !== 'function') {
+    console.warn('Nav already injected or Particle not ready');
+    return;
+  }
+  // ... 以降は元のコードそのまま（粒子注入・メニュー生成）
 // nav/nav-core.js - 粒子メニュー注入コア（実行順序ガード強化）
 function injectNavElements() {
   if (document.getElementById('particleCanvas')) return; // 二重注入防止
