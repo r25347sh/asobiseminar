@@ -46,20 +46,21 @@ if (document.readyState === 'loading') {
 }
 
 const menuData = [
-    { text: 'ホーム', url: 'sample1.html' },
-    { text: 'メンバー', url: 'sample2.html' },
+    { text: 'ホーム', url: '/asobiseminar/index.html' },
+    { text: 'メンバー', url: '/asobiseminar/subpages/members.html' },
     { 
         text: 'Groups', 
         children: [
-            { text: 'グループ1', url: 'groups/sample1.html' },
-            { text: 'グループ2', url: 'groups/sample2.html' },
-            { text: 'グループ3', url: 'groups/sample3.html' },
-            { text: 'プログラマ', url: 'groups/programmer.html' }
+            { text: '目次', url: '/asobiseminar/subpages/groups/index.html' },
+            { text: 'スケートボード', url: '/asobiseminar/subpages/groups/one.html', islong: true },
+            { text: '建築', url: '/asobiseminar/subpages/groups/two.html' },
+            { text: 'ファッション', url: '/asobiseminar/subpages/groups/three.html' },
+            { text: 'プログラマ', url: '/asobiseminar/subpages/groups/programmer.html' }
         ] 
     },
-    { text: 'このサイトについて', url: 'about.html', isLong: true },
-    { text: 'ギャラリー', url: 'gallery.html' },
-    { text: 'テーマ設定', url: 'theme.html' }
+    { text: 'このサイトについて', url: '/asobiseminar/subpages/about.html', isLong: true },
+    { text: 'ギャラリー', url: '/asobiseminar/subpages/gallery.html' },
+    { text: 'テーマ設定', url: '/asobiseminar/settigs.html' }
 ];
 
 let pressTimer = null;
