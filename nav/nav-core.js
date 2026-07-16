@@ -1,48 +1,44 @@
-// 埋め込み先サイトへナビ要素をすべて自動挿入するWidget機能
+// nav/nav-core.js - 粒子メニュー注入コア（実行順序ガード強化）
 function injectNavElements() {
-    // 1. 操作説明テキストの自動生成
-    const ins = document.createElement('div');
-    ins.className = 'magic-nav-instruction';
-    ins.innerHTML = '【PC】素早くトリプルクリック<br>【スマホ】0.4秒 長押しタップ<br>魔導メニューが固定表示されます';
-    document.body.appendChild(ins);
+  if (document.getElementById('particleCanvas')) return; // 二重注入防止
 
-    // 2. 粒子キャンバスの自動生成
-    const cvs = document.createElement('canvas');
-    cvs.id = 'particleCanvas';
-    document.body.appendChild(cvs);
+  // 操作説明
+  const ins = document.createElement('div');
+  ins.className = 'magic-nav-instruction';
+  ins.innerHTML = '【PC】長押し or トリプルクリック<br>【スマホ】0.4秒長押し<br>魔導粒子メニュー起動';
+  document.body.appendChild(ins);
 
-    // 3. メニューコンテナの自動生成
-    const ctn = document.createElement('div');
-    ctn.id = 'menu-container';
-    document.body.appendChild(ctn);
+  // Canvas & Container & SVG
+  const cvs = document.createElement('canvas');
+  cvs.id = 'particleCanvas';
+  document.body.appendChild(cvs);
 
-    // 4. 有機結合SVGフィルターの自動生成
-    const svgNS = "http://w3.org";
-    const svg = document.createElementNS(svgNS, 'svg');
-    svg.setAttribute('class', 'magic-nav-filter-svg');
+  const ctn = document.createElement('div');
+  ctn.id = 'menu-container';
+  document.body.appendChild(ctn);
 
-    svg.innerHTML = `
-        <defs>
-            <filter id="gooey">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
-                <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-            </filter>
-        </defs>
-    `;
-    document.body.appendChild(svg);
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+  svg.classList.add('magic-nav-filter-svg');
+  svg.innerHTML = `
+    <defs>
+      <filter id="gooey">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"/>
+        <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+      </filter>
+    </defs>`;
+  document.body.appendChild(svg);
 
-    // パーツ2（nav-particle.js）のシステムを初期化起動
-    if (typeof initParticleSystem === 'function') {
-        initParticleSystem();
-    }
+  if (typeof initParticleSystem === 'function') {
+    initParticleSystem();
+  }
 }
 
-// ページ読み込み完了時に自動挿入を実行
+// DOM完全準備後に実行
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectNavElements);
+  document.addEventListener('DOMContentLoaded', injectNavElements);
 } else {
-    injectNavElements();
+  injectNavElements();
 }
 
 const menuData = [
