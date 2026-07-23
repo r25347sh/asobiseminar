@@ -50,7 +50,7 @@ const RADIAL_MENU_DATA = [
   let tapCount = 0;
   let tapTimer = null;
 
-  // 🚀 Ajax非同期遷移 + load-css.js 自動読み込み
+  // 🚀 Ajax非同期遷移 + load-css.js 自動読み込み（URL先行確定版）
   async function navigateAjax(url) {
     try {
       const response = await fetch(url);
@@ -65,13 +65,16 @@ const RADIAL_MENU_DATA = [
         targetContainer.style.opacity = '0';
         
         setTimeout(() => {
+          // 1. 【超重要】HTMLを書き換えるより「先」にURLを新しいものに更新する！
+          history.pushState({ path: url }, '', url);
+
+          // 2. 画面の中身を新しいページのHTMLに書き換える
           targetContainer.innerHTML = newContent.innerHTML;
           targetContainer.style.opacity = '1';
           
-          // ページ遷移後に load-css.js を必ず読み込む
+          // 3. 正しくなったURLを基準に、load-css.js に新しいCSSを判定させる
           loadCssScript();
           
-          history.pushState({ path: url }, '', url);
         }, 180);
       } else {
         location.href = url;
