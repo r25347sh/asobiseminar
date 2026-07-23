@@ -50,11 +50,12 @@ const RADIAL_MENU_DATA = [
   let tapCount = 0;
   let tapTimer = null;
 
-  // 🚀 Ajax非同期遷移
+  // 🚀 Ajax非同期遷移 + load-css.js 自動読み込み
   async function navigateAjax(url) {
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error();
+      
       const htmlText = await response.text();
       const doc = new DOMParser().parseFromString(htmlText, 'text/html');
       const newContent = doc.querySelector('#app') || doc.querySelector('main') || doc.body;
@@ -62,9 +63,14 @@ const RADIAL_MENU_DATA = [
 
       if (targetContainer && newContent) {
         targetContainer.style.opacity = '0';
+        
         setTimeout(() => {
           targetContainer.innerHTML = newContent.innerHTML;
           targetContainer.style.opacity = '1';
+          
+          // ページ遷移後に load-css.js を必ず読み込む
+          loadCssScript();
+          
           history.pushState({ path: url }, '', url);
         }, 180);
       } else {
@@ -75,6 +81,18 @@ const RADIAL_MENU_DATA = [
     }
   }
 
+  // load-css.js を動的に読み込む専用関数
+  function loadCssScript() {
+    // 既存の同じスクリプトがあれば削除（重複防止）
+    const existing = document.getElementById('dynamic-load-css');
+    if (existing) existing.remove();
+
+    const script = document.createElement('script');
+    script.id = 'dynamic-load-css';
+    script.src = '/asobiseminar/js/load-css.js';
+    script.async = true;
+    document.head.appendChild(script);
+  }
 // 💥 放射状レインボースパーク ＆ ダブルショックウェーブエンジン
 // （麗澤シラバス配色に調整済み：深緑＋ゴールド中心）
 function triggerParticleBurst() {
@@ -297,6 +315,9 @@ function triggerParticleBurst() {
     oldItems.forEach(el => el.classList.remove('rendered'));
     coreBtn.classList.remove('visible');
     isOpen = false;
+    
+    // メニューを閉じたときにもCSSをリロード
+    loadCssScript();
   }
 
   // 🎯 トリプルタップ & 長押しイベントリスナー
