@@ -1,6 +1,6 @@
-// /reitansai/js/autovalue.js
+// /asobiseminar/js/autovalue.js
 document.addEventListener('DOMContentLoaded', function() {
-    const JSON_PATH = '/reitansai/json/autovalue.json';
+    const JSON_PATH = '/asobiseminar/json/autovalue.json';
     
     // 現在のページのURLパスを取得（index.html や second.html など）
     let currentPath = window.location.pathname;
