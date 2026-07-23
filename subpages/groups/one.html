@@ -25,47 +25,29 @@
     :root {
       --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
+    .rainbow-text {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 2rem;
+      /* 綺麗な虹色のグラデーション（始まりと終わりを同じ赤にするのがループのコツ） */
+      background: linear-gradient(90deg, #ff2400, #e8b71d, #1de840, #1ddde8, #2b1de8, #dd00f3, #ff2400);
+      background-size: 200% 100%;
+      /* 文字の形に背景をくり抜く設定 */
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      /* カクつかない滑らかなアニメーション */
+      animation: rainbow-text-move 6s linear infinite;
+    }
+    
+    @keyframes rainbow-text-move {
+      0% { background-position: 0% 50%; }
+      100% { background-position: -200% 50%; }
+    }
+
   </style>
 </head>
 <body>
-  <!-- ハンバーガーメニュー -->
-  <details class="magic-menu">
-    <!-- 左上固定の特異点ボタン -->
-    <summary class="magic-trigger" aria-label="空間を開放する">
-      <div></div>
-      <span></span>
-    </summary>
-    
-    <!-- 27色と連動する全画面マット背景 -->
-    <div class="magic-portal-bg"></div>
-
-    <!-- 1ミリも場外にズレない絶対中央の文字空間 -->
-    <nav class="magic-theater">
-      <ul class="magic-list">
-        <li style="--item-index: 1;"><a href="/asobiseminar/index.html">ホーム</a></li>
-        <li style="--item-index: 2;"><a href="/asobiseminar/subpages/members.html">メンバー</a></li>
-        <li style="--item-index: 3;" class="magic-has-submenu">
-          <details class="magic-submenu-details">
-            <summary class="magic-submenu-trigger">Groups（グループ）</summary>
-            <ul class="magic-sub-list">
-              <li><a href="/asobiseminar/subpages/groups/index.html">Group トップ</a></li>
-              <li><a href="/asobiseminar/subpages/groups/one.html">スケボーの技術向上とそのための思考</a></li>
-              <li><a href="/asobiseminar/subpages/groups/two.html">脆い割り箸ビルを探求で強くする</a></li>
-              <li><a href="/asobiseminar/subpages/groups/three.html">ファッションについて</a></li>
-              <li><a href="/asobiseminar/subpages/groups/programmer.html">超大天才プログラマー</a></li>
-              <li><a href="/asobiseminar/subpages/groups/englishgame.html">オンラインゲームを通じた英語学習の可能性</a></li>
-            </ul>
-          </details>
-        </li>
-        <li style="--item-index: 4;"><a href="/asobiseminar/subpages/aboutsite.html">このサイトについて</a></li>
-        <li style="--item-index: 5;"><a href="/asobiseminar/subpages/gallery.html">ギャラリー</a></li>
-        <li style="--item-index: 6;"><a href="/asobiseminar/settigs.html">テーマ設定</a></li>
-        <li style="--item-index: 7;"><a href="/asobiseminar/sitemap.html">サイトマップ</a></li>
-      </ul>
-    </nav>
-  </details>
-
-  
   <main class="group1-main">
     <section class="group1-hero">
       <div class="group1-hero-content">
@@ -89,20 +71,20 @@
 
         <article class="group1-card">
           <div class="group1-card-icon">🎨</div>
-          <h3>デザイン開発</h3>
-          <p>グラフィックデザインとカラースキームの創作</p>
+          <h3><string>What?</string> 何を解き明かすのか</h3>
+          <p>素人がスケボーを3ヶ月練習してどこまでできるようになるのか？</p>
         </article>
 
         <article class="group1-card">
           <div class="group1-card-icon">👥</div>
-          <h3>コミュニティ</h3>
-          <p>スケーター文化の探求とコミュニティ形成</p>
+          <h3><string>Why?</string> なぜそのテーマに興味を持ったのか</h3>
+          <p>前期の探求の授業でスケボーに触れる機会があり、その時にスケボーの楽しさに気づき、より深くスケボーがやりたくなったから。</p>
         </article>
 
         <article class="group1-card">
           <div class="group1-card-icon">🚀</div>
-          <h3>イノベーション</h3>
-          <p>新しい技術トレンドの発掘と実践</p>
+          <h3><string>How?</string> どのように探求を進めたのか</h3>
+          <p>スケボーを練習しつつ、練習を撮影し互いに撮影した動画をみてフィードバックをし合う。</p>
         </article>
       </div>
 
@@ -111,22 +93,23 @@
         <div class="group1-timeline-item">
           <div class="group1-timeline-marker"></div>
           <div class="group1-timeline-content">
-            <h4>Phase 1: リサーチ</h4>
-            <p>市場調査とトレンド分析を実施</p>
+            <h4>Phase 1: 目標設定・練習</h4>
+            <p>発表形態とやりたいことを決める→練習</p>
           </div>
         </div>
         <div class="group1-timeline-item">
           <div class="group1-timeline-marker"></div>
           <div class="group1-timeline-content">
-            <h4>Phase 2: 開発</h4>
-            <p>プロトタイプの設計と製作</p>
+            <h4>Phase 2: フィードバック</h4>
+            <p>教諭に聞いたり自分たちで改善点を探す</p>
           </div>
         </div>
         <div class="group1-timeline-item">
           <div class="group1-timeline-marker"></div>
           <div class="group1-timeline-content">
             <h4>Phase 3: 発表</h4>
-            <p>成果物の展示とプレゼンテーション</p>
+            <p>動画を制作</p>
+            <p><a href="" class="rainbow-text">動画はこちら</a></p>
           </div>
         </div>
       </section>
