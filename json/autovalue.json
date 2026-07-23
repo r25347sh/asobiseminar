@@ -1,0 +1,18 @@
+[
+    {
+        "url": "index.html",
+        "value": {
+            "sample_p_text": "これは赤いテキストです。",
+            "sample_div_html": "<h2>「こんにちは」とは</h2><p>今日もいい天気だね<span class=\"colorred\">ぇ</span></p>",
+            "sample_img_url": "https://example.com/image.jpeg",
+            "sample_a_url": {
+                "url": "https://example.com/",
+                "text": "これはサンプルリンクです。"
+            }
+        }
+    },
+    {
+        "url": "second.html",
+        "value": { ... }
+    }
+]
