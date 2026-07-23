@@ -8,7 +8,8 @@
   const cssFiles = [
     `${base}/gaibu/unpkg.css`,
     `${base}/css/style.css?v=2026`,
-    `${base}/nav/nav.css?v=2026`
+    `${base}/nav/nav.css?v=2026`,
+    `${base}/MENU/MENU.css?v=2026`
   ];
 
   // ページ別CSS
@@ -29,8 +30,7 @@
 
   // Nav JS 直接ロード
   const navScripts = [
-    `${base}/nav/nav-particle.js`,
-    `${base}/nav/nav-core.js`
+    `${base}/MENU/MENU.js?v=2026`
   ];
 
   navScripts.forEach(src => {
