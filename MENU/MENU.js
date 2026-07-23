@@ -50,35 +50,15 @@ const RADIAL_MENU_DATA = [
   let tapCount = 0;
   let tapTimer = null;
 
-  // 🚀 Ajax非同期遷移 + load-css.js 自動読み込み
-  async function navigateAjax(url) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error();
-      
-      const htmlText = await response.text();
-      const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-      const newContent = doc.querySelector('#app') || doc.querySelector('main') || doc.body;
-      const targetContainer = document.querySelector('#app') || document.querySelector('main');
-
-      if (targetContainer && newContent) {
-        targetContainer.style.opacity = '0';
-        
-        setTimeout(() => {
-          targetContainer.innerHTML = newContent.innerHTML;
-          targetContainer.style.opacity = '1';
-          
-          // ページ遷移後に load-css.js を必ず読み込む
-          loadCssScript();
-          
-          history.pushState({ path: url }, '', url);
-        }, 180);
-      } else {
-        location.href = url;
-      }
-    } catch {
+  // 🚀 メニューが消えるのを待ってから普通にページ遷移する関数
+  function navigateWithDelay(url) {
+    // 1. メニューを閉じるアニメーションを開始
+    closeMenu();
+    
+    // 2. アニメーション（180ms）が終わった瞬間にページを切り替える
+    setTimeout(() => {
       location.href = url;
-    }
+    }, 180);
   }
 
   // load-css.js を動的に読み込む専用関数
@@ -221,7 +201,6 @@ function triggerParticleBurst() {
       btn.style.setProperty('--x', `${data.x}px`);
       btn.style.setProperty('--y', `${data.y}px`);
       btn.style.transitionDelay = `${index * 0.025}s`;
-
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (data.item.items && data.item.items.length > 0) {
@@ -229,9 +208,12 @@ function triggerParticleBurst() {
           renderMenuLevel(data.item.items);
           triggerParticleBurst();
         } else {
-          if (data.item.url) navigateAjax(data.item.url);
-          else if (data.item.action) data.item.action();
-          closeMenu();
+          if (data.item.url) {
+            navigateWithDelay(data.item.url); // 👈 遅延遷移を実行
+          } else if (data.item.action) {
+            data.item.action();
+            closeMenu();
+          }
         }
       });
 
