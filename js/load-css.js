@@ -1,44 +1,63 @@
-// js/load-css.js - あなたのGitHub Pages完全対応版
+// js/load-css.js - Ajax・GitHub Pages完全対応決定版
 (function() {
   'use strict';
 
-  // GitHub Pages用（リポジトリ: asobiseminar）
   const base = '/asobiseminar';
+  // キャッシュを強制突破するためのランダムな数字を自動生成
+  const cacheBuster = 'v=' + new Date().getTime();
 
-  const cssFiles = [
+  // 1. 全ページ共通の基本CSS
+  const baseCssFiles = [
     `${base}/gaibu/unpkg.css`,
-    `${base}/css/style.css?v=2026`,
-    `${base}/nav/nav.css?v=2026`,
-    `${base}/MENU/MENU.css?v=2026`
+    `${base}/css/style.css?${cacheBuster}`,
+    `${base}/nav/nav.css?${cacheBuster}`,
+    `${base}/MENU/MENU.css?${cacheBuster}`
   ];
 
-  // ページ別CSS
-  const currentPath = window.location.pathname;
-  if (currentPath.includes('members.html')) cssFiles.push(`${base}/css/members.css?v=1`);
-  else if (currentPath.includes('/groups/')) cssFiles.push(`${base}/css/groupsIndex.css?v=1`);
-  else if (currentPath.includes('aboutsite.html')) cssFiles.push(`${base}/css/aboutsite.css?v=1`);
-  else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) cssFiles.push(`${base}/css/settings.css?v=1`);
-  else if (currentPath.includes('programmer.html')) cssFiles.push(`${base}/css/programmer.css?v=2026`);
-  else cssFiles.push(`${base}/css/index-main.css?v=1`);
+  baseCssFiles.forEach(url => {
+    // 既に同じ共通CSSが入っていればスキップ（二重読み込み防止）
+    if (document.querySelector(`link[href^="${url.split('?')[0]}"]`)) return;
 
-  cssFiles.reverse().forEach(url => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = url;
-    document.head.prepend(link);
+    document.head.appendChild(link); // 確実に効かせるため後ろに追加
   });
 
-  // Nav JS 直接ロード
-  const navScripts = [
-    `${base}/MENU/MENU.js?v=2026`
-  ];
+  // 2. ページ別CSSの判定と追加
+  const currentPath = window.location.pathname;
+  let pageCssUrl = '';
 
-  navScripts.forEach(src => {
+  if (currentPath.includes('members.html')) {
+    pageCssUrl = `${base}/css/members.css?${cacheBuster}`;
+  } else if (currentPath.includes('/groups/')) {
+    pageCssUrl = `${base}/css/groupsIndex.css?${cacheBuster}`;
+  } else if (currentPath.includes('aboutsite.html')) {
+    pageCssUrl = `${base}/css/aboutsite.css?${cacheBuster}`;
+  } else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) {
+    pageCssUrl = `${base}/css/settings.css?${cacheBuster}`;
+  } else if (currentPath.includes('programmer.html')) {
+    pageCssUrl = `${base}/css/programmer.css?${cacheBuster}`;
+  } else {
+    pageCssUrl = `${base}/css/index-main.css?${cacheBuster}`;
+  }
+
+  if (pageCssUrl) {
+    const pageLink = document.createElement('link');
+    pageLink.rel = 'stylesheet';
+    pageLink.className = 'dynamic-page-css'; // ラジアルメニュー側から消去・制御できるようにクラスを付与
+    pageLink.href = pageCssUrl;
+    document.head.appendChild(pageLink); // 最も優先されるよう、headの一番下に差し込む
+  }
+
+  // 3. Nav JS のロード（重複を防ぐ）
+  const scriptUrl = `${base}/MENU/MENU.js?${cacheBuster}`;
+  if (!document.querySelector(`script[src^="${base}/MENU/MENU.js"]`)) {
     const script = document.createElement('script');
-    script.src = src;
+    script.src = scriptUrl;
     script.async = false;
     document.head.appendChild(script);
-  });
+  }
 
-  console.log('%c✅ Load-css executed with base: /asobiseminar', 'color:#00ff88');
+  console.log('%c✅ Load-css re-executed for path: ' + currentPath, 'color:#00ff88');
 })();
