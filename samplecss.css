@@ -1,0 +1,18 @@
+/* /reitansai/samplecss.css */
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.colorred {
+    color: red;
+    font-weight: bold;
+}
+
+h1 {
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+}
