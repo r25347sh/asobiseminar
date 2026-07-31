@@ -12,21 +12,26 @@ const RADIAL_MENU_DATA = [
         label: 'ゼミ一覧',
         icon: '📚',
         items: [
-          { label: 'データサイエンス探究 AIゼミ', icon: '📊', url: '/reitansai/pages/zemi/data-science-ai.html' },
-          { label: '教育ゼミ', icon: '📖', url: '/reitansai/pages/zemi/kyoiku.html' },
-          { label: '国際地域研究ゼミ', icon: '🌍', url: '/reitansai/pages/zemi/kokusai-chiiki.html' },
-          { label: '文藝創作ゼミ', icon: '🖋️', url: '/reitansai/pages/zemi/bungei-sakuhin.html' },
-          { label: '化学ゼミ', icon: '🧪', url: '/reitansai/pages/zemi/kagaku.html' },
-          { label: '文学ゼミ', icon: '📜', url: '/reitansai/pages/zemi/bungaku.html' },
-          { label: 'メディアゼミ', icon: '📺', url: '/reitansai/pages/zemi/media.html' },
-          { label: '社会ゼミ', icon: '👥', url: '/reitansai/pages/zemi/shakai.html' },
-          { label: '農業ゼミ', icon: '🌾', url: '/reitansai/pages/zemi/nogyo.html' },
-          { label: '観光ゼミ', icon: '🗼', url: '/reitansai/pages/zemi/kanko.html' },
-          { label: '語学ゼミ', icon: '🗣️', url: '/reitansai/pages/zemi/gengo.html' },
-          { label: '遊びの探究ゼミ', icon: '🎮', url: '/asobiseminar/index.html' },
-          { label: '医療ゼミ', icon: '🩺', url: '/reitansai/pages/zemi/iryo.html' },
-          { label: '映像クリエイターゼミ', icon: '🎥', url: '/reitansai/pages/zemi/eizo-creator.html' },
-          { label: 'スポーツゼミ', icon: '⚽', url: '/reitansai/pages/zemi/sports.html' }
+        { label: 'データサイエンス探究 AIゼミ', icon: '📊', url: '/reitansai/pages/zemi/data-science-ai.html' },
+        { label: '教育ゼミ', icon: '📖', url: '/reitansai/pages/zemi/kyoiku.html' },
+        { label: '国際地域研究ゼミ', icon: '🌍', url: '/reitansai/pages/zemi/kokusai-chiiki.html' },
+        { label: '文芸小説創作ゼミ', icon: '🖋️', url: '/reitansai/pages/zemi/bungei-shosetsu-sosaku.html' },
+        { label: '化学ゼミ', icon: '🧪', url: '/reitansai/pages/zemi/kagaku.html' },
+        { label: '文学ゼミ', icon: '📜', url: '/reitansai/pages/zemi/bungaku.html' },
+        { label: 'メディアゼミ', icon: '📺', url: '/reitansai/pages/zemi/media.html' },
+        { label: '社会ゼミ', icon: '👥', url: '/reitansai/pages/zemi/shakai.html' },
+        { label: '農業ゼミ', icon: '🌾', url: '/reitansai/pages/zemi/nogyo.html' },
+        { label: '観光ゼミ', icon: '🗼', url: '/reitansai/pages/zemi/kanko.html' },
+        { label: '語学ゼミ', icon: '🗣️', url: '/reitansai/pages/zemi/gengo.html' },
+        { label: '遊びの探究ゼミ', icon: '🎮', url: '/reitansai/pages/zemi/asobi-tankyu.html' },
+        {
+          label:'外部企業ゼミ',
+          icon:'',
+          items: [
+            { label: '映像編集ゼミ', icon: '⏯️', url: '/reitansai/pages/zemi/mieta/eizo-henshu.html' },
+            { label: 'デジタルコンテンツ制作ゼミ', icon: '01', url: '/reitansai/pages/zemi/mieta/digital-content-create.html' },
+            { label: 'イベント企画ゼミ', icon: '🎪', url: '/reitansai/pages/zemi/mieta/event-kikaku.html' }
+          ]
         ]
       },
       { label: '麗探祭', icon: '🎉', url: '/reitansai/pages/event.html' },
