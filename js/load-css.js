@@ -1,9 +1,46 @@
-// js/load-css.js - 全ページ + 遊び心エンジン + 遊び場
+// js/load-css.js - 全ページ + 遊び心 + ファビコン自動注入
 (function() {
   'use strict';
 
   const base = '/asobiseminar';
   const cacheBuster = 'v=' + new Date().getTime();
+
+  // ----- Favicon (高解像度 SVG + フォールバック) 全ページ自動 ----- 
+  function injectFavicons() {
+    if (document.querySelector('link[data-asobi-favicon]')) return;
+
+    const svgHref = base + '/favicon.svg?' + cacheBuster;
+
+    const iconSvg = document.createElement('link');
+    iconSvg.rel = 'icon';
+    iconSvg.type = 'image/svg+xml';
+    iconSvg.href = svgHref;
+    iconSvg.setAttribute('data-asobi-favicon', '1');
+    document.head.appendChild(iconSvg);
+
+    // 旧ブラウザ向けに同じSVGを shortcut icon としても
+    const shortcut = document.createElement('link');
+    shortcut.rel = 'shortcut icon';
+    shortcut.href = svgHref;
+    shortcut.setAttribute('data-asobi-favicon', '1');
+    document.head.appendChild(shortcut);
+
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon';
+    apple.href = svgHref;
+    apple.setAttribute('data-asobi-favicon', '1');
+    document.head.appendChild(apple);
+
+    // theme-color もテーマに寄せる（可能なら）
+    if (!document.querySelector('meta[name="theme-color"]')) {
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim() || '#00ff88';
+      document.head.appendChild(meta);
+    }
+  }
+
+  injectFavicons();
 
   const baseCssFiles = [
     `${base}/gaibu/unpkg.css`,
@@ -79,5 +116,5 @@
     document.head.appendChild(playScript);
   }
 
-  console.log('%c✅ AsobiPlay MAX for: ' + currentPath, 'color:#00ff88');
+  console.log('%c✅ AsobiPlay + Favicon for: ' + currentPath, 'color:#00ff88');
 })();

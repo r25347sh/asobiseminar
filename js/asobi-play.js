@@ -1,5 +1,5 @@
 // js/asobi-play.js
-// Asobi Lab. 全ページ共通・遊び心エンジン MAX
+// Asobi Lab. 遊び心エンジン MAX + 混沌エンジン
 (function () {
   'use strict';
 
@@ -13,7 +13,6 @@
   ];
   let konamiIndex = 0;
 
-  // asobi と打つと発動
   const ASOBI_SEQ = ['a', 's', 'o', 'b', 'i'];
   let asobiIndex = 0;
 
@@ -30,10 +29,29 @@
     '実験成功！…たぶん'
   ];
 
+  const chaosToasts = [
+    '🌀 現実が歪んでいる…',
+    '警告: 遊び心が臨界点',
+    '色が逃げ出した',
+    '重力の契約が一時停止中',
+    'ERROR: FUN_OVERFLOW',
+    'このモードは仕様です',
+    'カードが踊り始めた',
+    'スキャンライン検出',
+    '混沌ポイント +α',
+    'もう普通には戻れない（気のせい）',
+    '実験ログ: 全てが面白い',
+    'Asobi Lab. プロトコル逸脱中'
+  ];
+
+  const chaosGlyphs = ['ア', 'ソ', 'ビ', '?', '!', '※', '★', '◆', '∞', '⚡', '🧪', '🌀', 'A', '#', '%', '&'];
+
   let score = parseInt(localStorage.getItem(STORAGE_SCORE) || '0', 10) || 0;
   let chaosOn = localStorage.getItem(STORAGE_CHAOS) === '1';
   let scoreEl = null;
   let lastSpark = 0;
+  let chaosTimers = [];
+  let chaosClickBonus = false;
 
   // ---------- toast ----------
   function ensureToastHost() {
@@ -81,7 +99,7 @@
 
     scoreEl = document.createElement('div');
     scoreEl.className = 'asobi-hud-score';
-    scoreEl.title = 'クリックで遊びポイント加算 / クリックでリセット確認';
+    scoreEl.title = '遊びスコア（クリックで確認/リセット）';
     scoreEl.textContent = '遊び ' + score;
     scoreEl.addEventListener('click', () => {
       if (score > 0 && confirm('遊びスコアをリセットする？')) {
@@ -104,7 +122,104 @@
     hud.appendChild(chaosBtn);
     document.body.appendChild(hud);
 
-    if (chaosOn) document.body.classList.add('asobi-chaos');
+    if (chaosOn) {
+      document.body.classList.add('asobi-chaos');
+      startChaosEngine();
+    }
+  }
+
+  // ---------- chaos layers ----------
+  function ensureChaosLayers() {
+    if (!document.querySelector('.asobi-chaos-scanlines')) {
+      const s = document.createElement('div');
+      s.className = 'asobi-chaos-scanlines';
+      document.body.appendChild(s);
+    }
+    if (!document.querySelector('.asobi-chaos-vignette')) {
+      const v = document.createElement('div');
+      v.className = 'asobi-chaos-vignette';
+      document.body.appendChild(v);
+    }
+    if (!document.querySelector('.asobi-chaos-glyph-layer')) {
+      const g = document.createElement('div');
+      g.className = 'asobi-chaos-glyph-layer';
+      document.body.appendChild(g);
+    }
+    if (!document.querySelector('.asobi-chaos-flash')) {
+      const f = document.createElement('div');
+      f.className = 'asobi-chaos-flash';
+      document.body.appendChild(f);
+    }
+  }
+
+  function flashScreen() {
+    const f = document.querySelector('.asobi-chaos-flash');
+    if (!f) return;
+    f.classList.remove('is-on');
+    void f.offsetWidth;
+    f.classList.add('is-on');
+    setTimeout(() => f.classList.remove('is-on'), 400);
+  }
+
+  function spawnChaosGlyph() {
+    const layer = document.querySelector('.asobi-chaos-glyph-layer');
+    if (!layer) return;
+    const g = document.createElement('div');
+    g.className = 'asobi-chaos-glyph';
+    g.textContent = chaosGlyphs[Math.floor(Math.random() * chaosGlyphs.length)];
+    g.style.left = Math.random() * 100 + 'vw';
+    g.style.animationDuration = (2.2 + Math.random() * 3.5) + 's';
+    g.style.fontSize = (0.9 + Math.random() * 1.6) + 'rem';
+    g.style.color = Math.random() > 0.5 ? 'var(--main-color)' : 'var(--balance-color)';
+    layer.appendChild(g);
+    setTimeout(() => g.remove(), 6000);
+  }
+
+  function startChaosEngine() {
+    stopChaosEngine();
+    ensureChaosLayers();
+    chaosClickBonus = true;
+
+    // 定期グリフ雨
+    chaosTimers.push(setInterval(() => {
+      if (!chaosOn) return;
+      const n = 2 + Math.floor(Math.random() * 4);
+      for (let i = 0; i < n; i++) spawnChaosGlyph();
+    }, 700));
+
+    // たまに紙吹雪
+    chaosTimers.push(setInterval(() => {
+      if (!chaosOn) return;
+      if (Math.random() > 0.55) spawnConfetti(18 + Math.floor(Math.random() * 20));
+    }, 4200));
+
+    // 混沌トースト
+    chaosTimers.push(setInterval(() => {
+      if (!chaosOn) return;
+      if (Math.random() > 0.4) return;
+      const msg = chaosToasts[Math.floor(Math.random() * chaosToasts.length)];
+      showToast(msg, 2600);
+      addScore(2);
+    }, 5500));
+
+    // たまにフラッシュ
+    chaosTimers.push(setInterval(() => {
+      if (!chaosOn) return;
+      if (Math.random() > 0.7) flashScreen();
+    }, 8000));
+
+    // オーブ加速
+    document.querySelectorAll('.asobi-orb').forEach(o => {
+      o.style.transition = 'none';
+    });
+  }
+
+  function stopChaosEngine() {
+    chaosTimers.forEach(t => clearInterval(t));
+    chaosTimers = [];
+    chaosClickBonus = false;
+    const layer = document.querySelector('.asobi-chaos-glyph-layer');
+    if (layer) layer.innerHTML = '';
   }
 
   function toggleChaos(force) {
@@ -116,10 +231,18 @@
       btn.classList.toggle('is-on', chaosOn);
       btn.textContent = chaosOn ? '混沌 ON' : '混沌';
     }
-    showToast(chaosOn ? '🌀 混沌モード発動！' : '混沌モード解除');
+
     if (chaosOn) {
-      spawnConfetti(24);
+      ensureChaosLayers();
+      flashScreen();
+      spawnConfetti(40);
       addScore(5);
+      showToast('🌀 混沌モード発動！遊び心が暴走します');
+      startChaosEngine();
+      for (let i = 0; i < 8; i++) setTimeout(spawnChaosGlyph, i * 80);
+    } else {
+      stopChaosEngine();
+      showToast('混沌モード解除。世界が落ち着いた');
     }
   }
 
@@ -148,48 +271,63 @@
     }
   }
 
-  // ---------- ripple + click score ----------
-  function spawnRipple(x, y) {
+  // ---------- ripple + click ----------
+  function spawnRipple(x, y, big) {
     const r = document.createElement('div');
     r.className = 'asobi-ripple';
     r.style.left = x + 'px';
     r.style.top = y + 'px';
-    const size = 40 + Math.random() * 50;
+    const size = (big ? 70 : 40) + Math.random() * (big ? 80 : 50);
     r.style.width = size + 'px';
     r.style.height = size + 'px';
     document.body.appendChild(r);
-    setTimeout(() => r.remove(), 600);
+    setTimeout(() => r.remove(), 700);
   }
 
   function initClicks() {
     document.addEventListener('pointerdown', (e) => {
-      // メニュー操作中は邪魔しない
       if (e.target.closest('.radial-menu-wrapper')) return;
-      spawnRipple(e.clientX, e.clientY);
-      addScore(1);
+      spawnRipple(e.clientX, e.clientY, chaosOn);
+
+      if (chaosOn) {
+        // 三重波紋
+        setTimeout(() => spawnRipple(e.clientX + 12, e.clientY - 8, true), 60);
+        setTimeout(() => spawnRipple(e.clientX - 10, e.clientY + 10, true), 120);
+        addScore(3);
+        if (Math.random() > 0.85) {
+          spawnChaosGlyph();
+          spawnChaosGlyph();
+        }
+      } else {
+        addScore(1);
+      }
     }, { passive: true });
   }
 
-  // ---------- cursor spark (desktop) ----------
+  // ---------- sparks ----------
   function initSparks() {
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
     document.addEventListener('pointermove', (e) => {
       const now = performance.now();
-      if (now - lastSpark < 40) return;
+      const throttle = chaosOn ? 18 : 40;
+      if (now - lastSpark < throttle) return;
       lastSpark = now;
 
-      const s = document.createElement('div');
-      s.className = 'asobi-spark';
-      s.style.left = e.clientX + 'px';
-      s.style.top = e.clientY + 'px';
-      s.style.background = Math.random() > 0.5 ? 'var(--main-color)' : 'var(--balance-color)';
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 560);
+      const count = chaosOn ? 2 : 1;
+      for (let i = 0; i < count; i++) {
+        const s = document.createElement('div');
+        s.className = 'asobi-spark';
+        s.style.left = (e.clientX + (Math.random() - 0.5) * (chaosOn ? 16 : 0)) + 'px';
+        s.style.top = (e.clientY + (Math.random() - 0.5) * (chaosOn ? 16 : 0)) + 'px';
+        s.style.background = Math.random() > 0.5 ? 'var(--main-color)' : 'var(--balance-color)';
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 560);
+      }
     }, { passive: true });
   }
 
-  // ---------- floating orbs ----------
+  // ---------- orbs ----------
   function initOrbs() {
     if (window.matchMedia('(pointer: coarse)').matches) return;
     if (document.querySelector('.asobi-orb-layer')) return;
@@ -211,7 +349,8 @@
         y: Math.random() * (window.innerHeight - 80) + 20,
         vx: (Math.random() - 0.5) * 1.4,
         vy: (Math.random() - 0.5) * 1.4,
-        dragging: false
+        dragging: false,
+        size: size
       };
       orb.style.left = state.x + 'px';
       orb.style.top = state.y + 'px';
@@ -220,8 +359,12 @@
         e.stopPropagation();
         state.dragging = true;
         orb.setPointerCapture(e.pointerId);
-        addScore(2);
-        showToast('オーブ捕獲！');
+        addScore(chaosOn ? 5 : 2);
+        showToast(chaosOn ? '混沌オーブ捕獲！！' : 'オーブ捕獲！');
+        if (chaosOn) {
+          spawnConfetti(12);
+          flashScreen();
+        }
       });
       orb.addEventListener('pointermove', (e) => {
         if (!state.dragging) return;
@@ -232,8 +375,9 @@
       });
       orb.addEventListener('pointerup', () => {
         state.dragging = false;
-        state.vx = (Math.random() - 0.5) * 2;
-        state.vy = (Math.random() - 0.5) * 2;
+        const boost = chaosOn ? 4.5 : 2;
+        state.vx = (Math.random() - 0.5) * boost;
+        state.vy = (Math.random() - 0.5) * boost;
       });
       orb.addEventListener('click', (e) => e.stopPropagation());
 
@@ -244,10 +388,11 @@
     function tick() {
       const w = window.innerWidth;
       const h = window.innerHeight;
+      const speedMul = chaosOn ? 2.2 : 1;
       orbs.forEach(o => {
         if (o.dragging) return;
-        o.x += o.vx;
-        o.y += o.vy;
+        o.x += o.vx * speedMul;
+        o.y += o.vy * speedMul;
         if (o.x < 0 || o.x > w - 40) o.vx *= -1;
         if (o.y < 0 || o.y > h - 40) o.vy *= -1;
         o.x = Math.max(0, Math.min(w - 40, o.x));
@@ -260,7 +405,7 @@
     requestAnimationFrame(tick);
   }
 
-  // ---------- scroll reveal ----------
+  // ---------- reveal ----------
   function initReveal() {
     const targets = document.querySelectorAll(
       'main section, .member-card, .group-card, .gallery-item, .asobi-card, .play-panel'
@@ -280,13 +425,14 @@
       hero.addEventListener('click', (e) => {
         e.stopPropagation();
         clicks++;
-        addScore(3);
-        spawnRipple(e.clientX, e.clientY);
+        addScore(chaosOn ? 6 : 3);
+        spawnRipple(e.clientX, e.clientY, true);
         if (clicks >= 5) {
           clicks = 0;
-          spawnConfetti(40);
-          showToast('タイトル連打ボーナス！');
-          addScore(20);
+          spawnConfetti(chaosOn ? 70 : 40);
+          showToast(chaosOn ? '混沌タイトルボーナス！！' : 'タイトル連打ボーナス！');
+          addScore(chaosOn ? 40 : 20);
+          if (chaosOn) flashScreen();
         }
         clearTimeout(clickTimer);
         clickTimer = setTimeout(() => { clicks = 0; }, 900);
@@ -308,14 +454,13 @@
     document.querySelectorAll('.asobi-reveal').forEach(el => io.observe(el));
   }
 
-  // ---------- keyboard easter eggs ----------
+  // ---------- keys ----------
   function initKeys() {
     document.addEventListener('keydown', (e) => {
       if (e.target.matches('input, textarea, select')) return;
 
       const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
 
-      // Konami
       const expected = KONAMI[konamiIndex];
       const expectedNorm = expected.length === 1 ? expected.toLowerCase() : expected;
       if (key === expectedNorm) {
@@ -328,10 +473,9 @@
           toggleChaos(true);
         }
       } else {
-        konamiIndex = key === 'arrowup' || key === 'ArrowUp' ? 1 : 0;
+        konamiIndex = (key === 'ArrowUp' || key === 'arrowup') ? 1 : 0;
       }
 
-      // type "asobi"
       if (key === ASOBI_SEQ[asobiIndex]) {
         asobiIndex++;
         if (asobiIndex === ASOBI_SEQ.length) {
@@ -339,14 +483,13 @@
           spawnConfetti(36);
           addScore(15);
           showToast('✨ asobi 入力成功！');
+          if (chaosOn) {
+            for (let i = 0; i < 12; i++) spawnChaosGlyph();
+            flashScreen();
+          }
         }
       } else {
         asobiIndex = key === 'a' ? 1 : 0;
-      }
-
-      // C key = chaos toggle
-      if (key === 'c' && !e.metaKey && !e.ctrlKey) {
-        // only if not typing sequence
       }
     });
   }
@@ -358,7 +501,8 @@
     if (now - last < 25000) return;
     if (Math.random() > 0.45) return;
     sessionStorage.setItem(key, String(now));
-    const msg = funToasts[Math.floor(Math.random() * funToasts.length)];
+    const pool = chaosOn ? chaosToasts : funToasts;
+    const msg = pool[Math.floor(Math.random() * pool.length)];
     setTimeout(() => showToast(msg, 3400), 900);
   }
 
@@ -370,7 +514,6 @@
     document.body.appendChild(hint);
   }
 
-  // ---------- boot ----------
   function boot() {
     initHud();
     initReveal();
@@ -386,7 +529,8 @@
       confetti: spawnConfetti,
       addScore: addScore,
       toggleChaos: toggleChaos,
-      getScore: () => score
+      getScore: () => score,
+      flash: flashScreen
     };
   }
 
