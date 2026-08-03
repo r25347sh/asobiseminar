@@ -27,7 +27,9 @@
   const currentPath = window.location.pathname;
   let pageCssUrl = '';
 
-  if (currentPath.includes('members.html')) {
+  if (currentPath.includes('404') || document.title.includes('404')) {
+    pageCssUrl = `${base}/css/404.css?${cacheBuster}`;
+  } else if (currentPath.includes('members.html')) {
     pageCssUrl = `${base}/css/members.css?${cacheBuster}`;
   } else if (currentPath.includes('/groups/')) {
     // グループ詳細ページは個別CSSを優先
@@ -53,11 +55,14 @@
   }
 
   if (pageCssUrl) {
-    const pageLink = document.createElement('link');
-    pageLink.rel = 'stylesheet';
-    pageLink.className = 'dynamic-page-css'; // ラジアルメニュー側から消去・制御できるようにクラスを付与
-    pageLink.href = pageCssUrl;
-    document.head.appendChild(pageLink); // 最も優先されるよう、headの一番下に差し込む
+    // 既に同じページCSSがあればスキップ
+    if (!document.querySelector(`link[href^="${pageCssUrl.split('?')[0]}"]`)) {
+      const pageLink = document.createElement('link');
+      pageLink.rel = 'stylesheet';
+      pageLink.className = 'dynamic-page-css';
+      pageLink.href = pageCssUrl;
+      document.head.appendChild(pageLink);
+    }
   }
 
   // 3. MENU JS のロード（重複を防ぐ）

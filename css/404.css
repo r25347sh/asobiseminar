@@ -1,0 +1,179 @@
+/* css/404.css - Asobi Lab. 遊び心404 */
+
+.error-stage {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== 浮遊装飾 ===== */
+.floaters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.floater {
+  position: absolute;
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--main-color);
+  opacity: 0.12;
+  user-select: none;
+  animation: floatAround 12s ease-in-out infinite;
+}
+
+.floater:nth-child(1) { top: 12%; left: 8%;  animation-delay: 0s;    animation-duration: 14s; }
+.floater:nth-child(2) { top: 22%; right: 10%; animation-delay: -3s;   animation-duration: 11s; }
+.floater:nth-child(3) { bottom: 28%; left: 14%; animation-delay: -6s; animation-duration: 13s; }
+.floater:nth-child(4) { bottom: 18%; right: 12%; animation-delay: -2s; animation-duration: 15s; }
+.floater:nth-child(5) { top: 48%; left: 48%; animation-delay: -8s;  animation-duration: 10s; }
+
+@keyframes floatAround {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25%      { transform: translate(12px, -18px) rotate(4deg); }
+  50%      { transform: translate(-8px, 10px) rotate(-3deg); }
+  75%      { transform: translate(6px, 14px) rotate(2deg); }
+}
+
+/* ===== コアコンテンツ ===== */
+.error-core {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+}
+
+.error-code {
+  font-size: clamp(5.5rem, 18vw, 9rem);
+  font-weight: 900;
+  color: var(--main-color);
+  line-height: 1;
+  margin: 0 0 8px;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 40px color-mix(in srgb, var(--main-color) 40%, transparent),
+    0 4px 24px rgba(0, 0, 0, 0.35);
+  animation: codePulse 3.2s ease-in-out infinite;
+  cursor: default;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.error-code:hover {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+.error-code.is-searching {
+  animation: codeGlitch 0.45s steps(2) infinite;
+}
+
+@keyframes codePulse {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes codeGlitch {
+  0%   { transform: translate(0, 0);    filter: none; }
+  25%  { transform: translate(-3px, 1px); filter: hue-rotate(30deg); }
+  50%  { transform: translate(3px, -1px); filter: hue-rotate(-20deg); }
+  75%  { transform: translate(-1px, 2px); filter: none; }
+  100% { transform: translate(0, 0); }
+}
+
+.error-title {
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
+  font-weight: 800;
+  color: var(--variation-color);
+  margin: 0 0 16px;
+  letter-spacing: 0.03em;
+}
+
+.error-message {
+  opacity: 0.85;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin: 0 0 36px;
+  min-height: 3.5em;
+  transition: opacity 0.25s ease;
+}
+
+.error-message.is-fading {
+  opacity: 0;
+}
+
+/* ===== ボタン群 ===== */
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.error-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 24px;
+  background: linear-gradient(135deg, var(--main-color), var(--balance-color));
+  color: var(--accent-color) !important;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s;
+  font-family: inherit;
+}
+
+.error-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--main-color) 35%, transparent);
+  opacity: 1 !important;
+}
+
+.error-btn:active {
+  transform: translateY(-1px);
+}
+
+.error-btn.secondary {
+  background: transparent;
+  border: 2px solid var(--main-color);
+  color: var(--main-color) !important;
+}
+
+.error-btn.secondary:hover {
+  background: color-mix(in srgb, var(--main-color) 12%, transparent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--main-color) 20%, transparent);
+}
+
+.error-hint {
+  font-size: 0.85rem;
+  opacity: 0.55;
+  margin: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 検索中の演出 */
+.error-hint.is-searching {
+  opacity: 0.9;
+  color: var(--main-color);
+}
+
+/* レスポンシブ微調整 */
+@media (max-width: 480px) {
+  .error-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .error-btn {
+    width: 100%;
+  }
+}
