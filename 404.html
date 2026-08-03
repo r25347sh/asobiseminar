@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - ページが見つかりません | Asobi Lab.</title>
+  <script src="/asobiseminar/js/setThemeColor.js"></script>
+  <script src="/asobiseminar/js/load-css.js"></script>
+  <link rel="stylesheet" href="/asobiseminar/MENU/MENU.css">
+  <style>
+    .error-container {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .error-code {
+      font-size: 8rem;
+      font-weight: 900;
+      color: var(--main-color);
+      text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+      line-height: 1;
+      margin: 0 0 16px 0;
+      letter-spacing: 0.05em;
+    }
+    .error-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--variation-color);
+      margin: 0 0 12px 0;
+    }
+    .error-message {
+      opacity: 0.8;
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      max-width: 420px;
+      line-height: 1.7;
+    }
+    .error-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+    .error-btn {
+      display: inline-block;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, var(--main-color), var(--balance-color));
+      color: var(--variation-color);
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .error-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .error-btn.secondary {
+      background: transparent;
+      border: 2px solid var(--main-color);
+      color: var(--main-color);
+    }
+  </style>
+</head>
+<body>
+  <main class="app-container error-container">
+    <p class="error-code">404</p>
+    <h1 class="error-title">ページが見つかりません</h1>
+    <p class="error-message">
+      お探しのページは移動したか、削除されたか、そもそも存在しない可能性があります。<br>
+      URLをご確認のうえ、もう一度お試しください。
+    </p>
+    <div class="error-actions">
+      <a href="/asobiseminar/index.html" class="error-btn">➔ ホームに戻る</a>
+      <a href="/asobiseminar/sitemap.html" class="error-btn secondary">サイトマップを見る</a>
+    </div>
+  </main>
+  <script src="/asobiseminar/MENU/MENU.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>テーマ設定 - Asobi Lab.</title>
+  
+  <!-- 共通スクリプト -->
+  <script src="/asobiseminar/js/load-css.js"></script>
+  <script src="/asobiseminar/js/setThemeColor.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;600&family=M+PLUS+1:wght@300;400;600;700&family=Zen+Kaku+Gothic+New:wght@400;600;700&family=Genjyoku+Shimbun&family=Noto+Sans+Mono:wght@400;600&family=Habibi&family=Inter:wght@300;400;600;700&family=Raleway:wght@300;400;600;700&family=Poppins:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@400;700&family=IBM+Plex+Sans+JP:wght@400;600&family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0; padding: 40px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--variation-color); background: var(--accent-color); min-height: 100vh;">
+
+  <main style="max-width: 600px; margin: 0 auto;">
+    <h1 style="color: var(--main-color); margin-bottom: 32px; font-size: 2.2rem; text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">⚙️ テーマ・フォント設定</h1>
+    
+    <!-- テーマ設定 -->
+    <div style="background: rgba(255,255,255,0.05); padding: 32px; border-radius: 12px; border: 1px solid var(--main-color); margin-bottom: 24px;">
+      <label style="display: block; margin-bottom: 12px; font-weight: bold; font-size: 1.1rem;">🎨 テーマを選択</label>
+      <select id="theme-select" style="display: block; width: 100%; margin-bottom: 24px; padding: 14px; background: rgba(0,0,0,0.3); color: var(--variation-color); border: 2px solid var(--main-color); border-radius: 8px; font-size: 1rem; cursor: pointer;">
+        <!-- JSONで自動生成 -->
+      </select>
+      
+      <div id="theme-preview" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+        <div style="padding: 12px; background: rgba(0,0,0,0.2); border-radius: 6px; border-left: 3px solid var(--main-color);">
+          <p style="margin: 0; font-size: 0.9rem; opacity: 0.7;">メインカラー</p>
+          <div id="preview-main" style="width: 100%; height: 30px; border-radius: 4px; margin-top: 6px;"></div>
+        </div>
+        <div style="padding: 12px; background: rgba(0,0,0,0.2); border-radius: 6px; border-left: 3px solid var(--balance-color);">
+          <p style="margin: 0; font-size: 0.9rem; opacity: 0.7;">バランスカラー</p>
+          <div id="preview-balance" style="width: 100%; height: 30px; border-radius: 4px; margin-top: 6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- フォント設定 -->
+    <div style="background: rgba(255,255,255,0.05); padding: 32px; border-radius: 12px; border: 1px solid var(--balance-color); margin-bottom: 24px;">
+      <label style="display: block; margin-bottom: 12px; font-weight: bold; font-size: 1.1rem;">🔤 フォントを選択</label>
+      <select id="font-select" style="display: block; width: 100%; margin-bottom: 24px; padding: 14px; background: rgba(0,0,0,0.3); color: var(--variation-color); border: 2px solid var(--balance-color); border-radius: 8px; font-size: 1rem; cursor: pointer;">
+        <!-- JSONで自動生成 -->
+      </select>
+      
+      <div id="font-preview" style="padding: 24px; background: rgba(0,0,0,0.2); border-radius: 6px; text-align: center;">
+        <p style="margin: 0; font-size: 0.85rem; opacity: 0.7; margin-bottom: 12px;">プレビュー</p>
+        <p id="font-preview-text" style="margin: 0; font-size: 1.8rem; font-weight: 600;">あいうえおABCabc 123</p>
+      </div>
+    </div>
+
+    <!-- 保存ボタン -->
+    <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+      <button id="save-btn" style="flex: 1; padding: 16px; background: linear-gradient(135deg, var(--main-color), var(--balance-color)); color: var(--variation-color); border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">💾 設定を保存する</button>
+      <button id="reset-btn" style="flex: 1; padding: 16px; background: rgba(255,255,255,0.1); color: var(--variation-color); border: 2px solid var(--main-color); border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">↺ リセット</button>
+    </div>
+    
+    <p id="save-message" style="text-align: center; margin: 0; opacity: 0; transition: opacity 0.3s; color: var(--main-color); font-weight: 600;"></p>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const themeSelect = document.getElementById('theme-select');
+      const fontSelect = document.getElementById('font-select');
+      const saveBtn = document.getElementById('save-btn');
+      const resetBtn = document.getElementById('reset-btn');
+      const saveMessage = document.getElementById('save-message');
+      const previewMain = document.getElementById('preview-main');
+      const previewBalance = document.getElementById('preview-balance');
+      const fontPreviewText = document.getElementById('font-preview-text');
+      
+      let allThemes = [];
+      let allFonts = [];
+
+      // テーマとフォント情報を読み込み
+      try {
+        const res = await fetch('/asobiseminar/themecolor.json');
+        if (!res.ok) throw new Error('JSONの読み込みに失敗しました');
+        const data = await res.json();
+        allThemes = data.themes || data;
+        allFonts = data.fonts || [];
+
+        // テーマセレクタを生成
+        themeSelect.innerHTML = '';
+        allThemes.forEach((theme) => {
+          const option = document.createElement('option');
+          option.value = theme.name;
+          option.textContent = theme.name;
+          option.style.backgroundColor = theme.accentcolor;
+          option.style.color = theme.variationcolor;
+          themeSelect.appendChild(option);
+        });
+
+        // フォントセレクタを生成
+        fontSelect.innerHTML = '';
+        allFonts.forEach((font) => {
+          const option = document.createElement('option');
+          option.value = font.name;
+          option.textContent = font.name;
+          fontSelect.appendChild(option);
+        });
+
+        // 保存された設定を復元
+        const savedTheme = localStorage.getItem('selectedTheme') || allThemes[0].name;
+        const savedFont = localStorage.getItem('selectedFont') || (allFonts[0]?.name || 'Noto Sans JP - モダン標準');
+        
+        themeSelect.value = savedTheme;
+        fontSelect.value = savedFont;
+        
+        updateThemePreview(savedTheme);
+        updateFontPreview(savedFont);
+
+        // イベントリスナー
+        themeSelect.addEventListener('change', (e) => updateThemePreview(e.target.value));
+        fontSelect.addEventListener('change', (e) => updateFontPreview(e.target.value));
+
+      } catch (err) {
+        console.error('設定ファイルの読み込みエラー:', err);
+        themeSelect.innerHTML = '<option>エラー: テーマが読み込めません</option>';
+      }
+
+      function updateThemePreview(themeName) {
+        const theme = allThemes.find(t => t.name === themeName);
+        if (theme) {
+          previewMain.style.backgroundColor = theme.maincolor;
+          previewBalance.style.backgroundColor = theme.balancecolor;
+        }
+      }
+
+      function updateFontPreview(fontName) {
+        const font = allFonts.find(f => f.name === fontName);
+        if (font) {
+          fontPreviewText.style.fontFamily = font.fontFamily;
+        }
+      }
+
+      saveBtn.addEventListener('click', () => {
+        localStorage.setItem('selectedTheme', themeSelect.value);
+        localStorage.setItem('selectedFont', fontSelect.value);
+        
+        saveBtn.style.animation = 'pulse 0.6s ease';
+        saveMessage.textContent = '✨ 設定を保存しました！';
+        saveMessage.style.opacity = '1';
+        
+        setTimeout(() => {
+          saveBtn.style.animation = '';
+          saveMessage.style.opacity = '0';
+          location.reload();
+        }, 2000);
+      });
+
+      resetBtn.addEventListener('click', () => {
+        if (confirm('設定をデフォルトにリセットしますか？')) {
+          localStorage.removeItem('selectedTheme');
+          localStorage.removeItem('selectedFont');
+          location.reload();
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

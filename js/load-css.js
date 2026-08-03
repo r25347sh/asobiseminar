@@ -10,7 +10,6 @@
   const baseCssFiles = [
     `${base}/gaibu/unpkg.css`,
     `${base}/css/style.css?${cacheBuster}`,
-    `${base}/nav/nav.css?${cacheBuster}`,
     `${base}/MENU/MENU.css?${cacheBuster}`
   ];
 
@@ -31,7 +30,18 @@
   if (currentPath.includes('members.html')) {
     pageCssUrl = `${base}/css/members.css?${cacheBuster}`;
   } else if (currentPath.includes('/groups/')) {
-    pageCssUrl = `${base}/css/groupsIndex.css?${cacheBuster}`;
+    // グループ詳細ページは個別CSSを優先
+    if (currentPath.includes('one.html')) {
+      pageCssUrl = `${base}/css/one.css?${cacheBuster}`;
+    } else if (currentPath.includes('two.html')) {
+      pageCssUrl = `${base}/css/two.css?${cacheBuster}`;
+    } else if (currentPath.includes('three.html')) {
+      pageCssUrl = `${base}/css/three.css?${cacheBuster}`;
+    } else if (currentPath.includes('programmer.html') || currentPath.includes('englishgame.html')) {
+      pageCssUrl = `${base}/css/programmer.css?${cacheBuster}`;
+    } else {
+      pageCssUrl = `${base}/css/groupsIndex.css?${cacheBuster}`;
+    }
   } else if (currentPath.includes('aboutsite.html')) {
     pageCssUrl = `${base}/css/aboutsite.css?${cacheBuster}`;
   } else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) {
@@ -50,7 +60,7 @@
     document.head.appendChild(pageLink); // 最も優先されるよう、headの一番下に差し込む
   }
 
-  // 3. Nav JS のロード（重複を防ぐ）
+  // 3. MENU JS のロード（重複を防ぐ）
   const scriptUrl = `${base}/MENU/MENU.js?${cacheBuster}`;
   if (!document.querySelector(`script[src^="${base}/MENU/MENU.js"]`)) {
     const script = document.createElement('script');

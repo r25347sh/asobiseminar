@@ -1,14 +1,15 @@
 // js/setThemeColor.js
 (function() {
-  const savedThemeName = localStorage.getItem('selectedTheme') || 'HalloweenNight';
+  // 存在するテーマ名をデフォルトに（themecolor.json の最初のテーマ）
+  const savedThemeName = localStorage.getItem('selectedTheme') || 'CyberNeon (電脳ネオン都市)';
   const savedFontName = localStorage.getItem('selectedFont') || 'Noto Sans JP - モダン標準';
 
   // 100%バグらせないための初期カラー
   const fallbackTheme = {
-    "maincolor": "#d65f01",
-    "balancecolor": "#b1c586",
-    "variationcolor": "#fff7d4",
-    "accentcolor": "#090000"
+    "maincolor": "#00ff88",
+    "balancecolor": "#ff00aa",
+    "variationcolor": "#ffffff",
+    "accentcolor": "#0a0a14"
   };
 
   fetch('/asobiseminar/themecolor.json')
@@ -18,10 +19,10 @@
     })
     .then(data => {
       const themes = data.themes || data;
-      const targetTheme = themes.find(t => t.name === savedThemeName) || fallbackTheme;
+      const targetTheme = themes.find(t => t.name === savedThemeName) || themes[0] || fallbackTheme;
       applyTheme(targetTheme);
       
-      // ★ 新規追加：フォント適用
+      // ★ フォント適用
       const fonts = data.fonts || [];
       applyFont(fonts);
     })
@@ -40,7 +41,7 @@
     root.style.setProperty('--accent-color', theme.accentcolor);
   }
 
-  // ★ 新規関数：フォント適用
+  // ★ フォント適用
   function applyFont(fonts) {
     const savedFont = fonts.find(f => f.name === savedFontName);
     const fontFamily = savedFont ? savedFont.fontFamily : "'Noto Sans JP', sans-serif";
