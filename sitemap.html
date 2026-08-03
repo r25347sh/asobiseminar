@@ -4,19 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>サイトマップ - Asobi Lab.</title>
-  
   <script src="/asobiseminar/js/load-css.js"></script>
   <script src="/asobiseminar/js/setThemeColor.js"></script>
 </head>
 <body>
   <main class="app-container">
     <header style="margin-bottom: 60px;">
-      <h1 style="color: var(--main-color); font-size: 3rem; font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">🗺️ サイトマップ</h1>
-      <p style="opacity: 0.8; font-size: 1.1rem; margin: 0;">Asobi Lab. のコンテンツ一覧</p>
+      <h1 style="color: var(--main-color); font-size: clamp(2.2rem, 7vw, 3rem); font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">
+        🗺️ サイトマップ
+      </h1>
+      <p style="opacity: 0.8; font-size: 1.1rem; margin: 0;">Asobi Lab. のコンテンツ一覧（迷子防止用）</p>
     </header>
 
-    <section style="margin-bottom: 60px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 20px;">メインページ</h2>
+    <section style="margin-bottom: 50px; line-height: 1.8;">
+      <h2 class="asobi-section-title">メインページ</h2>
       <ul style="list-style: none; padding: 0;">
         <li style="margin: 12px 0;"><a href="/asobiseminar/index.html">📍 ホーム - Asobi Lab. について</a></li>
         <li style="margin: 12px 0;"><a href="/asobiseminar/subpages/members.html">📍 メンバー紹介</a></li>
@@ -27,29 +28,29 @@
       </ul>
     </section>
 
-    <section style="margin-bottom: 60px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 20px;">Group Activities</h2>
+    <section style="margin-bottom: 50px; line-height: 1.8;">
+      <h2 class="asobi-section-title balance">Group Activities</h2>
       <ul style="list-style: none; padding: 0;">
         <li style="margin: 12px 0;"><a href="/asobiseminar/subpages/groups/index.html">🎯 Group トップ</a></li>
-        <li style="margin: 24px 0; padding-left: 20px;">
+        <li style="margin: 20px 0; padding-left: 20px;">
           <strong>スケボーと俺等の青春</strong>
           <ul style="list-style: none; padding: 0; margin-top: 8px;">
             <li><a href="/asobiseminar/subpages/groups/one.html">➔ 「スケオレ」 詳細</a></li>
           </ul>
         </li>
-        <li style="margin: 24px 0; padding-left: 20px;">
+        <li style="margin: 20px 0; padding-left: 20px;">
           <strong>脆い割り箸ビルを探求で強くする</strong>
           <ul style="list-style: none; padding: 0; margin-top: 8px;">
             <li><a href="/asobiseminar/subpages/groups/two.html">➔ 「割りビル」 詳細</a></li>
           </ul>
         </li>
-        <li style="margin: 24px 0; padding-left: 20px;">
+        <li style="margin: 20px 0; padding-left: 20px;">
           <strong>ファッションについて</strong>
           <ul style="list-style: none; padding: 0; margin-top: 8px;">
             <li><a href="/asobiseminar/subpages/groups/three.html">➔ 「ファッション」 詳細</a></li>
           </ul>
         </li>
-        <li style="margin: 24px 0; padding-left: 20px;">
+        <li style="margin: 20px 0; padding-left: 20px;">
           <strong>Web魔道士 / 英語ゲーマー</strong>
           <ul style="list-style: none; padding: 0; margin-top: 8px;">
             <li><a href="/asobiseminar/subpages/groups/programmer.html">➔ Web魔道士</a></li>
@@ -59,11 +60,13 @@
       </ul>
     </section>
 
-    <section style="background: rgba(255,255,255,0.05); padding: 32px; border-radius: 12px; border-left: 4px solid var(--main-color); margin-top: 40px;">
+    <section class="asobi-card" style="border-left: 4px solid var(--main-color); margin-top: 20px;">
       <h3 style="color: var(--main-color); margin-top: 0;">多色のテーマで変化する世界を体験</h3>
-      <p style="opacity: 0.8; margin-bottom: 16px;">このサイトは<a href="/asobiseminar/settings.html" style="color: var(--balance-color); font-weight: bold;">テーマ設定</a>で多色の異なる「世界観」に変わります。あなた好みの色彩を見つけてください。</p>
+      <p style="opacity: 0.85; margin-bottom: 16px;">
+        <a href="/asobiseminar/settings.html" style="font-weight: bold;">テーマ設定</a>で多色の異なる「世界観」に変わります。あなた好みの色彩を見つけてください。
+      </p>
+      <a href="/asobiseminar/settings.html" class="asobi-btn asobi-btn-ghost">⚙️ テーマを変えて遊ぶ</a>
     </section>
   </main>
-
 </body>
 </html>

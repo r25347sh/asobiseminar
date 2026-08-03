@@ -4,51 +4,60 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Asobi Lab. - ホーム</title>
-  
-  <!-- テーマ + CSSロード（Navも含む） -->
   <script src="/asobiseminar/js/setThemeColor.js"></script>
   <script src="/asobiseminar/js/load-css.js"></script>
   <link rel="stylesheet" href="/asobiseminar/MENU/MENU.css">
   <link rel="stylesheet" href="/asobiseminar/css/index-main.css">
 </head>
 <body>
-  <!-- ==========================================
-     🏛️ メインコンテンツエリア（Asobi Lab. 本文）
-     ========================================== -->
   <main class="app-container">
-    
-    <!-- メインヒーローヘッダー -->
+
     <header style="text-align: center; margin-bottom: 60px;">
-      <h1 style="color: var(--main-color); font-size: 3rem; font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em;">Asobi Lab.</h1>
-      <p style="opacity: 0.8; font-size: 1.1rem; margin-top: 10px;">遊びを極める特殊なゼミ</p>
+      <h1 style="color: var(--main-color); font-size: clamp(2.4rem, 8vw, 3.2rem); font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em;">
+        Asobi Lab.
+      </h1>
+      <p style="opacity: 0.85; font-size: 1.15rem; margin-top: 12px;">
+        遊びを極める特殊なゼミ
+      </p>
+      <p style="opacity: 0.5; font-size: 0.85rem; margin-top: 8px;">
+        長押し or 3回タップでメニューが開くよ
+      </p>
     </header>
 
-    <!-- セクション1：私たちについて -->
     <section style="margin-bottom: 50px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">私たちについて</h2>
-      <p>遊びの探求ゼミは、松丸教授をはじめとし、変人が集まっています（本文は後ほど編集予定）</p>
+      <h2 class="asobi-section-title">私たちについて</h2>
+      <p>
+        遊びの探求ゼミは、松丸教授をはじめとし、変人が集まっています。<br>
+        ここは「面白くなければ意味がない」を合言葉に、スケボーも割り箸建築もファッションもWebも英語も、全部「遊び」として本気でやる場所です。
+      </p>
     </section>
 
-    <!-- セクション2：メンバー -->
     <section style="margin-bottom: 50px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">メンバー</h2>
-      <p>当ゼミには、色々います（本文は後ほど編集予定）</p>
-      <a href="/asobiseminar/subpages/members.html" style="display: inline-block; margin-top: 8px; font-weight: bold; text-decoration: none;">➔ メンバー一覧を覗く</a>
+      <h2 class="asobi-section-title balance">メンバー</h2>
+      <p>当ゼミには、色々います。天才も変人もリーダーも、全部揃ってます。</p>
+      <a href="/asobiseminar/subpages/members.html" class="asobi-btn" style="margin-top: 14px;">➔ メンバー一覧を覗く</a>
     </section>
 
-    <!-- セクション3：グループ活動 -->
     <section style="margin-bottom: 50px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">グループ活動</h2>
-      <p>多次元的な研究を行うため、ゼミ内には複数の専門グループが存在します。スケボー・ファッション・建築（本文は後ほど編集予定）</p>
-      <a href="/asobiseminar/subpages/groups/index.html" style="display: inline-block; margin-top: 8px; font-weight: bold; text-decoration: none;">➔ グループのアクティビティを見る</a>
+      <h2 class="asobi-section-title">グループ活動</h2>
+      <p>
+        多次元的な研究を行うため、ゼミ内には複数の専門グループが存在します。<br>
+        スケボー・ファッション・割り箸建築・Web魔道・英語ゲーム——どれも「遊び」の延長線上にあります。
+      </p>
+      <a href="/asobiseminar/subpages/groups/index.html" class="asobi-btn" style="margin-top: 14px;">➔ グループのアクティビティを見る</a>
     </section>
 
-    <!-- セクション4：このサイトについて -->
     <section style="margin-bottom: 60px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">このサイトについて</h2>
-      <p>このシステムは、あなたが選択した「世界の概念（テーマカラー）」がブラウザの脳内（ローカルストレージ）に完全に記憶され、すべてのページへ瞬時に波及します。</p>
-      <a href="/asobiseminar/subpages/aboutsite.html" style="display: inline-block; margin-top: 8px; font-weight: bold; text-decoration: none;">➔ システムのタネ明かしへ</a>
+      <h2 class="asobi-section-title balance">このサイトについて</h2>
+      <p>
+        このシステムは、あなたが選択した「世界の概念（テーマカラー）」がブラウザの脳内（ローカルストレージ）に完全に記憶され、すべてのページへ瞬時に波及します。
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;">
+        <a href="/asobiseminar/subpages/aboutsite.html" class="asobi-btn">➔ システムのタネ明かしへ</a>
+        <a href="/asobiseminar/settings.html" class="asobi-btn asobi-btn-ghost">⚙️ テーマを変えて遊ぶ</a>
+      </div>
     </section>
+
   </main>
   <script src="/asobiseminar/MENU/MENU.js"></script>
 </body>

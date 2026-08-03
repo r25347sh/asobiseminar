@@ -4,8 +4,8 @@ html, body {
   padding: 0 !important;
   width: 100% !important;
   min-height: 100vh !important;
-  background-color: var(--accent-color) !important; /* 27色の背景が自動適用 */
-  color: var(--variation-color) !important; /* 27色の最も明るい文字色が自動適用 */
+  background-color: var(--accent-color) !important;
+  color: var(--variation-color) !important;
   font-family: var(--font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif) !important;
   transition: background-color 0.4s ease, color 0.4s ease !important;
 }
@@ -20,15 +20,38 @@ html, body {
 a {
   color: var(--main-color) !important;
   text-decoration: none !important;
-  transition: color 0.2s, opacity 0.2s !important;
+  transition: color 0.2s, opacity 0.2s, transform 0.2s !important;
 }
 a:hover {
   color: var(--balance-color) !important;
   opacity: 0.9 !important;
 }
 
+/* 選択テキストもテーマ色に */
+::selection {
+  background: color-mix(in srgb, var(--main-color) 45%, transparent);
+  color: var(--variation-color);
+}
+
+/* スクロールバーも少し遊び */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--main-color) 50%, transparent);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--main-color);
+  }
+}
+
 /* ==========================================
-   🚨 ハンバーガーメニューの絶対安定構造（コピペ用）
+   🚨 ハンバーガーメニューの絶対安定構造（レガシー互換）
    ========================================== */
 .magic-menu, .magic-menu * { box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; }
 .magic-menu summary, .magic-submenu-details summary { list-style: none !important; cursor: pointer !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }

@@ -1,4 +1,4 @@
-/* css/members.css - メンバーページ専用スタイル */
+/* css/members.css - メンバーページ専用 */
 .members-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -7,11 +7,11 @@
 }
 
 .member-card {
-  background: rgba(255,255,255,0.05);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
   padding: 28px;
-  border: 1px solid var(--main-color);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid color-mix(in srgb, var(--main-color) 60%, transparent);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
   overflow: hidden;
 }
@@ -23,15 +23,18 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transition: left 0.55s ease;
+  pointer-events: none;
 }
 
 .member-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  transform: translateY(-10px) scale(1.03);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.32),
+    0 0 28px color-mix(in srgb, var(--main-color) 25%, transparent);
   border-color: var(--balance-color);
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .member-card:hover::before {
@@ -47,15 +50,11 @@
   justify-content: center;
   font-size: 2.5rem;
   margin-bottom: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  animation: memberPulse 2.4s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+@keyframes memberPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
 }

@@ -1,38 +1,36 @@
-// js/load-css.js - Ajax・GitHub Pages完全対応決定版
+// js/load-css.js - Ajax・GitHub Pages完全対応 + 遊び心エンジン
 (function() {
   'use strict';
 
   const base = '/asobiseminar';
-  // キャッシュを強制突破するためのランダムな数字を自動生成
   const cacheBuster = 'v=' + new Date().getTime();
 
   // 1. 全ページ共通の基本CSS
   const baseCssFiles = [
     `${base}/gaibu/unpkg.css`,
     `${base}/css/style.css?${cacheBuster}`,
+    `${base}/css/asobi-play.css?${cacheBuster}`,
     `${base}/MENU/MENU.css?${cacheBuster}`
   ];
 
   baseCssFiles.forEach(url => {
-    // 既に同じ共通CSSが入っていればスキップ（二重読み込み防止）
     if (document.querySelector(`link[href^="${url.split('?')[0]}"]`)) return;
 
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = url;
-    document.head.appendChild(link); // 確実に効かせるため後ろに追加
+    document.head.appendChild(link);
   });
 
-  // 2. ページ別CSSの判定と追加
+  // 2. ページ別CSS
   const currentPath = window.location.pathname;
   let pageCssUrl = '';
 
-  if (currentPath.includes('404') || document.title.includes('404')) {
+  if (currentPath.includes('404') || (document.title && document.title.includes('404'))) {
     pageCssUrl = `${base}/css/404.css?${cacheBuster}`;
   } else if (currentPath.includes('members.html')) {
     pageCssUrl = `${base}/css/members.css?${cacheBuster}`;
   } else if (currentPath.includes('/groups/')) {
-    // グループ詳細ページは個別CSSを優先
     if (currentPath.includes('one.html')) {
       pageCssUrl = `${base}/css/one.css?${cacheBuster}`;
     } else if (currentPath.includes('two.html')) {
@@ -48,6 +46,9 @@
     pageCssUrl = `${base}/css/aboutsite.css?${cacheBuster}`;
   } else if (currentPath.includes('settings.html') || currentPath.includes('settigs.html')) {
     pageCssUrl = `${base}/css/settings.css?${cacheBuster}`;
+  } else if (currentPath.includes('gallery.html')) {
+    // gallery は共通 play + style で十分（専用CSSなし）
+    pageCssUrl = '';
   } else if (currentPath.includes('programmer.html')) {
     pageCssUrl = `${base}/css/programmer.css?${cacheBuster}`;
   } else {
@@ -55,7 +56,6 @@
   }
 
   if (pageCssUrl) {
-    // 既に同じページCSSがあればスキップ
     if (!document.querySelector(`link[href^="${pageCssUrl.split('?')[0]}"]`)) {
       const pageLink = document.createElement('link');
       pageLink.rel = 'stylesheet';
@@ -65,7 +65,7 @@
     }
   }
 
-  // 3. MENU JS のロード（重複を防ぐ）
+  // 3. MENU JS
   const scriptUrl = `${base}/MENU/MENU.js?${cacheBuster}`;
   if (!document.querySelector(`script[src^="${base}/MENU/MENU.js"]`)) {
     const script = document.createElement('script');
@@ -74,5 +74,14 @@
     document.head.appendChild(script);
   }
 
-  console.log('%c✅ Load-css re-executed for path: ' + currentPath, 'color:#00ff88');
+  // 4. 遊び心エンジン（全ページ）
+  const playUrl = `${base}/js/asobi-play.js?${cacheBuster}`;
+  if (!document.querySelector(`script[src^="${base}/js/asobi-play.js"]`)) {
+    const playScript = document.createElement('script');
+    playScript.src = playUrl;
+    playScript.async = true;
+    document.head.appendChild(playScript);
+  }
+
+  console.log('%c✅ Load-css + AsobiPlay for: ' + currentPath, 'color:#00ff88');
 })();

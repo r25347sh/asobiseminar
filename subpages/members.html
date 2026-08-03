@@ -4,58 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>メンバー - Asobi Lab.</title>
-  
-  <!-- 共通スクリプト -->
   <script src="/asobiseminar/js/load-css.js"></script>
   <script src="/asobiseminar/js/setThemeColor.js"></script>
 </head>
 <body>
   <main class="app-container">
     <header style="margin-bottom: 60px;">
-      <h1 style="color: var(--main-color); font-size: 3rem; font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">🎭 メンバー紹介</h1>
-      <p style="opacity: 0.8; font-size: 1.1rem; margin: 0;">Asobi Lab. を構成する多才なラボメンバーたちをご紹介します</p>
+      <h1 style="color: var(--main-color); font-size: clamp(2.2rem, 7vw, 3rem); font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">
+        🎭 メンバー紹介
+      </h1>
+      <p style="opacity: 0.8; font-size: 1.1rem; margin: 0;">
+        Asobi Lab. を構成する多才なラボメンバーたちをご紹介します
+      </p>
     </header>
 
     <section style="margin-bottom: 60px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.8rem; font-weight: 800; margin-bottom: 30px;">コアメンバー</h2>
-      
+      <h2 class="asobi-section-title" style="font-size: 1.8rem; margin-bottom: 30px;">コアメンバー</h2>
+
       <div class="members-grid">
         <article class="member-card">
           <div class="member-avatar" style="background: linear-gradient(135deg, var(--main-color), var(--balance-color));">🧠</div>
           <h3 style="color: var(--main-color); margin-bottom: 8px;">TOP: 松丸慶汰 教諭</h3>
-          <p style="opacity: 0.8; font-size: 0.95rem; margin: 0;">麗澤一の多趣味人間。</p>
+          <p style="opacity: 0.8; font-size: 0.95rem; margin: 0;">麗澤一の多趣味人間。遊びの総司令塔。</p>
         </article>
 
         <article class="member-card">
-          <div class="member-avatar" style="background: linear-gradient(135deg, var(--balance-color), var(--main-color));">はるるん</div>
+          <div class="member-avatar" style="background: linear-gradient(135deg, var(--balance-color), var(--main-color)); font-size: 1.1rem; font-weight: 800;">はるるん</div>
           <h3 style="color: var(--main-color); margin-bottom: 8px;">Webクリエイター：佐藤 晴</h3>
           <p style="opacity: 0.8; font-size: 0.95rem; margin: 0;">CSSアニメーションとUIの美しさに執着する人。退屈なWEBを芸術に変える魔法使い。</p>
-          <p style="opacity: 0.8; font-size: 0.95rem; margin: 0;">このサイトと麗探祭サイトの制作を行いました！</p>
+          <p style="opacity: 0.7; font-size: 0.9rem; margin: 8px 0 0;">このサイトと麗探祭サイトの制作を行いました！</p>
         </article>
 
         <article class="member-card">
           <div class="member-avatar" style="background: linear-gradient(135deg, var(--variation-color), var(--main-color));">⚡</div>
           <h3 style="color: var(--main-color); margin-bottom: 8px;">みんなのリーダー：川端也大 様</h3>
-          <p style="opacity: 0.8; font-size: 0.95rem; margin: 0;">どのグループにも属さぬ強いやつ。</p>
+          <p style="opacity: 0.8; font-size: 0.95rem; margin: 0;">どのグループにも属さぬ強いやつ。存在そのものが実験。</p>
         </article>
       </div>
     </section>
 
     <section style="margin-bottom: 60px;">
-      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.8rem; font-weight: 800; margin-bottom: 30px;">チームスピリット</h2>
-      <div style="background: rgba(255,255,255,0.05); padding: 32px; border-radius: 12px; border-left: 4px solid var(--balance-color); line-height: 1.8;">
-        <p>このラボは、個々の天才が集まったのではなく、互いに刺激し合う「遊び心」でつながった集団です。制約は創造性の敵。自由であること、試すことを何より大切にしています。</p>
-        <p>二文目制作中。。。おもいつかない</p>
+      <h2 class="asobi-section-title balance" style="font-size: 1.8rem; margin-bottom: 30px;">チームスピリット</h2>
+      <div class="asobi-card" style="border-left: 4px solid var(--balance-color);">
+        <p style="margin: 0 0 12px; line-height: 1.8;">
+          このラボは、個々の天才が集まったのではなく、互いに刺激し合う「遊び心」でつながった集団です。制約は創造性の敵。自由であること、試すことを何より大切にしています。
+        </p>
+        <p style="margin: 0; opacity: 0.75; font-size: 0.95rem;">
+          二文目はまだ実験中…思いついたら更新します。それも遊び。
+        </p>
       </div>
     </section>
 
     <section>
-      <div style="text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid var(--main-color);">
+      <div style="text-align: center; margin-top: 40px; padding-top: 40px; border-top: 1px solid color-mix(in srgb, var(--main-color) 40%, transparent);">
         <p style="opacity: 0.7; margin-bottom: 16px;">Asobi Lab. の活動詳細は</p>
-        <a href="/asobiseminar/subpages/groups/index.html" style="display: inline-block; padding: 14px 28px; background: linear-gradient(135deg, var(--main-color), var(--balance-color)); color: var(--variation-color); border-radius: 8px; font-weight: bold; text-decoration: none; transition: all 0.3s ease;">➔ グループアクティビティを見る</a>
+        <a href="/asobiseminar/subpages/groups/index.html" class="asobi-btn">➔ グループアクティビティを見る</a>
       </div>
     </section>
   </main>
-
 </body>
 </html>

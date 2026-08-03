@@ -4,27 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>このサイトについて - Asobi Lab.</title>
-  
-  <!-- 共通スクリプト -->
   <script src="/asobiseminar/js/load-css.js"></script>
   <script src="/asobiseminar/js/setThemeColor.js"></script>
 </head>
 <body>
   <main class="app-container">
     <header style="margin-bottom: 60px;">
-      <h1 style="color: var(--main-color); font-size: 3rem; font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">🔬 このサイトについて</h1>
+      <h1 style="color: var(--main-color); font-size: clamp(2.2rem, 7vw, 3rem); font-weight: 900; text-shadow: 0 4px 12px rgba(0,0,0,0.3); letter-spacing: 0.05em; margin-bottom: 16px;">
+        🔬 このサイトについて
+      </h1>
       <p style="opacity: 0.8; font-size: 1.1rem; margin: 0;">Asobi Lab. の工夫について説明いたします、、、！</p>
     </header>
 
     <section style="margin-bottom: 50px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">🎯 設計コンセプト</h2>
+      <h2 class="asobi-section-title">🎯 設計コンセプト</h2>
       <p>このサイトは、単なる情報発信の場ではなく、触って楽しい見て面白い、玉手箱のような構成としております。</p>
       <p>JavaScriptの複雑性を排除し、純粋なCSS変数の力で、動的で美しいUXを実現。多色の「世界観」を切り替えることで、同じHTMLが全く異なる表情を持つシステムを構築しました。</p>
     </section>
 
     <section style="margin-bottom: 50px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">🛠️ 技術スタック</h2>
-      <div style="background: rgba(255,255,255,0.05); padding: 24px; border-radius: 8px; margin-bottom: 16px;">
+      <h2 class="asobi-section-title balance">🛠️ 技術スタック</h2>
+      <div class="asobi-card" style="margin-bottom: 16px;">
         <h3 style="color: var(--main-color); margin-top: 0;">フロントエンド</h3>
         <ul style="margin: 0;">
           <li><strong>HTML5</strong> - セマンティックで意図的な構造設計</li>
@@ -32,18 +32,19 @@
           <li><strong>JavaScript</strong> - ミニマルで効率的なロジックのみ</li>
         </ul>
       </div>
-      <div style="background: rgba(255,255,255,0.05); padding: 24px; border-radius: 8px;">
+      <div class="asobi-card">
         <h3 style="color: var(--main-color); margin-top: 0;">アーキテクチャ</h3>
         <ul style="margin: 0;">
-          <li><strong>ファイル分割（タスク分担）</strong> - ページ別・機能別CSS + 共通スタイル</li>
-          <li><strong>CSS動的ロード</strong> - JavaScriptで現在のURLを検出し、必要なCSSのみ読み込み</li>
-          <li><strong>localStorage連携</strong> - テーマ選択をブラウザに記憶（ローカルストレージへの一時記憶）</li>
+          <li><strong>ファイル分割</strong> - ページ別・機能別CSS + 共通スタイル</li>
+          <li><strong>CSS動的ロード</strong> - URLを検出して必要なCSSだけ読む</li>
+          <li><strong>localStorage連携</strong> - テーマをブラウザに記憶</li>
+          <li><strong>遊び心エンジン</strong> - スクロール出現・トースト・イースターエッグ</li>
         </ul>
       </div>
     </section>
 
     <section style="margin-bottom: 50px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">🎨 多色のテーマシステム</h2>
+      <h2 class="asobi-section-title">🎨 多色のテーマシステム</h2>
       <p>このサイトの大きな特徴は、<strong>多種類の異なる「世界観」</strong>を瞬時に切り替えられることです。</p>
       <p>各テーマは、以下の4つのカラー変数（CSS）で構成されています：</p>
       <ul>
@@ -56,30 +57,23 @@
     </section>
 
     <section style="margin-bottom: 50px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--balance-color); padding-left: 15px; color: var(--balance-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">✨ アニメーション哲学</h2>
+      <h2 class="asobi-section-title balance">✨ アニメーション哲学</h2>
       <p>単なる「見た目の面白さ」ではなく、<strong>UXの直感性</strong>を高めるためのアニメーションを採用。</p>
       <ul>
-        <li><strong>粒子メニュー</strong> - スムーズな開閉アニメーションと、階層的なナビゲーション。自動演算による均等な要素配置。片手ユーザーにも利用しやすい仕様。</li>
-        <li><strong>ページ遷移</strong> - 微妙なトランジションで、視認性を損なわない</li>
-        <li><strong>ホバーエフェクト</strong> - インタラクティブな要素に対する即座の反応</li>
+        <li><strong>粒子メニュー</strong> - 長押し / 3回タップで開く放射メニュー</li>
+        <li><strong>スクロール出現</strong> - セクションがふわっと現れる</li>
+        <li><strong>イースターエッグ</strong> - ↑↑↓↓←→←→BA でコンフェッティ</li>
         <li><strong>テーマ切り替え</strong> - 世界観の変化を視覚的に体験</li>
       </ul>
     </section>
 
     <section style="margin-bottom: 60px; line-height: 1.8;">
-      <h2 style="border-left: 5px solid var(--main-color); padding-left: 15px; color: var(--main-color); font-size: 1.6rem; font-weight: 800; margin-bottom: 15px;">🚀 パフォーマンス最適化</h2>
-      <p>「Asobi Lab.」 は、「退屈なWEBを面白く」することが目標です。しかし、面白さの代わりに体験が損なわれては本末転倒。</p>
-      <p>以下の工夫で、高速でスムーズな体験を実現：</p>
-      <ul>
-        <li>外部ライブラリの最小化</li>
-        <li>画像とビデオの遅延ロード</li>
-        <li>CSS Variables（CSS変数）の効率的な活用</li>
-        <li>Javascriptを用いたタスクマネージャーの導入</li>
-      </ul>
+      <h2 class="asobi-section-title">🚀 パフォーマンス</h2>
+      <p>「面白さ」と引き換えに体験が損なわれては本末転倒。外部ライブラリは最小限、CSS Variables と軽量JSで高速を保っています。</p>
     </section>
 
     <section style="margin-bottom: 60px;">
-      <div style="background: rgba(255,255,255,0.05); padding: 32px; border-radius: 12px; border-left: 4px solid var(--balance-color);">
+      <div class="asobi-card" style="border-left: 4px solid var(--balance-color);">
         <h3 style="color: var(--balance-color); margin-top: 0;">💭 デザイン哲学</h3>
         <blockquote style="margin: 0; font-style: italic; opacity: 0.9;">
           <p>「遊び心なき技術は、人を感動させない。</p>
@@ -88,8 +82,6 @@
         </blockquote>
       </div>
     </section>
-
   </main>
-
 </body>
 </html>
