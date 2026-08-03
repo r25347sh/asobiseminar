@@ -1,0 +1,150 @@
+/* css/playground.css - 遊び場専用 */
+
+.playground-page {
+  max-width: 720px !important;
+}
+
+.play-panel {
+  text-align: left;
+}
+
+.play-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.play-stat {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--main-color);
+  opacity: 0.9;
+}
+
+/* バブル */
+.bubble-arena {
+  position: relative;
+  height: 260px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent-color) 70%, var(--main-color));
+  border: 2px solid var(--main-color);
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.bubble-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--variation-color);
+  font-weight: 700;
+  z-index: 2;
+  font-size: 1.1rem;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff8, var(--main-color));
+  border: 2px solid color-mix(in srgb, var(--balance-color) 80%, white);
+  cursor: pointer;
+  transform: scale(0);
+  animation: bubbleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--main-color) 40%, transparent);
+  touch-action: manipulation;
+}
+
+.bubble.pop {
+  animation: bubblePop 0.28s ease-out forwards;
+}
+
+@keyframes bubbleIn {
+  to { transform: scale(1); }
+}
+@keyframes bubblePop {
+  to { transform: scale(1.4); opacity: 0; }
+}
+
+/* 反射 */
+.react-arena {
+  height: 160px;
+  border-radius: 12px;
+  border: 2px solid var(--balance-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(255, 255, 255, 0.04);
+  transition: background 0.15s ease, color 0.15s ease;
+  touch-action: manipulation;
+}
+
+.react-arena.wait {
+  background: color-mix(in srgb, var(--main-color) 15%, transparent);
+}
+
+.react-arena.go {
+  background: linear-gradient(135deg, var(--main-color), var(--balance-color));
+  color: var(--accent-color);
+}
+
+.react-arena.early {
+  background: #c0392b44;
+  border-color: #e74c3c;
+}
+
+/* 色 */
+.color-fun {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.color-fun label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.color-fun input[type="range"] {
+  flex: 1;
+  accent-color: var(--main-color);
+}
+
+.color-preview {
+  padding: 28px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  border: 2px solid var(--main-color);
+  transition: filter 0.1s linear;
+}
+
+/* スローガン */
+.slogan-box {
+  padding: 24px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed var(--main-color);
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
+  min-height: 3.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}

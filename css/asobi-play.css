@@ -1,6 +1,5 @@
 /* css/asobi-play.css
-   Asobi Lab. 全ページ共通・遊び心エンジン
-   軽量・テーマ変数完全対応
+   Asobi Lab. 全ページ共通・遊び心エンジン MAX
 */
 
 /* ===== スクロール出現 ===== */
@@ -11,18 +10,16 @@
     opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 .asobi-reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
-
 .asobi-reveal-delay-1 { transition-delay: 0.08s; }
 .asobi-reveal-delay-2 { transition-delay: 0.16s; }
 .asobi-reveal-delay-3 { transition-delay: 0.24s; }
 .asobi-reveal-delay-4 { transition-delay: 0.32s; }
 
-/* ===== 共通カード・リンクの遊び ===== */
+/* ===== カード ===== */
 .asobi-card {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid color-mix(in srgb, var(--main-color) 55%, transparent);
@@ -36,7 +33,6 @@
   position: relative;
   overflow: hidden;
 }
-
 .asobi-card::after {
   content: '';
   position: absolute;
@@ -44,28 +40,24 @@
   background: linear-gradient(
     120deg,
     transparent 30%,
-    color-mix(in srgb, var(--main-color) 12%, transparent) 50%,
+    color-mix(in srgb, var(--main-color) 14%, transparent) 50%,
     transparent 70%
   );
   transform: translateX(-120%);
   transition: transform 0.6s ease;
   pointer-events: none;
 }
-
 .asobi-card:hover {
-  transform: translateY(-6px) scale(1.015);
+  transform: translateY(-8px) scale(1.02);
   border-color: var(--balance-color);
   box-shadow:
-    0 14px 36px rgba(0, 0, 0, 0.28),
-    0 0 24px color-mix(in srgb, var(--main-color) 22%, transparent);
-  background: rgba(255, 255, 255, 0.08);
+    0 16px 40px rgba(0, 0, 0, 0.3),
+    0 0 28px color-mix(in srgb, var(--main-color) 28%, transparent);
+  background: rgba(255, 255, 255, 0.09);
 }
+.asobi-card:hover::after { transform: translateX(120%); }
 
-.asobi-card:hover::after {
-  transform: translateX(120%);
-}
-
-/* 共通ボタン */
+/* ===== ボタン ===== */
 .asobi-btn {
   display: inline-flex;
   align-items: center;
@@ -84,54 +76,27 @@
   transition:
     transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
-
 .asobi-btn:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 10px 28px color-mix(in srgb, var(--main-color) 40%, transparent);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--main-color) 45%, transparent);
   opacity: 1 !important;
   color: var(--accent-color) !important;
 }
-
-.asobi-btn:active {
-  transform: translateY(-1px) scale(0.98);
-}
-
+.asobi-btn:active { transform: translateY(-1px) scale(0.97); }
 .asobi-btn-ghost {
   background: transparent;
   border: 2px solid var(--main-color);
   color: var(--main-color) !important;
 }
-
 .asobi-btn-ghost:hover {
   background: color-mix(in srgb, var(--main-color) 14%, transparent);
   color: var(--main-color) !important;
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--main-color) 25%, transparent);
 }
 
-/* 見出しの遊び */
-.asobi-heading {
-  position: relative;
-  display: inline-block;
-}
-
-.asobi-heading::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--main-color), var(--balance-color));
-  border-radius: 2px;
-  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.asobi-heading:hover::after {
-  width: 100%;
-}
-
-/* セクション左ボーダー強化 */
+/* ===== 見出し ===== */
 .asobi-section-title {
   border-left: 5px solid var(--main-color);
   padding-left: 15px;
@@ -139,14 +104,13 @@
   font-size: 1.6rem;
   font-weight: 800;
   margin-bottom: 15px;
-  transition: border-color 0.3s ease, padding-left 0.3s ease;
+  transition: border-color 0.3s ease, padding-left 0.3s ease, letter-spacing 0.3s ease;
 }
-
 .asobi-section-title:hover {
   border-color: var(--balance-color);
-  padding-left: 20px;
+  padding-left: 22px;
+  letter-spacing: 0.04em;
 }
-
 .asobi-section-title.balance {
   border-left-color: var(--balance-color);
   color: var(--balance-color);
@@ -163,7 +127,6 @@
   gap: 10px;
   pointer-events: none;
 }
-
 .asobi-toast {
   pointer-events: auto;
   padding: 14px 20px;
@@ -176,18 +139,15 @@
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
   opacity: 0;
   transform: translateY(16px) scale(0.94);
-  transition:
-    opacity 0.35s ease,
-    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  max-width: 280px;
+  transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 300px;
 }
-
 .asobi-toast.is-show {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
 
-/* ===== コンフェッティ（イースターエッグ） ===== */
+/* ===== コンフェッティ ===== */
 .asobi-confetti-layer {
   position: fixed;
   inset: 0;
@@ -195,7 +155,6 @@
   z-index: 999998;
   overflow: hidden;
 }
-
 .asobi-confetti-piece {
   position: absolute;
   width: 8px;
@@ -204,83 +163,236 @@
   top: -12px;
   animation: confettiFall linear forwards;
 }
-
 @keyframes confettiFall {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(110vh) rotate(720deg);
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* ===== クリック波紋 ===== */
+.asobi-ripple {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999990;
+  border: 2px solid var(--main-color);
+  background: color-mix(in srgb, var(--main-color) 25%, transparent);
+  transform: translate(-50%, -50%) scale(0);
+  animation: rippleOut 0.55s ease-out forwards;
+}
+@keyframes rippleOut {
+  to {
+    transform: translate(-50%, -50%) scale(1);
     opacity: 0;
   }
 }
 
-/* ===== ヒーロー揺れ ===== */
+/* ===== カーソル軌跡 ===== */
+.asobi-spark {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--main-color);
+  pointer-events: none;
+  z-index: 999989;
+  transform: translate(-50%, -50%);
+  animation: sparkFade 0.55s ease-out forwards;
+  box-shadow: 0 0 8px var(--main-color);
+}
+@keyframes sparkFade {
+  0% { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
+}
+
+/* ===== 浮遊オーブ ===== */
+.asobi-orb-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+  overflow: hidden;
+}
+.asobi-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: auto;
+  cursor: grab;
+  background: radial-gradient(circle at 30% 30%, var(--balance-color), var(--main-color));
+  opacity: 0.35;
+  box-shadow: 0 0 20px color-mix(in srgb, var(--main-color) 40%, transparent);
+  transition: opacity 0.25s ease, transform 0.2s ease;
+  user-select: none;
+}
+.asobi-orb:hover {
+  opacity: 0.75;
+  transform: scale(1.15);
+}
+.asobi-orb:active { cursor: grabbing; }
+
+/* ===== 遊びスコア HUD ===== */
+.asobi-hud {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 99950;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--variation-color);
+  pointer-events: none;
+}
+.asobi-hud-score {
+  background: color-mix(in srgb, var(--accent-color) 80%, var(--main-color));
+  border: 1px solid var(--main-color);
+  border-radius: 999px;
+  padding: 6px 14px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: auto;
+  cursor: pointer;
+}
+.asobi-hud-score:hover {
+  opacity: 1;
+  transform: scale(1.06);
+}
+.asobi-hud-score.is-pop {
+  transform: scale(1.2);
+  opacity: 1;
+}
+.asobi-hud-chaos {
+  pointer-events: auto;
+  cursor: pointer;
+  background: transparent;
+  border: 1px dashed var(--balance-color);
+  color: var(--balance-color);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: inherit;
+  opacity: 0.55;
+  transition: opacity 0.25s, background 0.25s, transform 0.25s;
+}
+.asobi-hud-chaos:hover { opacity: 1; }
+.asobi-hud-chaos.is-on {
+  opacity: 1;
+  background: color-mix(in srgb, var(--balance-color) 25%, transparent);
+  animation: chaosPulse 0.8s ease-in-out infinite;
+}
+@keyframes chaosPulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--balance-color) 40%, transparent); }
+  50% { box-shadow: 0 0 0 6px transparent; }
+}
+
+/* ===== カオスモード ===== */
+body.asobi-chaos {
+  animation: chaosShake 0.4s ease-in-out infinite alternate;
+}
+body.asobi-chaos .app-container {
+  animation: chaosWobble 1.2s ease-in-out infinite alternate;
+}
+body.asobi-chaos .asobi-section-title,
+body.asobi-chaos h1,
+body.asobi-chaos h2 {
+  animation: chaosHue 2s linear infinite;
+}
+@keyframes chaosShake {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(25deg); }
+}
+@keyframes chaosWobble {
+  from { transform: rotate(-0.6deg) scale(1.01); }
+  to { transform: rotate(0.6deg) scale(0.99); }
+}
+@keyframes chaosHue {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(360deg); }
+}
+
+/* ===== ヒーロー ===== */
 @keyframes asobiFloat {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-10px); }
 }
-
 .asobi-float {
-  animation: asobiFloat 3.6s ease-in-out infinite;
+  animation: asobiFloat 3.2s ease-in-out infinite;
+  cursor: pointer;
+}
+.asobi-float:hover {
+  animation-play-state: paused;
+  text-shadow:
+    0 0 20px var(--main-color),
+    0 0 40px var(--balance-color) !important;
 }
 
-/* ページ入場 */
 @keyframes asobiPageIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 .app-container {
   animation: asobiPageIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ギャラリー用ホバー強化 */
+/* グリッチ文字 */
+.asobi-glitch:hover {
+  animation: glitchSkew 0.35s steps(2) infinite;
+}
+@keyframes glitchSkew {
+  0% { transform: skewX(0); }
+  25% { transform: skewX(-4deg) translateX(2px); }
+  50% { transform: skewX(3deg) translateX(-2px); }
+  75% { transform: skewX(-2deg); }
+  100% { transform: skewX(0); }
+}
+
+/* ギャラリー */
 .gallery-item {
   transition:
     transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.35s ease,
     border-color 0.3s ease !important;
 }
-
 .gallery-item:hover {
-  transform: translateY(-8px) scale(1.03) !important;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-10px) scale(1.04) rotate(-1deg) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32) !important;
   border-color: var(--balance-color) !important;
 }
 
-/* 小さな遊びヒント */
+/* ヒント */
 .asobi-easter-hint {
   position: fixed;
   bottom: 12px;
   left: 12px;
-  font-size: 0.7rem;
-  opacity: 0.25;
+  font-size: 0.68rem;
+  opacity: 0.22;
   color: var(--variation-color);
   pointer-events: none;
   z-index: 10;
-  transition: opacity 0.4s ease;
-}
-
-.asobi-easter-hint:hover,
-body:hover .asobi-easter-hint {
-  opacity: 0.45;
+  line-height: 1.5;
+  max-width: 160px;
 }
 
 @media (max-width: 600px) {
   .asobi-toast-host {
-    right: 16px;
-    bottom: 16px;
-    left: 16px;
+    right: 14px;
+    bottom: 14px;
+    left: 14px;
   }
-  .asobi-toast {
-    max-width: none;
+  .asobi-toast { max-width: none; }
+  .asobi-hud { top: 12px; right: 12px; }
+  .asobi-orb { display: none; } /* モバイルは軽量化 */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .asobi-reveal,
+  .asobi-float,
+  .app-container,
+  body.asobi-chaos,
+  body.asobi-chaos * {
+    animation: none !important;
+    transition: none !important;
   }
 }
