@@ -8,7 +8,6 @@
   <script src="/asobiseminar/js/load-css.js"></script>
   <script src="/asobiseminar/js/setThemeColor.js"></script>
   <!-- Group 1 専用CSS -->
-  <link rel="stylesheet" href="/asobiseminar/css/style.css">
   <link rel="stylesheet" href="/asobiseminar/css/one.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Noto+Serif+JP:wght@400;600&family=M+PLUS+1:wght@300;400;600;700&family=Zen+Kaku+Gothic+New:wght@400;600;700&family=IBM+Plex+Sans+JP:wght@400;600&family=Roboto:wght@300;400;500;700&family=Inter:wght@300;400;600;700&family=Raleway:wght@300;400;600;700&family=Poppins:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&family=Playfair+Display:wght@400;600;700&family=Merriweather:wght@400;700&family=Montserrat:wght@300;400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -29,14 +28,11 @@
       display: inline-block;
       font-weight: bold;
       font-size: 2rem;
-      /* 綺麗な虹色のグラデーション（始まりと終わりを同じ赤にするのがループのコツ） */
       background: linear-gradient(90deg, #ff2400, #e8b71d, #1de840, #1ddde8, #2b1de8, #dd00f3, #ff2400);
       background-size: 200% 100%;
-      /* 文字の形に背景をくり抜く設定 */
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      /* カクつかない滑らかなアニメーション */
       animation: rainbow-text-move 6s linear infinite;
     }
     
@@ -44,7 +40,6 @@
       0% { background-position: 0% 50%; }
       100% { background-position: -200% 50%; }
     }
-
   </style>
 </head>
 <body>
@@ -71,19 +66,19 @@
 
         <article class="group1-card">
           <div class="group1-card-icon">🎨</div>
-          <h3><string>What?</string> 何を解き明かすのか</h3>
+          <h3>What? 何を解き明かすのか</h3>
           <p>素人がスケボーを3ヶ月練習してどこまでできるようになるのか？</p>
         </article>
 
         <article class="group1-card">
           <div class="group1-card-icon">👥</div>
-          <h3><string>Why?</string> なぜそのテーマに興味を持ったのか</h3>
+          <h3>Why? なぜそのテーマに興味を持ったのか</h3>
           <p>前期の探求の授業でスケボーに触れる機会があり、その時にスケボーの楽しさに気づき、より深くスケボーがやりたくなったから。</p>
         </article>
 
         <article class="group1-card">
           <div class="group1-card-icon">🚀</div>
-          <h3><string>How?</string> どのように探求を進めたのか</h3>
+          <h3>How? どのように探求を進めたのか</h3>
           <p>スケボーを練習しつつ、練習を撮影し互いに撮影した動画をみてフィードバックをし合う。</p>
         </article>
 
@@ -115,14 +110,12 @@
           <div class="group1-timeline-content">
             <h4>Phase 3: 発表</h4>
             <p>動画を制作</p>
-            <p><a href="" class="rainbow-text">動画はこちら</a></p>
+            <p><a href="#" class="rainbow-text">動画はこちら</a></p>
           </div>
         </div>
       </section>
     </section>
   </main>
-  <script src="/asobiseminar/nav/nav-core.js"></script>
-  <script src="/asobiseminar/nav/nav-particle.js"></script>
   <script>
     // フォント設定を適用
     const selectedFont = localStorage.getItem('selectedFont') || 'Noto Sans JP - モダン標準';
