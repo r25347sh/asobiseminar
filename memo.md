@@ -1,5 +1,6 @@
  - index.html
- - settigs.html
+ - settings.html
+ - 404.html
  - themecolor.json
  - sitemap.html
  - subpages/
@@ -11,18 +12,27 @@
      - one.html
      - two.html
      - three.html
+     - programmer.html
+     - englishgame.html
  - js/
    - load-css.js
    - setThemeColor.js
+   - autovalue.js
  - css/
    - style.css
    - variable.css
-   - index.css
+   - index-main.css
    - members.css
    - groupsIndex.css
    - one.css
    - two.css
    - three.css
+   - programmer.css
+   - settings.css
+   - aboutsite.css
+ - MENU/
+   - MENU.js
+   - MENU.css
  - gaibu/
    - unpkg.css
  - imagesAndVideos/

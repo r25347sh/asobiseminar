@@ -1,64 +1,29 @@
 /**
  * 📋 データ構造（可変長対応・自動レイアウト）
+ * Asobi Lab. 専用メニュー
  */
 const RADIAL_MENU_DATA = [
-  {
-    label: '麗探祭',
-    icon: '🏮',
-    items: [
-      { label: 'ホーム', icon: '🏠', url: '/reitansai/index.html' },
-      { label: '統括責任者', icon: '👔', url: '/reitansai/pages/takimura_t.html' },
-      {
-        label: 'ゼミ一覧',
-        icon: '📚',
-        items: [
-        { label: 'データサイエンス探究 AIゼミ', icon: '📊', url: '/reitansai/pages/zemi/data-science-ai.html' },
-        { label: '教育ゼミ', icon: '📖', url: '/reitansai/pages/zemi/kyoiku.html' },
-        { label: '国際地域研究ゼミ', icon: '🌍', url: '/reitansai/pages/zemi/kokusai-chiiki.html' },
-        { label: '文芸小説創作ゼミ', icon: '🖋️', url: '/reitansai/pages/zemi/bungei-shosetsu-sosaku.html' },
-        { label: '化学ゼミ', icon: '🧪', url: '/reitansai/pages/zemi/kagaku.html' },
-        { label: '文学ゼミ', icon: '📜', url: '/reitansai/pages/zemi/bungaku.html' },
-        { label: 'メディアゼミ', icon: '📺', url: '/reitansai/pages/zemi/media.html' },
-        { label: '社会ゼミ', icon: '👥', url: '/reitansai/pages/zemi/shakai.html' },
-        { label: '農業ゼミ', icon: '🌾', url: '/reitansai/pages/zemi/nogyo.html' },
-        { label: '観光ゼミ', icon: '🗼', url: '/reitansai/pages/zemi/kanko.html' },
-        { label: '語学ゼミ', icon: '🗣️', url: '/reitansai/pages/zemi/gengo.html' },
-        { label: '遊びの探究ゼミ', icon: '🎮', url: '/reitansai/pages/zemi/asobi-tankyu.html' },
-        {
-          label:'外部企業ゼミ',
-          icon:'',
-          items: [
-            { label: '映像編集ゼミ', icon: '⏯️', url: '/reitansai/pages/zemi/mieta/eizo-henshu.html' },
-            { label: 'デジタルコンテンツ制作ゼミ', icon: '01', url: '/reitansai/pages/zemi/mieta/digital-content-create.html' },
-            { label: 'イベント企画ゼミ', icon: '🎪', url: '/reitansai/pages/zemi/mieta/event-kikaku.html' }
-          ]
-        ]
-      },
-      { label: '麗探祭', icon: '🎉', url: '/reitansai/pages/event.html' },
-      { label: 'このサイトについて', icon: '⭐', url: '/reitansai/pages/aboutsite.html' }
-    ]
-  },
   { label: 'ホーム', icon: '🏠', url: '/asobiseminar/index.html' },
   { label: 'メンバー', icon: '👱', url: '/asobiseminar/subpages/members.html' },
   {
     label: 'グループ',
     icon: '📗',
     items: [
-      { label: '目次', icon: '🔖', url:'/asobiseminar/subpages/groups/index.html'  },
-      { label: 'スケボー', icon: '🛹', url:'/asobiseminar/subpages/groups/one.html'},
-      { label: '割り箸建築', icon: '🥢', url:'/asobiseminar/subpages/groups/two.html' },
-      { label: 'ファッション', icon: '📚', url:'/asobiseminar/subpages/groups/three.html' },
-      { label: 'Web魔道士', icon: '🔮', url:'/asobiseminar/subpages/groups/programmer.html' },
-      { label: '英語ゲーマー', icon: '🎮️', url:'/asobiseminar/subpages/groups/englishgame.html' },
+      { label: '目次', icon: '🔖', url: '/asobiseminar/subpages/groups/index.html' },
+      { label: 'スケボー', icon: '🛹', url: '/asobiseminar/subpages/groups/one.html' },
+      { label: '割り箸建築', icon: '🥢', url: '/asobiseminar/subpages/groups/two.html' },
+      { label: 'ファッション', icon: '👗', url: '/asobiseminar/subpages/groups/three.html' },
+      { label: 'Web魔道士', icon: '🔮', url: '/asobiseminar/subpages/groups/programmer.html' },
+      { label: '英語ゲーマー', icon: '🎮', url: '/asobiseminar/subpages/groups/englishgame.html' }
     ]
   },
   {
     label: 'ギャラリー',
     icon: '📁',
-    url:'/asobiseminar/subpages/gallery.html'
+    url: '/asobiseminar/subpages/gallery.html'
   },
-  { label: 'このサイトについて', icon: '⭐', url:'/asobiseminar/subpages/aboutsite.html' },
-  { label: '設定', icon: '⚙', url:'/asobiseminar/settigs.html' }
+  { label: 'このサイトについて', icon: '⭐', url: '/asobiseminar/subpages/aboutsite.html' },
+  { label: '設定', icon: '⚙', url: '/asobiseminar/settings.html' }
 ];
 
 (function () {
@@ -110,7 +75,6 @@ const RADIAL_MENU_DATA = [
     document.head.appendChild(script);
   }
 // 💥 放射状レインボースパーク ＆ ダブルショックウェーブエンジン
-// （麗澤シラバス配色に調整済み：深緑＋ゴールド中心）
 function triggerParticleBurst() {
   if (!canvas || !ctx) return;
   canvas.width = 600;
@@ -125,8 +89,8 @@ function triggerParticleBurst() {
     const a = (idx / particleCount) * Math.PI * 2 + (Math.random() * 0.15);
     const spd = Math.random() * 7 + 3.5;
     
-    // 麗澤テーマ用：緑〜黄緑〜ゴールド寄りの色相
-    const hue = 80 + Math.floor(Math.random() * 70); // 80〜150度（緑〜ライム）
+    // 緑〜黄緑〜ゴールド寄りの色相
+    const hue = 80 + Math.floor(Math.random() * 70);
 
     return {
       x: cX, y: cY,
@@ -144,7 +108,7 @@ function triggerParticleBurst() {
     if (ring1Alpha > 0) {
       ctx.beginPath();
       ctx.arc(cX, cY, ring1Radius, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(34, 139, 34, ${ring1Alpha})`;   // #228B22
+      ctx.strokeStyle = `rgba(34, 139, 34, ${ring1Alpha})`;
       ctx.lineWidth = 3.5;
       ctx.stroke();
       ring1Radius += 8;
@@ -155,7 +119,7 @@ function triggerParticleBurst() {
     if (ring2Alpha > 0) {
       ctx.beginPath();
       ctx.arc(cX, cY, ring2Radius, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(232, 185, 35, ${ring2Alpha})`;  // #E8B923
+      ctx.strokeStyle = `rgba(232, 185, 35, ${ring2Alpha})`;
       ctx.lineWidth = 2.5;
       ctx.stroke();
       ring2Radius += 6.5;
@@ -245,7 +209,7 @@ function triggerParticleBurst() {
           triggerParticleBurst();
         } else {
           if (data.item.url) {
-            navigateWithDelay(data.item.url); // 👈 遅延遷移を実行
+            navigateWithDelay(data.item.url);
           } else if (data.item.action) {
             data.item.action();
             closeMenu();
