@@ -2,9 +2,8 @@
  * Asobi Lab. 限定公開ゲート
  * username: gentei / password: hiroike2026
  *
- * - 認証成功 → localStorage に認証済みを保存
- * - 「次回から認証を省略する」ON → 次回以降スキップ
- * - 「次回から認証を省略する」OFF → タブを閉じるまで（sessionStorage）有効
+ * - 「次回から自動でログインする」ON → localStorage に保存し次回以降スキップ
+ * - OFF → このタブ／セッション中のみ有効（sessionStorage）
  */
 (function () {
   'use strict';
@@ -31,11 +30,13 @@
 
   function markAuthenticated(remember) {
     try {
-      localStorage.setItem(KEY_AUTH, '1');
       sessionStorage.setItem(KEY_SESSION, '1');
       if (remember) {
+        localStorage.setItem(KEY_AUTH, '1');
         localStorage.setItem(KEY_REMEMBER, '1');
       } else {
+        // 自動ログインしない場合は永続フラグを残さない
+        localStorage.removeItem(KEY_AUTH);
         localStorage.removeItem(KEY_REMEMBER);
       }
     } catch (e) { /* ignore */ }
@@ -78,10 +79,10 @@
       '    </div>' +
       '    <label class="asobi-pr-remember">' +
       '      <input type="checkbox" id="asobi-pr-remember" />' +
-      '      <span>次回から認証を省略する</span>' +
+      '      <span>次回から自動でログインする</span>' +
       '    </label>' +
       '    <p class="asobi-pr-error" id="asobi-pr-error" aria-live="polite"></p>' +
-      '    <button type="submit" class="asobi-pr-submit">入室する</button>' +
+      '    <button type="submit" class="asobi-pr-submit">ログイン</button>' +
       '  </form>' +
       '  <p class="asobi-pr-foot">Unauthorized access is prohibited.</p>' +
       '</div>';
@@ -111,7 +112,7 @@
         if (u === USER && p === PASS) {
           errorEl.textContent = '';
           submitBtn.disabled = true;
-          submitBtn.textContent = '認証中…';
+          submitBtn.textContent = 'ログイン中…';
           markAuthenticated(remember);
           unlock();
         } else {
@@ -121,7 +122,6 @@
         }
       });
 
-      // Esc では閉じない（限定公開のため）
       overlay.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') e.preventDefault();
       });
@@ -130,7 +130,6 @@
     mount();
   }
 
-  // 公開 API（ターミナル等からログアウトできるように）
   window.AsobiPR = {
     logout: function () {
       try {
@@ -148,7 +147,6 @@
     return;
   }
 
-  // 未認証: 即座にロックしてゲート表示
   lockBodyEarly();
   showGate();
 })();
