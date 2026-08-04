@@ -1,11 +1,11 @@
-// js/load-css.js - 全ページ + 遊び心 + ファビコン + Terminal 自動注入
+// js/load-css.js - 全ページ + 限定公開 + 遊び心 + ファビコン + Terminal 自動注入
 (function() {
   'use strict';
 
   const base = '/asobiseminar';
   const cacheBuster = 'v=' + new Date().getTime();
 
-  // ----- Favicon (完全ラスター化済み SVG) 全ページ自動 -----
+  // ----- Favicon -----
   function injectFavicons() {
     if (document.querySelector('link[data-asobi-favicon]')) return;
 
@@ -41,6 +41,7 @@
   injectFavicons();
 
   const baseCssFiles = [
+    `${base}/pr.css?${cacheBuster}`,
     `${base}/gaibu/unpkg.css`,
     `${base}/css/style.css?${cacheBuster}`,
     `${base}/css/asobi-play.css?${cacheBuster}`,
@@ -107,9 +108,11 @@
     document.head.appendChild(script);
   }
 
+  // 限定公開ゲートを最優先で読み込む
+  injectScript(`${base}/pr.js`);
   injectScript(`${base}/MENU/MENU.js`);
   injectScript(`${base}/js/asobi-play.js`);
   injectScript(`${base}/terminal/terminal.js`);
 
-  console.log('%c✅ AsobiPlay + Terminal + Favicon for: ' + currentPath, 'color:#00ff88');
+  console.log('%c✅ PR gate + AsobiPlay + Terminal for: ' + currentPath, 'color:#00ff88');
 })();
