@@ -1,4 +1,4 @@
-// js/load-css.js - 全ページ + 遊び心 + ファビコン自動注入
+// js/load-css.js - 全ページ + 遊び心 + ファビコン + Terminal 自動注入
 (function() {
   'use strict';
 
@@ -18,7 +18,6 @@
     iconSvg.setAttribute('data-asobi-favicon', '1');
     document.head.appendChild(iconSvg);
 
-    // 旧ブラウザ向けに同じSVGを shortcut icon としても
     const shortcut = document.createElement('link');
     shortcut.rel = 'shortcut icon';
     shortcut.href = svgHref;
@@ -31,7 +30,6 @@
     apple.setAttribute('data-asobi-favicon', '1');
     document.head.appendChild(apple);
 
-    // theme-color もテーマに寄せる（可能なら）
     if (!document.querySelector('meta[name="theme-color"]')) {
       const meta = document.createElement('meta');
       meta.name = 'theme-color';
@@ -46,7 +44,8 @@
     `${base}/gaibu/unpkg.css`,
     `${base}/css/style.css?${cacheBuster}`,
     `${base}/css/asobi-play.css?${cacheBuster}`,
-    `${base}/MENU/MENU.css?${cacheBuster}`
+    `${base}/MENU/MENU.css?${cacheBuster}`,
+    `${base}/terminal/terminal.css?${cacheBuster}`
   ];
 
   baseCssFiles.forEach(url => {
@@ -100,21 +99,17 @@
     }
   }
 
-  const scriptUrl = `${base}/MENU/MENU.js?${cacheBuster}`;
-  if (!document.querySelector(`script[src^="${base}/MENU/MENU.js"]`)) {
+  function injectScript(srcBase) {
+    if (document.querySelector(`script[src^="${srcBase}"]`)) return;
     const script = document.createElement('script');
-    script.src = scriptUrl;
+    script.src = `${srcBase}?${cacheBuster}`;
     script.async = false;
     document.head.appendChild(script);
   }
 
-  const playUrl = `${base}/js/asobi-play.js?${cacheBuster}`;
-  if (!document.querySelector(`script[src^="${base}/js/asobi-play.js"]`)) {
-    const playScript = document.createElement('script');
-    playScript.src = playUrl;
-    playScript.async = true;
-    document.head.appendChild(playScript);
-  }
+  injectScript(`${base}/MENU/MENU.js`);
+  injectScript(`${base}/js/asobi-play.js`);
+  injectScript(`${base}/terminal/terminal.js`);
 
-  console.log('%c✅ AsobiPlay + Favicon (fully rasterized) for: ' + currentPath, 'color:#00ff88');
+  console.log('%c✅ AsobiPlay + Terminal + Favicon for: ' + currentPath, 'color:#00ff88');
 })();

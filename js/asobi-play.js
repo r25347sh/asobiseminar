@@ -1,24 +1,25 @@
 // js/asobi-play.js
-// Asobi Lab. 遊び心エンジン MAX + 混沌エンジン
+// Asobi Lab. 遊び心エンジン + 混沌エンジン
 (function () {
   'use strict';
 
   const STORAGE_SCORE = 'asobi-play-score';
   const STORAGE_CHAOS = 'asobi-chaos';
 
-  const KONAMI = [
+  // e.code ベース（キーボード配列・IMEの影響を受けにくい）
+  const KONAMI_CODES = [
     'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
     'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-    'b', 'a'
+    'KeyB', 'KeyA'
   ];
   let konamiIndex = 0;
 
-  const ASOBI_SEQ = ['a', 's', 'o', 'b', 'i'];
+  const ASOBI_SEQ = ['KeyA', 'KeyS', 'KeyO', 'KeyB', 'KeyI'];
   let asobiIndex = 0;
 
   const funToasts = [
     'クリックするたび遊びポイントが増えるよ',
-    '右上の「混沌」を押してみて',
+    '左上のターミナルアイコンを試してみて',
     '長押し or 3回タップでメニュー',
     'タイトルを連打すると…？',
     '浮いてる玉をドラッグできる',
@@ -30,7 +31,7 @@
   ];
 
   const chaosToasts = [
-    '🌀 現実が歪んでいる…',
+    '現実が歪んでいる…',
     '警告: 遊び心が臨界点',
     '色が逃げ出した',
     '重力の契約が一時停止中',
@@ -44,14 +45,23 @@
     'Asobi Lab. プロトコル逸脱中'
   ];
 
-  const chaosGlyphs = ['ア', 'ソ', 'ビ', '?', '!', '※', '★', '◆', '∞', '⚡', '🧪', '🌀', 'A', '#', '%', '&'];
+  const chaosGlyphs = ['ア', 'ソ', 'ビ', '?', '!', '※', '★', '◆', '∞', '⚡', 'A', '#', '%', '&'];
 
   let score = parseInt(localStorage.getItem(STORAGE_SCORE) || '0', 10) || 0;
-  let chaosOn = localStorage.getItem(STORAGE_CHAOS) === '1';
+  // 混沌モードは起動時に強制OFF
+  localStorage.setItem(STORAGE_CHAOS, '0');
+  let chaosOn = false;
   let scoreEl = null;
   let lastSpark = 0;
   let chaosTimers = [];
   let chaosClickBonus = false;
+
+  function isTypingTarget(el) {
+    if (!el) return false;
+    if (el.matches && el.matches('input, textarea, select, [contenteditable="true"]')) return true;
+    if (el.closest && el.closest('.asobi-term-panel, .asobi-console-panel')) return true;
+    return false;
+  }
 
   // ---------- toast ----------
   function ensureToastHost() {
@@ -122,10 +132,9 @@
     hud.appendChild(chaosBtn);
     document.body.appendChild(hud);
 
-    if (chaosOn) {
-      document.body.classList.add('asobi-chaos');
-      startChaosEngine();
-    }
+    // 起動時は混沌OFFを確実に
+    document.body.classList.remove('asobi-chaos');
+    stopChaosEngine();
   }
 
   // ---------- chaos layers ----------
@@ -180,20 +189,17 @@
     ensureChaosLayers();
     chaosClickBonus = true;
 
-    // 定期グリフ雨
     chaosTimers.push(setInterval(() => {
       if (!chaosOn) return;
       const n = 2 + Math.floor(Math.random() * 4);
       for (let i = 0; i < n; i++) spawnChaosGlyph();
     }, 700));
 
-    // たまに紙吹雪
     chaosTimers.push(setInterval(() => {
       if (!chaosOn) return;
       if (Math.random() > 0.55) spawnConfetti(18 + Math.floor(Math.random() * 20));
     }, 4200));
 
-    // 混沌トースト
     chaosTimers.push(setInterval(() => {
       if (!chaosOn) return;
       if (Math.random() > 0.4) return;
@@ -202,13 +208,11 @@
       addScore(2);
     }, 5500));
 
-    // たまにフラッシュ
     chaosTimers.push(setInterval(() => {
       if (!chaosOn) return;
       if (Math.random() > 0.7) flashScreen();
     }, 8000));
 
-    // オーブ加速
     document.querySelectorAll('.asobi-orb').forEach(o => {
       o.style.transition = 'none';
     });
@@ -237,12 +241,12 @@
       flashScreen();
       spawnConfetti(40);
       addScore(5);
-      showToast('🌀 混沌モード発動！遊び心が暴走します');
+      showToast('混沌モード発動');
       startChaosEngine();
       for (let i = 0; i < 8; i++) setTimeout(spawnChaosGlyph, i * 80);
     } else {
       stopChaosEngine();
-      showToast('混沌モード解除。世界が落ち着いた');
+      showToast('混沌モード解除');
     }
   }
 
@@ -286,11 +290,10 @@
 
   function initClicks() {
     document.addEventListener('pointerdown', (e) => {
-      if (e.target.closest('.radial-menu-wrapper')) return;
+      if (e.target.closest('.radial-menu-wrapper, .asobi-term-panel, .asobi-term-toggle, .asobi-console-panel')) return;
       spawnRipple(e.clientX, e.clientY, chaosOn);
 
       if (chaosOn) {
-        // 三重波紋
         setTimeout(() => spawnRipple(e.clientX + 12, e.clientY - 8, true), 60);
         setTimeout(() => spawnRipple(e.clientX - 10, e.clientY + 10, true), 120);
         addScore(3);
@@ -360,7 +363,7 @@
         state.dragging = true;
         orb.setPointerCapture(e.pointerId);
         addScore(chaosOn ? 5 : 2);
-        showToast(chaosOn ? '混沌オーブ捕獲！！' : 'オーブ捕獲！');
+        showToast(chaosOn ? '混沌オーブ捕獲' : 'オーブ捕獲');
         if (chaosOn) {
           spawnConfetti(12);
           flashScreen();
@@ -430,7 +433,7 @@
         if (clicks >= 5) {
           clicks = 0;
           spawnConfetti(chaosOn ? 70 : 40);
-          showToast(chaosOn ? '混沌タイトルボーナス！！' : 'タイトル連打ボーナス！');
+          showToast(chaosOn ? '混沌タイトルボーナス' : 'タイトル連打ボーナス');
           addScore(chaosOn ? 40 : 20);
           if (chaosOn) flashScreen();
         }
@@ -454,42 +457,43 @@
     document.querySelectorAll('.asobi-reveal').forEach(el => io.observe(el));
   }
 
-  // ---------- keys ----------
+  // ---------- keys (Konami + asobi) ----------
   function initKeys() {
     document.addEventListener('keydown', (e) => {
-      if (e.target.matches('input, textarea, select')) return;
+      if (isTypingTarget(e.target)) return;
 
-      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      const code = e.code;
 
-      const expected = KONAMI[konamiIndex];
-      const expectedNorm = expected.length === 1 ? expected.toLowerCase() : expected;
-      if (key === expectedNorm) {
+      // Konami: ↑↑↓↓←→←→BA
+      if (code === KONAMI_CODES[konamiIndex]) {
         konamiIndex++;
-        if (konamiIndex === KONAMI.length) {
+        if (konamiIndex === KONAMI_CODES.length) {
           konamiIndex = 0;
           spawnConfetti(64);
           addScore(50);
-          showToast('🎉 コナミ成功！ +50pt');
+          showToast('コナミ成功！ +50pt');
           toggleChaos(true);
         }
       } else {
-        konamiIndex = (key === 'ArrowUp' || key === 'arrowup') ? 1 : 0;
+        // 途中で ArrowUp なら先頭から再開
+        konamiIndex = (code === 'ArrowUp') ? 1 : 0;
       }
 
-      if (key === ASOBI_SEQ[asobiIndex]) {
+      // asobi シーケンス
+      if (code === ASOBI_SEQ[asobiIndex]) {
         asobiIndex++;
         if (asobiIndex === ASOBI_SEQ.length) {
           asobiIndex = 0;
           spawnConfetti(36);
           addScore(15);
-          showToast('✨ asobi 入力成功！');
+          showToast('asobi 入力成功');
           if (chaosOn) {
             for (let i = 0; i < 12; i++) spawnChaosGlyph();
             flashScreen();
           }
         }
       } else {
-        asobiIndex = key === 'a' ? 1 : 0;
+        asobiIndex = code === 'KeyA' ? 1 : 0;
       }
     });
   }
