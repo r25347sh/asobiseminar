@@ -5,29 +5,43 @@
   const base = '/asobiseminar';
   const cacheBuster = 'v=' + new Date().getTime();
 
-  // ----- Favicon (高解像度 SVG + フォールバック) 全ページ自動 ----- 
+  // ----- Favicon (完全ラスター化 PNG/ICO + apple-touch) 全ページ自動 -----
   function injectFavicons() {
     if (document.querySelector('link[data-asobi-favicon]')) return;
 
-    const svgHref = base + '/favicon.svg?' + cacheBuster;
+    const pngHref = base + '/favicon.png?' + cacheBuster;
+    const icoHref = base + '/favicon.ico?' + cacheBuster;
+    const appleHref = base + '/apple-touch-icon.png?' + cacheBuster;
 
-    const iconSvg = document.createElement('link');
-    iconSvg.rel = 'icon';
-    iconSvg.type = 'image/svg+xml';
-    iconSvg.href = svgHref;
-    iconSvg.setAttribute('data-asobi-favicon', '1');
-    document.head.appendChild(iconSvg);
+    // 標準 PNG favicon
+    const iconPng = document.createElement('link');
+    iconPng.rel = 'icon';
+    iconPng.type = 'image/png';
+    iconPng.sizes = '512x512';
+    iconPng.href = pngHref;
+    iconPng.setAttribute('data-asobi-favicon', '1');
+    document.head.appendChild(iconPng);
 
-    // 旧ブラウザ向けに同じSVGを shortcut icon としても
+    // ICO (旧ブラウザ・タブ互換)
+    const iconIco = document.createElement('link');
+    iconIco.rel = 'icon';
+    iconIco.type = 'image/x-icon';
+    iconIco.href = icoHref;
+    iconIco.setAttribute('data-asobi-favicon', '1');
+    document.head.appendChild(iconIco);
+
+    // shortcut icon
     const shortcut = document.createElement('link');
     shortcut.rel = 'shortcut icon';
-    shortcut.href = svgHref;
+    shortcut.href = icoHref;
     shortcut.setAttribute('data-asobi-favicon', '1');
     document.head.appendChild(shortcut);
 
+    // Apple Touch Icon
     const apple = document.createElement('link');
     apple.rel = 'apple-touch-icon';
-    apple.href = svgHref;
+    apple.sizes = '180x180';
+    apple.href = appleHref;
     apple.setAttribute('data-asobi-favicon', '1');
     document.head.appendChild(apple);
 
@@ -116,5 +130,5 @@
     document.head.appendChild(playScript);
   }
 
-  console.log('%c✅ AsobiPlay + Favicon for: ' + currentPath, 'color:#00ff88');
+  console.log('%c✅ AsobiPlay + Favicon (raster) for: ' + currentPath, 'color:#00ff88');
 })();
