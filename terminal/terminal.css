@@ -1,9 +1,9 @@
 /* Asobi Lab. Terminal + tool panels */
 
-.asobi-term-toggle{position:fixed;top:14px;left:14px;z-index:100000;width:42px;height:42px;border-radius:10px;border:1px solid color-mix(in srgb,var(--main-color,#00ff88) 60%,transparent);background:color-mix(in srgb,var(--accent-color,#111) 88%,#000);color:var(--main-color,#00ff88);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.15rem;box-shadow:0 4px 16px rgba(0,0,0,.35);transition:transform .2s,box-shadow .2s,border-color .2s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1;padding:0}
-.asobi-term-toggle:hover{transform:scale(1.08);border-color:var(--main-color,#00ff88);box-shadow:0 0 18px color-mix(in srgb,var(--main-color,#00ff88) 35%,transparent)}
-.asobi-term-toggle.is-active{background:color-mix(in srgb,var(--main-color,#00ff88) 18%,#111);border-color:var(--balance-color,#e8b71d)}
-.asobi-term-panel{position:fixed;top:64px;left:14px;z-index:100001;width:min(520px,calc(100vw - 28px));height:min(380px,calc(100vh - 90px));display:flex;flex-direction:column;background:#0b0f0c;border:1px solid #2a3a2e;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.55);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transition:opacity .22s,transform .22s,background .25s,border-color .25s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#c8e6c9}
+.asobi-term-toggle{position:fixed;bottom:18px;left:18px;top:auto;z-index:10000001;width:48px;height:48px;border-radius:12px;border:2px solid var(--main-color,#00ff88);background:#0b0f0c;color:var(--main-color,#00ff88);cursor:pointer;display:flex!important;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:transform .2s,box-shadow .2s,border-color .2s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1;padding:0;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+.asobi-term-toggle:hover{transform:scale(1.08);border-color:var(--main-color,#00ff88);box-shadow:0 0 22px rgba(0,255,136,.45)}
+.asobi-term-toggle.is-active{background:#1a3a28;border-color:var(--balance-color,#e8b71d);color:var(--balance-color,#e8b71d)}
+.asobi-term-panel{position:fixed;bottom:76px;left:14px;top:auto;z-index:100001;width:min(520px,calc(100vw - 28px));height:min(380px,calc(100vh - 110px));display:flex;flex-direction:column;background:#0b0f0c;border:1px solid #2a3a2e;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.55);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(8px) scale(.98);transition:opacity .22s,transform .22s,background .25s,border-color .25s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#c8e6c9}
 .asobi-term-panel.is-open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
 .asobi-term-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:#121a14;border-bottom:1px solid #243028;user-select:none}
 .asobi-term-title{font-weight:700;font-size:12px;color:#7dcea0;letter-spacing:.04em}
@@ -19,7 +19,7 @@
 .asobi-term-prompt{color:#7dcea0;font-weight:700;white-space:nowrap;flex-shrink:0}.asobi-term-prompt.is-root{color:#f0d77a}
 .asobi-term-input{flex:1;min-width:0;background:transparent;border:none;outline:none;color:#e8f5e9;font:inherit;caret-color:#7dcea0}
 
-.asobi-term-panel[data-theme=matrix]{background:#000;border-color:#0f0;color:#0f0;box-shadow:0 0 24px rgba(0,255,0,.25)}
+.asobi-term-panel[data-theme=matrix]{background:#000;border-color:#0f0;color:#0f0}
 .asobi-term-panel[data-theme=matrix] .asobi-term-header{background:#001100;border-bottom-color:#0a0}
 .asobi-term-panel[data-theme=matrix] .asobi-term-title,.asobi-term-panel[data-theme=matrix] .asobi-term-prompt{color:#0f0}
 .asobi-term-panel[data-theme=matrix] .asobi-term-input{color:#0f0;caret-color:#0f0}
@@ -88,4 +88,4 @@
 .asobi-console-run{background:#21262d;border:1px solid #30363d;color:#c9d1d9;border-radius:6px;padding:0 12px;cursor:pointer;font:inherit}
 .asobi-console-run:hover{border-color:#58a6ff;color:#58a6ff}
 .asobi-dom-hl{outline:2px solid #f85149!important;outline-offset:2px;background:rgba(248,81,73,.12)!important}
-@media (max-width:600px){.asobi-term-panel{left:8px;top:58px;width:calc(100vw - 16px);height:min(50vh,360px)}.asobi-tool-panel{left:8px!important;right:8px!important;width:auto;bottom:8px!important;top:auto!important}.asobi-term-toggle{top:10px;left:10px;width:38px;height:38px}}
+@media (max-width:600px){.asobi-term-panel{left:8px;bottom:68px;width:calc(100vw - 16px);height:min(50vh,360px)}.asobi-tool-panel{left:8px!important;right:8px!important;width:auto;bottom:8px!important;top:auto!important}.asobi-term-toggle{bottom:12px;left:12px;top:auto;width:44px;height:44px}}
