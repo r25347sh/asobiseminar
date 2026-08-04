@@ -3,7 +3,7 @@
 .asobi-term-toggle{position:fixed;bottom:18px;left:18px;top:auto;z-index:10000001;width:48px;height:48px;border-radius:12px;border:2px solid var(--main-color,#00ff88);background:#0b0f0c;color:var(--main-color,#00ff88);cursor:pointer;display:flex!important;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.5);transition:transform .2s,box-shadow .2s,border-color .2s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;line-height:1;padding:0;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
 .asobi-term-toggle:hover{transform:scale(1.08);border-color:var(--main-color,#00ff88);box-shadow:0 0 22px rgba(0,255,136,.45)}
 .asobi-term-toggle.is-active{background:#1a3a28;border-color:var(--balance-color,#e8b71d);color:var(--balance-color,#e8b71d)}
-.asobi-term-panel{position:fixed;bottom:76px;left:14px;top:auto;z-index:100001;width:min(520px,calc(100vw - 28px));height:min(380px,calc(100vh - 110px));display:flex;flex-direction:column;background:#0b0f0c;border:1px solid #2a3a2e;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.55);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(8px) scale(.98);transition:opacity .22s,transform .22s,background .25s,border-color .25s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#c8e6c9}
+.asobi-term-panel{position:fixed;bottom:76px;left:14px;top:auto;z-index:100010;width:min(520px,calc(100vw - 28px));height:min(380px,calc(100vh - 110px));display:flex;flex-direction:column;background:#0b0f0c;border:1px solid #2a3a2e;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.55);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(8px) scale(.98);transition:opacity .22s,transform .22s,background .25s,border-color .25s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:#c8e6c9}
 .asobi-term-panel.is-open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
 .asobi-term-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;background:#121a14;border-bottom:1px solid #243028;user-select:none}
 .asobi-term-title{font-weight:700;font-size:12px;color:#7dcea0;letter-spacing:.04em}
@@ -44,14 +44,14 @@
 .asobi-term-panel[data-theme=light]{background:#f5f5f5;border-color:#ccc;color:#222}
 .asobi-term-panel[data-theme=light] .asobi-term-header{background:#e8e8e8}.asobi-term-panel[data-theme=light] .asobi-term-title{color:#06c}.asobi-term-panel[data-theme=light] .asobi-term-prompt{color:#080}.asobi-term-panel[data-theme=light] .asobi-term-input{color:#111}.asobi-term-panel[data-theme=light] .asobi-term-line.cmd{color:#111}.asobi-term-panel[data-theme=light] .asobi-term-line.out{color:#333}
 
-.asobi-tool-panel{position:fixed;z-index:100002;width:min(480px,calc(100vw - 28px));height:min(320px,45vh);display:flex;flex-direction:column;background:#0d1117;border:1px solid #30363d;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.55);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .22s,transform .22s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#c9d1d9}
+.asobi-tool-panel{position:fixed;z-index:100005;width:min(480px,calc(100vw - 28px));height:min(320px,45vh);display:flex;flex-direction:column;background:#0d1117;border:1px solid #30363d;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.55);overflow:hidden;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .22s,transform .22s;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:#c9d1d9}
 .asobi-tool-panel.is-open{opacity:1;pointer-events:auto;transform:translateY(0)}
 .asobi-console-panel{bottom:14px;right:14px}
 .asobi-storage-panel{bottom:14px;right:28px;border-color:#3d5a80}
 .asobi-network-panel{bottom:40px;right:40px;border-color:#6e3a5d}
 .asobi-dom-panel{bottom:60px;right:20px;border-color:#3d6b4f;height:min(360px,50vh)}
-.asobi-info-panel{bottom:30px;left:14px;right:auto;border-color:#5a4a2a}
-.asobi-palette-panel{bottom:50px;left:30px;right:auto;border-color:#5a3a80}
+.asobi-info-panel{top:70px;right:14px;bottom:auto;left:auto;border-color:#5a4a2a}
+.asobi-palette-panel{top:100px;right:40px;bottom:auto;left:auto;border-color:#5a3a80}
 .asobi-keys-panel{top:70px;right:14px;bottom:auto;border-color:#4a5a3a}
 .asobi-tool-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#161b22;border-bottom:1px solid #30363d;font-weight:700;font-size:12px;color:#58a6ff;flex-shrink:0}
 .asobi-tool-label{display:flex;align-items:center;gap:8px}
