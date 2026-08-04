@@ -1,119 +1,121 @@
-/* css/404.css - Asobi Lab. 遊び心404 */
+/* css/404.css - Asobi Lab. 前例のない遊び心404 */
 
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+/* ===== Canvas (粒子背景) ===== */
+#playCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ===== Stage ===== */
 .error-stage {
-  min-height: 70vh;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 40px 24px 80px;
-  position: relative;
+  padding: 40px 20px 60px;
   overflow: hidden;
 }
 
-/* ===== 浮遊装飾 ===== */
-.floaters {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.floater {
-  position: absolute;
-  font-size: clamp(1.2rem, 3vw, 2rem);
-  font-weight: 800;
-  color: var(--main-color);
-  opacity: 0.12;
-  user-select: none;
-  animation: floatAround 12s ease-in-out infinite;
-}
-
-.floater:nth-child(1) { top: 12%; left: 8%;  animation-delay: 0s;    animation-duration: 14s; }
-.floater:nth-child(2) { top: 22%; right: 10%; animation-delay: -3s;   animation-duration: 11s; }
-.floater:nth-child(3) { bottom: 28%; left: 14%; animation-delay: -6s; animation-duration: 13s; }
-.floater:nth-child(4) { bottom: 18%; right: 12%; animation-delay: -2s; animation-duration: 15s; }
-.floater:nth-child(5) { top: 48%; left: 48%; animation-delay: -8s;  animation-duration: 10s; }
-
-@keyframes floatAround {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25%      { transform: translate(12px, -18px) rotate(4deg); }
-  50%      { transform: translate(-8px, 10px) rotate(-3deg); }
-  75%      { transform: translate(6px, 14px) rotate(2deg); }
-}
-
-/* ===== コアコンテンツ ===== */
+/* ===== Core ===== */
 .error-core {
   position: relative;
-  z-index: 1;
-  max-width: 520px;
+  z-index: 2;
+  max-width: 560px;
+  pointer-events: auto;
 }
 
 .error-code {
-  font-size: clamp(5.5rem, 18vw, 9rem);
+  font-size: clamp(6rem, 22vw, 11rem);
   font-weight: 900;
   color: var(--main-color);
-  line-height: 1;
-  margin: 0 0 8px;
-  letter-spacing: 0.04em;
+  line-height: 0.9;
+  margin: 0 0 12px;
+  letter-spacing: 0.02em;
   text-shadow:
-    0 0 40px color-mix(in srgb, var(--main-color) 40%, transparent),
-    0 4px 24px rgba(0, 0, 0, 0.35);
-  animation: codePulse 3.2s ease-in-out infinite;
-  cursor: default;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    0 0 60px color-mix(in srgb, var(--main-color) 50%, transparent),
+    0 6px 30px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: codeFloat 4s ease-in-out infinite;
 }
 
 .error-code:hover {
-  transform: scale(1.06) rotate(-2deg);
+  transform: scale(1.08) rotate(-3deg);
+}
+
+.error-code.is-exploding {
+  animation: none;
+  transform: scale(1.3);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
 .error-code.is-searching {
-  animation: codeGlitch 0.45s steps(2) infinite;
+  animation: codeGlitch 0.35s steps(3) infinite;
 }
 
-@keyframes codePulse {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-6px); }
+@keyframes codeFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-10px) rotate(1deg); }
 }
 
 @keyframes codeGlitch {
-  0%   { transform: translate(0, 0);    filter: none; }
-  25%  { transform: translate(-3px, 1px); filter: hue-rotate(30deg); }
-  50%  { transform: translate(3px, -1px); filter: hue-rotate(-20deg); }
-  75%  { transform: translate(-1px, 2px); filter: none; }
+  0%   { transform: translate(0, 0); filter: none; }
+  20%  { transform: translate(-4px, 2px); filter: hue-rotate(40deg); }
+  40%  { transform: translate(5px, -2px); filter: hue-rotate(-30deg); }
+  60%  { transform: translate(-2px, 3px); filter: none; }
+  80%  { transform: translate(3px, -1px); }
   100% { transform: translate(0, 0); }
 }
 
 .error-title {
-  font-size: clamp(1.35rem, 4vw, 1.85rem);
+  font-size: clamp(1.3rem, 4.5vw, 1.9rem);
   font-weight: 800;
   color: var(--variation-color);
-  margin: 0 0 16px;
-  letter-spacing: 0.03em;
+  margin: 0 0 14px;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
 .error-message {
-  opacity: 0.85;
+  opacity: 0.9;
   font-size: 1.05rem;
-  line-height: 1.75;
-  margin: 0 0 36px;
-  min-height: 3.5em;
-  transition: opacity 0.25s ease;
+  line-height: 1.7;
+  margin: 0 0 32px;
+  min-height: 3.2em;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .error-message.is-fading {
   opacity: 0;
+  transform: translateY(8px);
 }
 
-/* ===== ボタン群 ===== */
+/* ===== Buttons ===== */
 .error-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .error-btn {
@@ -124,19 +126,33 @@
   background: linear-gradient(135deg, var(--main-color), var(--balance-color));
   color: var(--accent-color) !important;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-weight: 700;
   font-size: 0.95rem;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.error-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.error-btn:hover::after {
+  transform: translateX(100%);
 }
 
 .error-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--main-color) 35%, transparent);
-  opacity: 1 !important;
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--main-color) 40%, transparent);
 }
 
 .error-btn:active {
@@ -150,24 +166,97 @@
 }
 
 .error-btn.secondary:hover {
-  background: color-mix(in srgb, var(--main-color) 12%, transparent);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--main-color) 20%, transparent);
+  background: color-mix(in srgb, var(--main-color) 15%, transparent);
 }
 
 .error-hint {
-  font-size: 0.85rem;
-  opacity: 0.55;
+  font-size: 0.88rem;
+  opacity: 0.6;
   margin: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, color 0.3s ease;
 }
 
-/* 検索中の演出 */
 .error-hint.is-searching {
-  opacity: 0.9;
+  opacity: 1;
   color: var(--main-color);
+  font-weight: 600;
 }
 
-/* レスポンシブ微調整 */
+/* ===== Score ===== */
+.score-board {
+  margin-top: 20px;
+  padding: 8px 18px;
+  background: color-mix(in srgb, var(--main-color) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--main-color) 40%, transparent);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: var(--variation-color);
+  animation: scorePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scorePop {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* ===== Floating play objects ===== */
+.play-objects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.play-obj {
+  position: absolute;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--accent-color);
+  background: linear-gradient(145deg, var(--main-color), var(--balance-color));
+  box-shadow:
+    0 4px 16px color-mix(in srgb, var(--main-color) 45%, transparent),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+  transition: transform 0.15s ease, box-shadow 0.2s;
+  will-change: transform;
+  touch-action: none;
+}
+
+.play-obj:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--main-color) 55%, transparent);
+}
+
+.play-obj.caught {
+  animation: caughtBurst 0.55s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes caughtBurst {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(1.6); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* 特別なオブジェクト（レア） */
+.play-obj.rare {
+  background: linear-gradient(145deg, #ff6b6b, #feca57);
+  animation: rarePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes rarePulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(255, 107, 107, 0.5); }
+  50%      { box-shadow: 0 0 28px rgba(254, 202, 87, 0.8); }
+}
+
+/* ===== レスポンシブ ===== */
 @media (max-width: 480px) {
   .error-actions {
     flex-direction: column;
@@ -176,4 +265,17 @@
   .error-btn {
     width: 100%;
   }
+  .error-code {
+    font-size: clamp(5rem, 28vw, 8rem);
+  }
+}
+
+/* 操作時の選択防止 */
+.error-stage * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.error-message, .error-title, .error-hint {
+  -webkit-user-select: text;
+  user-select: text;
 }
