@@ -2,28 +2,21 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - 遊びの座標が見つかりません | Asobi Lab.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>404 - 遊びの座標が消滅しました | Asobi Lab.</title>
   <script src="/asobiseminar/js/setThemeColor.js"></script>
   <script src="/asobiseminar/js/load-css.js"></script>
   <link rel="stylesheet" href="/asobiseminar/css/404.css">
 </head>
 <body>
-  <main class="app-container error-stage">
-    <!-- 浮遊する装飾 -->
-    <div class="floaters" aria-hidden="true">
-      <span class="floater">?</span>
-      <span class="floater">あそび</span>
-      <span class="floater">?</span>
-      <span class="floater">迷路</span>
-      <span class="floater">?</span>
-    </div>
+  <canvas id="playCanvas" aria-hidden="true"></canvas>
 
-    <div class="error-core">
-      <p class="error-code" id="errorCode">404</p>
-      <h1 class="error-title">遊びの座標が見つかりません</h1>
+  <main class="error-stage" id="stage">
+    <div class="error-core" id="core">
+      <p class="error-code" id="errorCode" title="クリックしてみて">404</p>
+      <h1 class="error-title" id="errorTitle">遊びの座標が消滅しました</h1>
       <p class="error-message" id="errorMessage">
-        このページは『遊び』に夢中になって帰ってこないようです。
+        このページは遊びすぎて、時空の隙間に落ちてしまったようです。
       </p>
 
       <div class="error-actions">
@@ -39,9 +32,16 @@
       </div>
 
       <p class="error-hint" id="errorHint">
-        ヒント: メニューから好きな場所へ飛んでみてください
+        画面を触ったり、404をクリックしたりしてみてください
       </p>
+
+      <div class="score-board" id="scoreBoard" hidden>
+        <span>捕まえた遊び: <strong id="catchCount">0</strong></span>
+      </div>
     </div>
+
+    <!-- 捕まえられる浮遊オブジェクト用コンテナ -->
+    <div class="play-objects" id="playObjects" aria-hidden="true"></div>
   </main>
 
   <script src="/asobiseminar/js/404.js"></script>
