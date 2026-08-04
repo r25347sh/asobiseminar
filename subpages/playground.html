@@ -12,17 +12,17 @@
   <main class="app-container playground-page">
     <header style="text-align: center; margin-bottom: 40px;">
       <h1 style="color: var(--main-color); font-size: clamp(2.2rem, 8vw, 3rem); font-weight: 900; letter-spacing: 0.05em;">
-        🧪 遊び場
+        遊び場
       </h1>
-      <p style="opacity: 0.8; margin-top: 8px;">ここは実験許可区域。壊しても怒られません。</p>
+      <p style="opacity: 0.8; margin-top: 8px;">インタラクティブな実験・体験エリア</p>
     </header>
 
     <!-- バブル叩き -->
     <section class="play-panel asobi-card" style="margin-bottom: 28px;">
-      <h2 class="asobi-section-title">🎈 バブル叩き</h2>
-      <p style="opacity: 0.8; margin-bottom: 12px;">出てくる泡をタップして弾け！制限時間 20 秒</p>
+      <h2 class="asobi-section-title">バブル叩き</h2>
+      <p style="opacity: 0.8; margin-bottom: 12px;">出てくる泡をタップして弾く。制限時間 20 秒</p>
       <div class="bubble-arena" id="bubbleArena">
-        <div class="bubble-overlay" id="bubbleOverlay">スタートを押してね</div>
+        <div class="bubble-overlay" id="bubbleOverlay">スタートを押してください</div>
       </div>
       <div class="play-controls">
         <button type="button" class="asobi-btn" id="bubbleStart">スタート</button>
@@ -33,9 +33,9 @@
 
     <!-- 反射神経 -->
     <section class="play-panel asobi-card" style="margin-bottom: 28px;">
-      <h2 class="asobi-section-title balance">⚡ 反射テスト</h2>
-      <p style="opacity: 0.8; margin-bottom: 12px;">画面が変わったらすぐタップ。早すぎ注意。</p>
-      <div class="react-arena" id="reactArena">待機中…</div>
+      <h2 class="asobi-section-title balance">反射テスト</h2>
+      <p style="opacity: 0.8; margin-bottom: 12px;">画面が変わったらすぐにタップ。早すぎに注意。</p>
+      <div class="react-arena" id="reactArena">待機中</div>
       <div class="play-controls">
         <button type="button" class="asobi-btn" id="reactStart">計測スタート</button>
         <span class="play-stat" id="reactStat">結果: —</span>
@@ -44,27 +44,27 @@
 
     <!-- 色ぐるぐる -->
     <section class="play-panel asobi-card" style="margin-bottom: 28px;">
-      <h2 class="asobi-section-title">🎨 色ぐるぐる</h2>
-      <p style="opacity: 0.8; margin-bottom: 12px;">スライダーで世界の色をいじる（このページだけ）</p>
+      <h2 class="asobi-section-title">色の調整</h2>
+      <p style="opacity: 0.8; margin-bottom: 12px;">スライダーで色調を変更（このページのみ）</p>
       <div class="color-fun">
         <label>Hue <input type="range" id="hueRange" min="0" max="360" value="0"></label>
         <label>Saturation <input type="range" id="satRange" min="0" max="200" value="100"></label>
         <label>Brightness <input type="range" id="briRange" min="50" max="150" value="100"></label>
       </div>
-      <div class="color-preview" id="colorPreview">Asobi Lab. 色実験中</div>
+      <div class="color-preview" id="colorPreview">Asobi Lab. 色実験</div>
       <button type="button" class="asobi-btn asobi-btn-ghost" id="colorReset" style="margin-top: 12px;">リセット</button>
     </section>
 
     <!-- 言葉メーカー -->
     <section class="play-panel asobi-card" style="margin-bottom: 28px;">
-      <h2 class="asobi-section-title balance">🎲 遊び言葉メーカー</h2>
-      <p style="opacity: 0.8; margin-bottom: 12px;">ランダムに実験スローガンを生成</p>
-      <div class="slogan-box" id="sloganBox">ボタンを押してみて</div>
+      <h2 class="asobi-section-title balance">言葉メーカー</h2>
+      <p style="opacity: 0.8; margin-bottom: 12px;">ランダムにスローガンを生成</p>
+      <div class="slogan-box" id="sloganBox">ボタンを押してみてください</div>
       <button type="button" class="asobi-btn" id="sloganBtn">生成する</button>
     </section>
 
     <section style="text-align: center; margin-top: 40px;">
-      <a href="/asobiseminar/index.html" class="asobi-btn asobi-btn-ghost">➔ ホームに戻る</a>
+      <a href="/asobiseminar/index.html" class="asobi-btn asobi-btn-ghost">ホームに戻る</a>
     </section>
   </main>
 
