@@ -1,1 +1,2 @@
-/asobiseminar/CODEOWNERS @r25347sh
+/asobiseminar/.github/CODEOWNERS @r25347sh
+/asobiseminar/.github/workflows/deploy.yml
