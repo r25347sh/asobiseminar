@@ -82,11 +82,16 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .admin-out{background:#1e1b2e;color:#e8e4f0;padding:1rem;border-radius:12px;font-size:.78rem;overflow:auto;max-height:40vh;margin-top:1rem}
 .admin-actions{display:flex;gap:.5rem;flex-wrap:wrap}
 
-/* リッチテキストツールバー */
+/* リッチテキストツールバー — ドック式（コンテンツに被らない） */
 .rt-toolbar{
-  position:fixed;z-index:50;display:flex;flex-wrap:wrap;align-items:center;gap:2px;
-  background:#2b2140;color:#fff;padding:6px 8px;border-radius:12px;
-  box-shadow:0 12px 32px rgba(43,33,64,.35);max-width:min(92vw,520px);
+  position:fixed;z-index:40;display:flex;flex-wrap:wrap;align-items:center;gap:2px;
+  background:#2b2140;color:#fff;padding:6px 10px;border-radius:0 0 12px 12px;
+  box-shadow:0 8px 24px rgba(43,33,64,.25);max-width:100%;
+  left:0;right:0;top:58px; /* editor-bar 直下 */
+  justify-content:center;
+}
+.rt-toolbar.rt-docked{
+  /* 中央寄せで邪魔にならない */
 }
 .rt-toolbar button{
   border:0;background:transparent;color:#fff;padding:6px 9px;border-radius:8px;
@@ -100,3 +105,7 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .favicon-preview{width:32px;height:32px;border-radius:8px;border:2px solid var(--border);object-fit:contain;background:#f5f5f5}
 .check-label{display:flex!important;align-items:center;gap:.5rem;font-weight:500!important;margin-top:1rem!important}
 .check-label input{width:auto!important;margin:0!important}
+
+/* ツールバー表示中はプレビュー上端に余白 */
+.view-editor.rt-open .stage{padding-top:2.5rem}
+.editor-bar{z-index:45}
