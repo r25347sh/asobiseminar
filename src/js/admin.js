@@ -225,6 +225,12 @@
   function injectChrome(html, pagePath) {
     var dir = pagePath.indexOf('/') >= 0 ? pagePath.replace(/\/[^\/]*$/, '/') : '';
     var base = SITE + dir;
+    /* CMS編集中は MENU / FAB を完全に無効化（被り防止） */
+    html = html.replace(/<script[^>]*MENU\/MENU\.js[^>]*>[\s\S]*?<\/script>/gi, '');
+    html = html.replace(/<script[^>]*src=["'][^"']*MENU\/MENU\.js["'][^>]*><\/script>/gi, '');
+    html = html.replace(/<link[^>]*MENU\/MENU\.css[^>]*>/gi, '');
+    html = html.replace(/<div[^>]*class=["'][^"']*radial-menu-wrapper[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+    html = html.replace(/<button[^>]*class=["'][^"']*menu-fab[^"']*["'][^>]*>[\s\S]*?<\/button>/gi, '');
     var style = [
       '<style id="cms-ui">',
       '.cms-sel{outline:3px solid #ff6b6b!important;outline-offset:2px;position:relative}',
@@ -237,6 +243,9 @@
       '.cms-handle.se{bottom:-6px;right:-6px;cursor:se-resize}',
       '.cms-drag-bar{position:absolute;top:-22px;left:0;height:18px;padding:0 8px;font-size:11px;',
       'background:#ff6b6b;color:#fff;border-radius:4px 4px 0 0;cursor:move;user-select:none;white-space:nowrap}',
+      /* プレビュー内のMENU残骸を強制非表示 */
+      '.radial-menu-wrapper,.menu-fab,.header-auth{display:none!important;visibility:hidden!important;pointer-events:none!important}',
+      'body{padding-bottom:0!important}',
       '</style>'
     ].join('');
     if (/<head[^>]*>/i.test(html)) {
@@ -323,18 +332,20 @@
     var tb = $('rt-toolbar');
     if (!tb) return;
     tb.classList.remove('hidden');
-    var rect = el.getBoundingClientRect();
-    var iframe = frame();
-    var ir = iframe.getBoundingClientRect();
-    var top = ir.top + rect.top - 48;
-    var left = ir.left + rect.left;
-    if (top < 60) top = ir.top + rect.bottom + 8;
-    tb.style.top = Math.max(60, top) + 'px';
-    tb.style.left = Math.min(Math.max(8, left), window.innerWidth - 320) + 'px';
+    tb.style.top = '';
+    tb.style.left = '';
+    tb.classList.add('rt-docked');
+    var ve = document.getElementById('view-editor');
+    if (ve) ve.classList.add('rt-open');
   }
   function hideRtToolbar() {
     var tb = $('rt-toolbar');
-    if (tb) tb.classList.add('hidden');
+    if (tb) {
+      tb.classList.add('hidden');
+      tb.classList.remove('rt-docked');
+    }
+    var ve = document.getElementById('view-editor');
+    if (ve) ve.classList.remove('rt-open');
   }
 
   function setupFrameEvents() {
@@ -486,8 +497,13 @@
         if ($('ed-title')) $('ed-title').textContent = title || path;
         var fEl = frame();
         fEl.onload = function () {
+          var d = doc();
+          if (d) {
+            d.querySelectorAll('.radial-menu-wrapper,.menu-fab,.header-auth').forEach(function (n) { n.remove(); });
+            /* 長押しメニューが起動しないよう pointer 系を抑制しないが、MENU script は既に除去済み */
+          }
           setupFrameEvents();
-          status('編集可能 — 要素をクリックしてインライン編集');
+          status('編集可能 — 要素をクリックしてインライン編集（MENUは編集中非表示）');
         };
         fEl.srcdoc = injectChrome(content, path);
       } else {
@@ -507,13 +523,16 @@
     clearSelection();
     var clone = d.documentElement.cloneNode(true);
     clone.querySelectorAll('#cms-ui,base').forEach(function (n) { n.remove(); });
-    clone.querySelectorAll('.cms-sel,.cms-handle,.cms-drag-bar').forEach(function (n) {
-      if (n.classList.contains('cms-handle') || n.classList.contains('cms-drag-bar')) n.remove();
-      else {
+    clone.querySelectorAll('.cms-sel,.cms-handle,.cms-drag-bar,.radial-menu-wrapper,.menu-fab').forEach(function (n) {
+      if (n.classList.contains('cms-handle') || n.classList.contains('cms-drag-bar') ||
+          n.classList.contains('radial-menu-wrapper') || n.classList.contains('menu-fab')) {
+        n.remove();
+      } else {
         n.classList.remove('cms-sel');
         n.removeAttribute('contenteditable');
       }
     });
+    /* MENUスクリプトは保存時も除去しない（本番で必要）。編集用注入分だけ消す */
     return '<!DOCTYPE html>\n' + clone.outerHTML;
   }
 
