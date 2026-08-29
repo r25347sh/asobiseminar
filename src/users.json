@@ -1,0 +1,115 @@
+{
+  "r22289hh": {
+    "password": "jL5!KsOnKS2!",
+    "name": "樊澤熙",
+    "semi_id": "fashion",
+    "semi_name": "遊びの探究ゼミ・ファッション",
+    "group": "fashion",
+    "class": "5E",
+    "permissions": ["pages/members/r22289hh.html", "pages/groups/fashion.html"]
+  },
+  "r22321fs": {
+    "password": "gI9#CYzMDQmr",
+    "name": "福島駿",
+    "semi_id": "skate",
+    "semi_name": "遊びの探究ゼミ・すけぼぉ",
+    "group": "skate",
+    "class": "5A",
+    "permissions": ["pages/members/r22321fs.html", "pages/groups/skate.html"]
+  },
+  "r22497kk": {
+    "password": "FMBCgQwYBJBv",
+    "name": "川端也大",
+    "semi_id": "skate",
+    "semi_name": "遊びの探究ゼミ・すけぼぉ",
+    "group": "skate",
+    "class": "5A",
+    "permissions": ["pages/members/r22497kk.html", "pages/groups/skate.html"]
+  },
+  "r22570kr": {
+    "password": "7$8PLjCwXu%f",
+    "name": "草深りお",
+    "semi_id": "fashion",
+    "semi_name": "遊びの探究ゼミ・ファッション",
+    "group": "fashion",
+    "class": "5C",
+    "permissions": ["pages/members/r22570kr.html", "pages/groups/fashion.html"]
+  },
+  "r22661kk": {
+    "password": "5FFVNXbCuD1X",
+    "name": "小林和輝",
+    "semi_id": "arch",
+    "semi_name": "遊びの探究ゼミ・建築",
+    "group": "arch",
+    "class": "5A",
+    "permissions": ["pages/members/r22661kk.html", "pages/groups/arch.html"]
+  },
+  "r25173ok": {
+    "password": "4lsgva0SfwTc",
+    "name": "奥村京太",
+    "semi_id": "skate",
+    "semi_name": "遊びの探究ゼミ・すけぼぉ",
+    "group": "skate",
+    "class": "5F",
+    "permissions": ["pages/members/r25173ok.html", "pages/groups/skate.html"]
+  },
+  "r25321sa": {
+    "password": "Ipd#cWeFZe1H",
+    "name": "齊藤絢太",
+    "semi_id": "arch",
+    "semi_name": "遊びの探究ゼミ・建築",
+    "group": "arch",
+    "class": "5C",
+    "permissions": ["pages/members/r25321sa.html", "pages/groups/arch.html"]
+  },
+  "r25339sc": {
+    "password": "NgYqQ95mDwDX",
+    "name": "佐藤ちほ",
+    "semi_id": "fashion",
+    "semi_name": "遊びの探究ゼミ・ファッション",
+    "group": "fashion",
+    "class": "5F",
+    "permissions": ["pages/members/r25339sc.html", "pages/groups/fashion.html"]
+  },
+  "r25404jk": {
+    "password": "QlOcL2m!fkD1",
+    "name": "神季美花",
+    "semi_id": "fashion",
+    "semi_name": "遊びの探究ゼミ・ファッション",
+    "group": "fashion",
+    "class": "5F",
+    "permissions": ["pages/members/r25404jk.html", "pages/groups/fashion.html"]
+  },
+  "r25660na": {
+    "password": "%4!MRq84W4nY",
+    "name": "野田彩夏",
+    "semi_id": "arch",
+    "semi_name": "遊びの探究ゼミ・建築",
+    "group": "arch",
+    "class": "5D",
+    "permissions": ["pages/members/r25660na.html", "pages/groups/arch.html"]
+  },
+  "r25917yk": {
+    "password": "XE21qDXeMUx2",
+    "name": "柳原康希",
+    "semi_id": "skate",
+    "semi_name": "遊びの探究ゼミ・すけぼぉ",
+    "group": "skate",
+    "class": "5F",
+    "permissions": ["pages/members/r25917yk.html", "pages/groups/skate.html"]
+  },
+  "matsumaru": {
+    "password": "Asobi#2026$Play!",
+    "name": "松丸先生",
+    "semi_id": "matsumaru",
+    "semi_name": "遊びの探究ゼミ・全体管理",
+    "permissions": ["pages/Matsumaru_T.html", "pages/about_This_Site.html", "pages/about_asobi.html", "pages/members/r22289hh.html", "pages/members/r22321fs.html", "pages/members/r22497kk.html", "pages/members/r22570kr.html", "pages/members/r22661kk.html", "pages/members/r25173ok.html", "pages/members/r25321sa.html", "pages/members/r25339sc.html", "pages/members/r25404jk.html", "pages/members/r25660na.html", "pages/members/r25917yk.html", "pages/groups/skate.html", "pages/groups/fashion.html", "pages/groups/arch.html"]
+  },
+  "r25347sh": {
+    "password": "kes-2592",
+    "name": "r25347sh",
+    "semi_id": "admin",
+    "semi_name": "サイト管理者",
+    "permissions": ["index.html", "admin.html", "map.html", "pages/Matsumaru_T.html", "pages/about_This_Site.html", "pages/about_asobi.html", "pages/members/r22289hh.html", "pages/members/r22321fs.html", "pages/members/r22497kk.html", "pages/members/r22570kr.html", "pages/members/r22661kk.html", "pages/members/r25173ok.html", "pages/members/r25321sa.html", "pages/members/r25339sc.html", "pages/members/r25404jk.html", "pages/members/r25660na.html", "pages/members/r25917yk.html", "pages/groups/skate.html", "pages/groups/fashion.html", "pages/groups/arch.html"]
+  }
+}
