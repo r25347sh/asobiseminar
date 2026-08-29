@@ -20,7 +20,7 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .btn:hover{transform:translateY(-2px)}
 .btn.primary{background:linear-gradient(135deg,var(--coral),#ff8e53);color:#fff}
 .btn.ghost{background:transparent;border:2px solid rgba(43,33,64,.15);color:var(--ink)}
-.btn.block{width:100%;margin-top:.8rem}
+.btn.block{width:100%;margin-top:.55rem}
 .btn.danger{background:#fff;border:2px solid rgba(255,107,107,.5);color:var(--coral)}
 .msg{color:var(--coral);font-size:.85rem;margin-top:.7rem;min-height:1.2em}
 .app-bar{display:flex;align-items:center;gap:1rem;padding:.75rem 1.15rem;background:#fff;border-bottom:2px solid rgba(255,107,107,.15);position:sticky;top:0;z-index:20}
@@ -49,17 +49,21 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .file-row .meta{font-size:.72rem;color:var(--ink-soft)}
 .file-row .actions{display:flex;gap:.35rem}
 .file-row .actions .btn{padding:.35rem .7rem;font-size:.78rem}
-.editor-bar{display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;flex-wrap:wrap;background:#fff;border-bottom:2px solid rgba(43,33,64,.08);position:sticky;top:0;z-index:20}
+.editor-bar{display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;flex-wrap:wrap;background:#fff;border-bottom:2px solid rgba(43,33,64,.08);position:sticky;top:0;z-index:30}
 .ed-title{font-weight:700;font-size:.95rem}
 .ed-path{font-size:.7rem;color:var(--ink-soft)}
 .bar-spacer{flex:1}
-.commit{padding:.4rem .65rem;border-radius:10px;border:2px solid var(--border);font:inherit;min-width:9rem}
+.commit{padding:.4rem .65rem;border-radius:10px;border:2px solid var(--border);font:inherit;min-width:8rem}
+.editor-modes{display:flex;gap:.25rem}
+.mode-btn{padding:.35rem .7rem;font-size:.75rem}
+.mode-btn.active{border-color:var(--coral);background:rgba(255,107,107,.12);color:var(--coral)}
 .editor-body{display:grid;grid-template-columns:280px 1fr;min-height:calc(100dvh - 58px)}
 @media(max-width:800px){.editor-body{grid-template-columns:1fr}}
 .rail{background:#fff;border-right:2px solid rgba(43,33,64,.08);padding:1rem;overflow:auto}
 .rail-panel{margin-bottom:1.2rem}
 .rail-panel label{display:block;margin-top:.7rem;font-size:.8rem;font-weight:600}
-.rail-panel input,.rail-panel textarea{width:100%;margin-top:.25rem;padding:.45rem;border-radius:10px;border:2px solid var(--border);font:inherit}
+.rail-panel input,.rail-panel textarea,.rail-panel select{width:100%;margin-top:.25rem;padding:.45rem;border-radius:10px;border:2px solid var(--border);font:inherit}
+.rail-h{font-family:Fredoka,sans-serif;font-size:1rem;margin-bottom:.5rem}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .sel-info{font-size:.82rem;padding:.55rem;background:rgba(76,201,240,.12);border-radius:10px}
 .tips{font-size:.78rem;color:var(--ink-soft);padding-left:1.1rem;line-height:1.7}
@@ -77,3 +81,22 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .modal-actions{display:flex;justify-content:flex-end;gap:.5rem;margin-top:1.1rem}
 .admin-out{background:#1e1b2e;color:#e8e4f0;padding:1rem;border-radius:12px;font-size:.78rem;overflow:auto;max-height:40vh;margin-top:1rem}
 .admin-actions{display:flex;gap:.5rem;flex-wrap:wrap}
+
+/* リッチテキストツールバー */
+.rt-toolbar{
+  position:fixed;z-index:50;display:flex;flex-wrap:wrap;align-items:center;gap:2px;
+  background:#2b2140;color:#fff;padding:6px 8px;border-radius:12px;
+  box-shadow:0 12px 32px rgba(43,33,64,.35);max-width:min(92vw,520px);
+}
+.rt-toolbar button{
+  border:0;background:transparent;color:#fff;padding:6px 9px;border-radius:8px;
+  cursor:pointer;font:inherit;font-size:.82rem;font-weight:600;
+}
+.rt-toolbar button:hover{background:rgba(255,255,255,.15)}
+.rt-sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 4px}
+.rt-done{background:var(--coral)!important;border-radius:8px!important}
+
+.favicon-row{display:flex;align-items:center;gap:.6rem;margin-top:.7rem;flex-wrap:wrap}
+.favicon-preview{width:32px;height:32px;border-radius:8px;border:2px solid var(--border);object-fit:contain;background:#f5f5f5}
+.check-label{display:flex!important;align-items:center;gap:.5rem;font-weight:500!important;margin-top:1rem!important}
+.check-label input{width:auto!important;margin:0!important}
