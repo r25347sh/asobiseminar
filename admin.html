@@ -7,12 +7,11 @@
   <link rel="stylesheet" href="src/css/pages/admin.css">
 </head>
 <body class="cms-app">
-  <!-- ログイン -->
   <div id="view-login" class="view view-login">
     <div class="login-panel">
       <div class="login-brand">🎮 Asobi Lab. <span>CMS</span></div>
       <h1>メンバーログイン</h1>
-      <p class="muted">遊びの探究ゼミ 専用ワークスペース<br>初心者でもかんたんにページ編集・ファイル管理ができます</p>
+      <p class="muted">遊びの探究ゼミ 専用ワークスペース<br>クリックでインライン編集・リッチテキスト・ドラッグ移動ができます</p>
       <label>ユーザーID<input id="uid" autocomplete="username" placeholder="例: r25xxx"></label>
       <label>パスワード<input id="pw" type="password" autocomplete="current-password"></label>
       <button type="button" id="btn-login" class="btn primary">ログイン</button>
@@ -20,7 +19,6 @@
     </div>
   </div>
 
-  <!-- ダッシュボード -->
   <div id="view-dash" class="view view-dash hidden">
     <header class="app-bar">
       <a class="brand" href="index.html">🎮 Asobi Lab.</a>
@@ -34,26 +32,18 @@
         <h1>ワークスペース</h1>
         <p class="muted">編集するページや、自分のファイルスペースを選んでください</p>
       </div>
-
       <nav class="dash-tabs" role="tablist">
         <button type="button" class="tab active" data-tab="pages" id="tab-pages">📄 編集可能ページ</button>
         <button type="button" class="tab" data-tab="files" id="tab-files">📁 個人ファイルスペース</button>
         <button type="button" class="tab hidden" data-tab="admin" id="tab-admin">⚙️ 管理</button>
       </nav>
-
-      <!-- ページ一覧 -->
       <section id="panel-pages" class="dash-panel">
-        <div class="panel-help">クリックでビジュアル編集が始まります。文字・色・サイズを直感的に変更できます。</div>
+        <div class="panel-help">クリックでビジュアル編集。要素を選ぶと<strong>その場でインライン編集</strong>・リッチテキスト・ドラッグ移動ができます。</div>
         <div id="page-grid" class="page-grid"></div>
         <p id="dash-status" class="muted center"></p>
       </section>
-
-      <!-- 個人ファイルスペース -->
       <section id="panel-files" class="dash-panel hidden">
-        <div class="panel-help">
-          ここはあなた専用のフォルダです（<code id="files-path">users/…</code>）。<br>
-          テキスト・HTML・画像などを自由に置いてください。初心者向けに「新規作成」ボタンから始められます。
-        </div>
+        <div class="panel-help">ここはあなた専用のフォルダです（<code id="files-path">users/…</code>）。</div>
         <div class="files-toolbar">
           <button type="button" id="btn-new-file" class="btn primary">＋ 新規ファイル</button>
           <button type="button" id="btn-upload" class="btn ghost">📤 アップロード</button>
@@ -63,8 +53,6 @@
         <div id="files-list" class="files-list"></div>
         <p id="files-status" class="muted center"></p>
       </section>
-
-      <!-- 管理（adminのみ） -->
       <section id="panel-admin" class="dash-panel hidden">
         <div class="panel-help">管理者向け機能です。</div>
         <div class="admin-actions">
@@ -75,7 +63,6 @@
     </main>
   </div>
 
-  <!-- エディタ（ページ / テキスト共通） -->
   <div id="view-editor" class="view view-editor hidden">
     <header class="editor-bar">
       <button type="button" id="btn-back" class="btn ghost">←</button>
@@ -84,42 +71,109 @@
         <div id="ed-path" class="ed-path mono"></div>
       </div>
       <div class="bar-spacer"></div>
+      <div class="editor-modes">
+        <button type="button" class="btn ghost mode-btn active" data-mode="visual" id="mode-visual">ビジュアル</button>
+        <button type="button" class="btn ghost mode-btn" data-mode="meta" id="mode-meta">メタ/ファビコン</button>
+        <button type="button" class="btn ghost mode-btn" data-mode="code" id="mode-code">コード</button>
+      </div>
       <input id="commit-msg" class="commit" placeholder="変更メモ（任意）">
       <button type="button" id="btn-save" class="btn primary">保存</button>
     </header>
+
+    <div id="rt-toolbar" class="rt-toolbar hidden">
+      <button type="button" data-cmd="bold" title="太字"><b>B</b></button>
+      <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
+      <button type="button" data-cmd="underline" title="下線"><u>U</u></button>
+      <button type="button" data-cmd="strikeThrough" title="取り消し線"><s>S</s></button>
+      <span class="rt-sep"></span>
+      <button type="button" data-cmd="insertUnorderedList" title="箇条書き">• リスト</button>
+      <button type="button" data-cmd="insertOrderedList" title="番号リスト">1. リスト</button>
+      <button type="button" data-cmd="createLink" title="リンク">🔗</button>
+      <button type="button" data-cmd="unlink" title="リンク解除">🔗✕</button>
+      <span class="rt-sep"></span>
+      <button type="button" data-cmd="formatBlock" data-val="h2" title="見出し">H2</button>
+      <button type="button" data-cmd="formatBlock" data-val="h3" title="小見出し">H3</button>
+      <button type="button" data-cmd="formatBlock" data-val="p" title="本文">P</button>
+      <span class="rt-sep"></span>
+      <button type="button" data-cmd="removeFormat" title="書式クリア">クリア</button>
+      <button type="button" id="rt-done" class="rt-done">完了</button>
+    </div>
+
     <div class="editor-body">
       <aside class="rail" id="rail-visual">
         <div class="rail-panels">
           <section class="rail-panel">
-            <div class="sel-info">プレビュー内の要素をクリックして選択</div>
-            <label>テキスト<textarea id="p-text" rows="4" placeholder="選択した要素の文字"></textarea></label>
+            <div class="sel-info" id="sel-info">要素をクリック → その場で編集できます</div>
             <div class="row2">
               <label>文字色<input type="color" id="p-color" value="#2b2140"></label>
               <label>背景<input type="color" id="p-bg" value="#ffffff"></label>
             </div>
-            <label>サイズ <span id="p-size-v">16</span>px
+            <label>フォントサイズ <span id="p-size-v">16</span>px
               <input type="range" id="p-size" min="10" max="72" value="16">
             </label>
+            <label>太さ
+              <select id="p-weight">
+                <option value="">そのまま</option>
+                <option value="400">標準</option>
+                <option value="600">やや太字</option>
+                <option value="700">太字</option>
+              </select>
+            </label>
             <button type="button" id="btn-apply-style" class="btn primary block">スタイル適用</button>
+            <button type="button" id="btn-make-absolute" class="btn ghost block">ドラッグ可能にする</button>
+            <button type="button" id="btn-delete-el" class="btn danger block">要素を削除</button>
           </section>
           <section class="rail-panel">
-            <p class="muted" style="font-size:.78rem;margin-bottom:.5rem">初心者向けヒント</p>
+            <p class="muted" style="font-size:.78rem;margin-bottom:.5rem">操作ヒント</p>
             <ul class="tips">
-              <li>文字を変えたい → クリック → 上のテキスト欄</li>
-              <li>色・大きさを変えたい → 適用ボタン</li>
-              <li>保存でサイトに反映されます</li>
+              <li><strong>クリック</strong> … 選択 + インライン編集</li>
+              <li><strong>ドラッグ</strong> … 位置移動（絶対配置時）</li>
+              <li><strong>角ハンドル</strong> … サイズ変更</li>
+              <li>ツールバーで太字・リスト・リンク</li>
+              <li>「メタ/ファビコン」で title 等を変更</li>
             </ul>
           </section>
         </div>
       </aside>
+
+      <aside class="rail hidden" id="rail-meta">
+        <div class="rail-panels">
+          <section class="rail-panel">
+            <h3 class="rail-h">ページ情報（&lt;head&gt;）</h3>
+            <label>タイトル（&lt;title&gt;）
+              <input type="text" id="meta-title" placeholder="ページタイトル">
+            </label>
+            <label>説明（meta description）
+              <textarea id="meta-desc" rows="3" placeholder="検索結果などに表示される説明文"></textarea>
+            </label>
+            <label>キーワード（任意）
+              <input type="text" id="meta-keywords" placeholder="遊び, 探究, ゼミ">
+            </label>
+            <label>ファビコン URL またはパス
+              <input type="text" id="meta-favicon" placeholder="例: data:image/svg+xml,... または icon.png">
+            </label>
+            <div class="favicon-row">
+              <img id="favicon-preview" class="favicon-preview" alt="" width="32" height="32">
+              <button type="button" id="btn-favicon-upload" class="btn ghost">📤 画像アップロード</button>
+              <input type="file" id="favicon-input" class="hidden" accept="image/*">
+            </div>
+            <label class="check-label">
+              <input type="checkbox" id="meta-use-menu-icon"> このファビコンを MENU のアイコンに使う
+            </label>
+            <button type="button" id="btn-apply-meta" class="btn primary block">メタ情報を適用</button>
+          </section>
+        </div>
+      </aside>
+
       <aside class="rail hidden" id="rail-code">
         <div class="rail-panels">
           <section class="rail-panel">
-            <p class="muted">テキスト / コード編集モード</p>
+            <p class="muted">HTML / テキスト 直接編集</p>
             <label>内容<textarea id="code-area" rows="22" class="code-area" spellcheck="false"></textarea></label>
           </section>
         </div>
       </aside>
+
       <div class="stage-wrap">
         <div id="stage" class="stage">
           <iframe id="frame" title="preview" sandbox="allow-same-origin allow-scripts"></iframe>
@@ -132,7 +186,6 @@
     </div>
   </div>
 
-  <!-- 新規ファイルモーダル -->
   <div id="modal-new" class="modal hidden">
     <div class="modal-panel">
       <h2>新規ファイル作成</h2>
