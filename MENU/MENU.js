@@ -18,6 +18,28 @@
     } catch (e) { return null; }
   }
 
+  var menuIcons = {};
+  function loadMenuIcons(cb) {
+    var url = root + 'src/cms/menu-icons.json';
+    fetch(url + '?t=' + Date.now()).then(function (r) {
+      if (!r.ok) return {};
+      return r.json();
+    }).then(function (data) {
+      menuIcons = data || {};
+      if (cb) cb();
+    }).catch(function () {
+      menuIcons = {};
+      if (cb) cb();
+    });
+  }
+
+  function iconFor(urlPath, fallbackEmoji) {
+    if (menuIcons && menuIcons[urlPath]) {
+      return { type: 'img', src: menuIcons[urlPath] };
+    }
+    return { type: 'emoji', src: fallbackEmoji };
+  }
+
   function buildMenuData() {
     var data = [
       { label: 'ホーム', icon: '🏠', url: root + 'index.html' },
@@ -48,6 +70,17 @@
       { label: '松丸先生', icon: '🎯', url: root + 'pages/Matsumaru_T.html' }
     ];
     if (getUser()) data.push({ label: 'CMS', icon: '✏️', url: root + 'admin.html' });
+    /* ファビコン由来のアイコンを適用 */
+    function enrich(items) {
+      items.forEach(function (it) {
+        if (it.url) {
+          var key = it.url.replace(root, '');
+          if (menuIcons[key]) it.iconUrl = menuIcons[key];
+        }
+        if (it.items) enrich(it.items);
+      });
+    }
+    enrich(data);
     return data;
   }
 
@@ -160,7 +193,11 @@
       var btn = document.createElement('button');
       btn.className = 'rm-item' + (data.item.items ? ' has-sub' : '');
       btn.setAttribute('data-label', data.item.label);
-      btn.innerHTML = data.item.icon;
+      if (data.item.iconUrl) {
+        btn.innerHTML = '<img src="' + data.item.iconUrl + '" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover">';
+      } else {
+        btn.innerHTML = data.item.icon;
+      }
       btn.style.setProperty('--x', data.x + 'px');
       btn.style.setProperty('--y', data.y + 'px');
       btn.style.transitionDelay = (index * 0.024) + 's';
@@ -226,8 +263,10 @@
     menuEl.classList.add('active');
     isOpen = true;
     menuStack = [];
-    renderMenuLevel(buildMenuData());
-    triggerParticleBurst();
+    loadMenuIcons(function () {
+      renderMenuLevel(buildMenuData());
+      triggerParticleBurst();
+    });
   }
 
   function closeMenu() {
@@ -327,6 +366,7 @@
     createMenuDOM();
     initEvents();
     mountAuthHeader();
+    loadMenuIcons(function () {});
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
