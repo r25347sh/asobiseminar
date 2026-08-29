@@ -7,17 +7,20 @@
   <link rel="stylesheet" href="src/css/pages/admin.css">
 </head>
 <body class="cms-app">
+  <!-- ログイン -->
   <div id="view-login" class="view view-login">
     <div class="login-panel">
       <div class="login-brand">🎮 Asobi Lab. <span>CMS</span></div>
       <h1>メンバーログイン</h1>
-      <p class="muted">遊びの探究ゼミ 専用ワークスペース</p>
-      <label>ユーザーID<input id="uid" autocomplete="username"></label>
+      <p class="muted">遊びの探究ゼミ 専用ワークスペース<br>初心者でもかんたんにページ編集・ファイル管理ができます</p>
+      <label>ユーザーID<input id="uid" autocomplete="username" placeholder="例: r25xxx"></label>
       <label>パスワード<input id="pw" type="password" autocomplete="current-password"></label>
       <button type="button" id="btn-login" class="btn primary">ログイン</button>
       <p id="login-msg" class="msg"></p>
     </div>
   </div>
+
+  <!-- ダッシュボード -->
   <div id="view-dash" class="view view-dash hidden">
     <header class="app-bar">
       <a class="brand" href="index.html">🎮 Asobi Lab.</a>
@@ -27,11 +30,52 @@
       </div>
     </header>
     <main class="dash-main">
-      <div class="dash-head"><h1>ページ一覧</h1><p class="muted">編集するページを選んでください</p></div>
-      <div id="page-grid" class="page-grid"></div>
-      <p id="dash-status" class="muted center"></p>
+      <div class="dash-head">
+        <h1>ワークスペース</h1>
+        <p class="muted">編集するページや、自分のファイルスペースを選んでください</p>
+      </div>
+
+      <nav class="dash-tabs" role="tablist">
+        <button type="button" class="tab active" data-tab="pages" id="tab-pages">📄 編集可能ページ</button>
+        <button type="button" class="tab" data-tab="files" id="tab-files">📁 個人ファイルスペース</button>
+        <button type="button" class="tab hidden" data-tab="admin" id="tab-admin">⚙️ 管理</button>
+      </nav>
+
+      <!-- ページ一覧 -->
+      <section id="panel-pages" class="dash-panel">
+        <div class="panel-help">クリックでビジュアル編集が始まります。文字・色・サイズを直感的に変更できます。</div>
+        <div id="page-grid" class="page-grid"></div>
+        <p id="dash-status" class="muted center"></p>
+      </section>
+
+      <!-- 個人ファイルスペース -->
+      <section id="panel-files" class="dash-panel hidden">
+        <div class="panel-help">
+          ここはあなた専用のフォルダです（<code id="files-path">users/…</code>）。<br>
+          テキスト・HTML・画像などを自由に置いてください。初心者向けに「新規作成」ボタンから始められます。
+        </div>
+        <div class="files-toolbar">
+          <button type="button" id="btn-new-file" class="btn primary">＋ 新規ファイル</button>
+          <button type="button" id="btn-upload" class="btn ghost">📤 アップロード</button>
+          <input type="file" id="file-input" class="hidden" multiple>
+          <button type="button" id="btn-refresh-files" class="btn ghost">🔄 更新</button>
+        </div>
+        <div id="files-list" class="files-list"></div>
+        <p id="files-status" class="muted center"></p>
+      </section>
+
+      <!-- 管理（adminのみ） -->
+      <section id="panel-admin" class="dash-panel hidden">
+        <div class="panel-help">管理者向け機能です。</div>
+        <div class="admin-actions">
+          <button type="button" id="btn-list-all-users" class="btn primary">ユーザー一覧を確認</button>
+        </div>
+        <pre id="admin-out" class="admin-out mono"></pre>
+      </section>
     </main>
   </div>
+
+  <!-- エディタ（ページ / テキスト共通） -->
   <div id="view-editor" class="view view-editor hidden">
     <header class="editor-bar">
       <button type="button" id="btn-back" class="btn ghost">←</button>
@@ -40,34 +84,69 @@
         <div id="ed-path" class="ed-path mono"></div>
       </div>
       <div class="bar-spacer"></div>
-      <input id="commit-msg" class="commit" placeholder="変更メモ">
+      <input id="commit-msg" class="commit" placeholder="変更メモ（任意）">
       <button type="button" id="btn-save" class="btn primary">保存</button>
     </header>
     <div class="editor-body">
-      <aside class="rail">
+      <aside class="rail" id="rail-visual">
         <div class="rail-panels">
           <section class="rail-panel">
-            <div class="sel-info">クリックで要素を選択</div>
-            <label>テキスト<textarea id="p-text" rows="4"></textarea></label>
+            <div class="sel-info">プレビュー内の要素をクリックして選択</div>
+            <label>テキスト<textarea id="p-text" rows="4" placeholder="選択した要素の文字"></textarea></label>
             <div class="row2">
               <label>文字色<input type="color" id="p-color" value="#2b2140"></label>
               <label>背景<input type="color" id="p-bg" value="#ffffff"></label>
             </div>
             <label>サイズ <span id="p-size-v">16</span>px
-              <input type="range" id="p-size" min="10" max="64" value="16">
+              <input type="range" id="p-size" min="10" max="72" value="16">
             </label>
-            <button type="button" id="btn-apply-style" class="btn primary block">適用</button>
+            <button type="button" id="btn-apply-style" class="btn primary block">スタイル適用</button>
+          </section>
+          <section class="rail-panel">
+            <p class="muted" style="font-size:.78rem;margin-bottom:.5rem">初心者向けヒント</p>
+            <ul class="tips">
+              <li>文字を変えたい → クリック → 上のテキスト欄</li>
+              <li>色・大きさを変えたい → 適用ボタン</li>
+              <li>保存でサイトに反映されます</li>
+            </ul>
+          </section>
+        </div>
+      </aside>
+      <aside class="rail hidden" id="rail-code">
+        <div class="rail-panels">
+          <section class="rail-panel">
+            <p class="muted">テキスト / コード編集モード</p>
+            <label>内容<textarea id="code-area" rows="22" class="code-area" spellcheck="false"></textarea></label>
           </section>
         </div>
       </aside>
       <div class="stage-wrap">
         <div id="stage" class="stage">
           <iframe id="frame" title="preview" sandbox="allow-same-origin allow-scripts"></iframe>
+          <div id="code-stage" class="code-stage hidden">
+            <textarea id="code-main" class="code-main" spellcheck="false"></textarea>
+          </div>
         </div>
         <div id="status" class="status-bar">準備完了</div>
       </div>
     </div>
   </div>
+
+  <!-- 新規ファイルモーダル -->
+  <div id="modal-new" class="modal hidden">
+    <div class="modal-panel">
+      <h2>新規ファイル作成</h2>
+      <p class="muted">ファイル名を入力（例: memo.txt / note.html）</p>
+      <label>ファイル名<input id="new-filename" placeholder="my-note.txt"></label>
+      <label>初期内容（任意）<textarea id="new-content" rows="5" placeholder="ここに自由に書いてください"></textarea></label>
+      <div class="modal-actions">
+        <button type="button" id="btn-new-cancel" class="btn ghost">キャンセル</button>
+        <button type="button" id="btn-new-create" class="btn primary">作成</button>
+      </div>
+      <p id="new-msg" class="msg"></p>
+    </div>
+  </div>
+
   <script src="src/js/admin.js"></script>
 </body>
 </html>
