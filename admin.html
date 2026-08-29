@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asobi Lab. CMS</title>
+  <link rel="stylesheet" href="src/css/pages/admin.css">
+</head>
+<body class="cms-app">
+  <div id="view-login" class="view view-login">
+    <div class="login-panel">
+      <div class="login-brand">🎮 Asobi Lab. <span>CMS</span></div>
+      <h1>メンバーログイン</h1>
+      <p class="muted">遊びの探究ゼミ 専用ワークスペース</p>
+      <label>ユーザーID<input id="uid" autocomplete="username"></label>
+      <label>パスワード<input id="pw" type="password" autocomplete="current-password"></label>
+      <button type="button" id="btn-login" class="btn primary">ログイン</button>
+      <p id="login-msg" class="msg"></p>
+    </div>
+  </div>
+  <div id="view-dash" class="view view-dash hidden">
+    <header class="app-bar">
+      <a class="brand" href="index.html">🎮 Asobi Lab.</a>
+      <div class="app-bar-right">
+        <span id="dash-user" class="user-pill"></span>
+        <button type="button" id="btn-logout" class="btn ghost">ログアウト</button>
+      </div>
+    </header>
+    <main class="dash-main">
+      <div class="dash-head"><h1>ページ一覧</h1><p class="muted">編集するページを選んでください</p></div>
+      <div id="page-grid" class="page-grid"></div>
+      <p id="dash-status" class="muted center"></p>
+    </main>
+  </div>
+  <div id="view-editor" class="view view-editor hidden">
+    <header class="editor-bar">
+      <button type="button" id="btn-back" class="btn ghost">←</button>
+      <div class="editor-title-block">
+        <div id="ed-title" class="ed-title">—</div>
+        <div id="ed-path" class="ed-path mono"></div>
+      </div>
+      <div class="bar-spacer"></div>
+      <input id="commit-msg" class="commit" placeholder="変更メモ">
+      <button type="button" id="btn-save" class="btn primary">保存</button>
+    </header>
+    <div class="editor-body">
+      <aside class="rail">
+        <div class="rail-panels">
+          <section class="rail-panel">
+            <div class="sel-info">クリックで要素を選択</div>
+            <label>テキスト<textarea id="p-text" rows="4"></textarea></label>
+            <div class="row2">
+              <label>文字色<input type="color" id="p-color" value="#2b2140"></label>
+              <label>背景<input type="color" id="p-bg" value="#ffffff"></label>
+            </div>
+            <label>サイズ <span id="p-size-v">16</span>px
+              <input type="range" id="p-size" min="10" max="64" value="16">
+            </label>
+            <button type="button" id="btn-apply-style" class="btn primary block">適用</button>
+          </section>
+        </div>
+      </aside>
+      <div class="stage-wrap">
+        <div id="stage" class="stage">
+          <iframe id="frame" title="preview" sandbox="allow-same-origin allow-scripts"></iframe>
+        </div>
+        <div id="status" class="status-bar">準備完了</div>
+      </div>
+    </div>
+  </div>
+  <script src="src/js/admin.js"></script>
+</body>
+</html>
