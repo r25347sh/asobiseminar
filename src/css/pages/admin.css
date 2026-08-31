@@ -23,10 +23,13 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .btn.block{width:100%;margin-top:.55rem}
 .btn.danger{background:#fff;border:2px solid rgba(255,107,107,.5);color:var(--coral)}
 .msg{color:var(--coral);font-size:.85rem;margin-top:.7rem;min-height:1.2em}
-.app-bar{display:flex;align-items:center;gap:1rem;padding:.75rem 1.15rem;background:#fff;border-bottom:2px solid rgba(255,107,107,.15);position:sticky;top:0;z-index:20}
+.app-bar{display:flex;align-items:center;gap:1rem;padding:.75rem 1.15rem;background:#fff;border-bottom:2px solid rgba(255,107,107,.15);position:sticky;top:0;z-index:20;flex-wrap:wrap}
 .brand{font-family:Fredoka,sans-serif;font-weight:700;color:var(--ink);text-decoration:none}
-.app-bar-right{margin-left:auto;display:flex;align-items:center;gap:.5rem}
+.app-bar-right{margin-left:auto;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .user-pill{font-size:.78rem;background:rgba(46,196,182,.15);padding:.3rem .75rem;border-radius:999px}
+.token-hint{font-size:.7rem;padding:.25rem .6rem;border-radius:999px}
+.token-ok{background:rgba(46,196,182,.2);color:#0d9488}
+.token-warn{background:rgba(255,107,107,.15);color:var(--coral)}
 .dash-main{max-width:980px;margin:0 auto;padding:1.5rem 1rem 3.5rem}
 .dash-head h1{font-family:Fredoka,sans-serif;font-size:1.65rem}
 .dash-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.2rem 0 1rem}
@@ -47,18 +50,18 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .file-row{display:flex;align-items:center;gap:.75rem;background:#fff;border:2px solid var(--border);border-radius:14px;padding:.7rem .9rem;flex-wrap:wrap}
 .file-row .name{flex:1;font-weight:600;min-width:8rem}
 .file-row .meta{font-size:.72rem;color:var(--ink-soft)}
-.file-row .actions{display:flex;gap:.35rem}
+.file-row .actions{display:flex;gap:.35rem;flex-wrap:wrap}
 .file-row .actions .btn{padding:.35rem .7rem;font-size:.78rem}
 .editor-bar{display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;flex-wrap:wrap;background:#fff;border-bottom:2px solid rgba(43,33,64,.08);position:sticky;top:0;z-index:30}
 .ed-title{font-weight:700;font-size:.95rem}
 .ed-path{font-size:.7rem;color:var(--ink-soft)}
 .bar-spacer{flex:1}
 .commit{padding:.4rem .65rem;border-radius:10px;border:2px solid var(--border);font:inherit;min-width:8rem}
-.editor-modes{display:flex;gap:.25rem}
+.editor-modes{display:flex;gap:.25rem;flex-wrap:wrap}
 .mode-btn{padding:.35rem .7rem;font-size:.75rem}
 .mode-btn.active{border-color:var(--coral);background:rgba(255,107,107,.12);color:var(--coral)}
 .editor-body{display:grid;grid-template-columns:280px 1fr;min-height:calc(100dvh - 58px)}
-@media(max-width:800px){.editor-body{grid-template-columns:1fr}}
+@media(max-width:800px){.editor-body{grid-template-columns:1fr}.rail{border-right:0;border-bottom:2px solid rgba(43,33,64,.08)}}
 .rail{background:#fff;border-right:2px solid rgba(43,33,64,.08);padding:1rem;overflow:auto}
 .rail-panel{margin-bottom:1.2rem}
 .rail-panel label{display:block;margin-top:.7rem;font-size:.8rem;font-weight:600}
@@ -82,16 +85,13 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .admin-out{background:#1e1b2e;color:#e8e4f0;padding:1rem;border-radius:12px;font-size:.78rem;overflow:auto;max-height:40vh;margin-top:1rem}
 .admin-actions{display:flex;gap:.5rem;flex-wrap:wrap}
 
-/* リッチテキストツールバー — ドック式（コンテンツに被らない） */
+/* リッチテキストツールバー — ドック式 */
 .rt-toolbar{
   position:fixed;z-index:40;display:flex;flex-wrap:wrap;align-items:center;gap:2px;
   background:#2b2140;color:#fff;padding:6px 10px;border-radius:0 0 12px 12px;
   box-shadow:0 8px 24px rgba(43,33,64,.25);max-width:100%;
-  left:0;right:0;top:58px; /* editor-bar 直下 */
+  left:0;right:0;top:58px;
   justify-content:center;
-}
-.rt-toolbar.rt-docked{
-  /* 中央寄せで邪魔にならない */
 }
 .rt-toolbar button{
   border:0;background:transparent;color:#fff;padding:6px 9px;border-radius:8px;
@@ -106,6 +106,5 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .check-label{display:flex!important;align-items:center;gap:.5rem;font-weight:500!important;margin-top:1rem!important}
 .check-label input{width:auto!important;margin:0!important}
 
-/* ツールバー表示中はプレビュー上端に余白 */
 .view-editor.rt-open .stage{padding-top:2.5rem}
 .editor-bar{z-index:45}
