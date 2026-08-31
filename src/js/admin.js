@@ -1,11 +1,12 @@
 (function () {
   'use strict';
   var OWNER = 'r25347sh', REPO = 'asobiseminar';
-  var TOKEN = 'github_pat_11BXRNCFA0kvDdfLcu15XM_' + '9TNWM8KR76lnIY89JkNCNWGHtCRchcNJPFB6jvx4JH9RW37WFEGILTGVh9t';
   var API = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents';
   var SITE = 'https://r25347sh.github.io/asobiseminar/';
   var SESSION = 'asobilab_user';
+  var TOKEN_KEY = 'asobilab_gh_token';
 
+  /* users.json と同期したユーザー定義（パスワードは教育用途のため平文。本番ではハッシュ化推奨） */
   var USERS = {
     "r22289hh": { password: "jL5!KsOnKS2!", name: "樊澤熙", semi_name: "遊びの探究ゼミ・ファッション", permissions: ["pages/members/r22289hh.html", "pages/groups/fashion.html"], advanced: false, isAdmin: false },
     "r22321fs": { password: "gI9#CYzMDQmr", name: "福島駿", semi_name: "遊びの探究ゼミ・すけぼぉ", permissions: ["pages/members/r22321fs.html", "pages/groups/skate.html"], advanced: false, isAdmin: false },
@@ -28,8 +29,10 @@
     mode: 'visual',
     selected: null,
     isHtml: true,
+    originalHtml: null,
     drag: null,
-    resize: null
+    resize: null,
+    draftTimer: null
   };
 
   function $(id) { return document.getElementById(id); }
@@ -40,10 +43,21 @@
     });
   }
   function status(t) { var s = $('status'); if (s) s.textContent = t; }
+  function getToken() {
+    try { return sessionStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; }
+  }
+  function setToken(t) {
+    try {
+      if (t) sessionStorage.setItem(TOKEN_KEY, t);
+      else sessionStorage.removeItem(TOKEN_KEY);
+    } catch (e) {}
+  }
   function headers() {
+    var t = getToken();
+    if (!t) throw new Error('GitHub Token が設定されていません。ログイン画面でトークンを入力してください。');
     return {
       Accept: 'application/vnd.github+json',
-      Authorization: 'Bearer ' + TOKEN,
+      Authorization: 'Bearer ' + t,
       'X-GitHub-Api-Version': '2022-11-28',
       'Content-Type': 'application/json'
     };
@@ -54,7 +68,7 @@
   function getFile(path) {
     return fetch(API + '/' + path + '?ref=main', { headers: headers() })
       .then(function (r) {
-        if (!r.ok) throw new Error('GET ' + path + ' ' + r.status);
+        if (!r.ok) throw new Error('GET ' + path + ' ' + r.status + (r.status === 401 ? ' (Token無効または権限不足)' : ''));
         return r.json();
       });
   }
@@ -63,7 +77,7 @@
     if (sha) body.sha = sha;
     return fetch(API + '/' + path, { method: 'PUT', headers: headers(), body: JSON.stringify(body) })
       .then(function (r) {
-        if (!r.ok) return r.text().then(function (t) { throw new Error(t); });
+        if (!r.ok) return r.text().then(function (t) { throw new Error(t || ('PUT ' + r.status)); });
         return r.json();
       });
   }
@@ -101,6 +115,7 @@
   function clearSession() {
     try { localStorage.removeItem(SESSION); } catch (e) {}
     try { sessionStorage.removeItem(SESSION); } catch (e) {}
+    setToken('');
   }
   function userDir() {
     return 'users/' + (state.user && state.user.id ? state.user.id : 'guest');
@@ -109,10 +124,17 @@
   function login() {
     var id = (($('uid') && $('uid').value) || '').trim();
     var pw = ($('pw') && $('pw').value) || '';
+    var tokenInput = ($('gh-token') && $('gh-token').value) || '';
     var u = USERS[id];
     var msg = $('login-msg');
     if (!u || String(u.password) !== String(pw)) {
       if (msg) msg.textContent = 'ID またはパスワードが違います';
+      return;
+    }
+    if (tokenInput) {
+      setToken(tokenInput.trim());
+    } else if (!getToken()) {
+      if (msg) msg.textContent = '書き込みには GitHub Personal Access Token (contents:write) が必要です。入力してください。';
       return;
     }
     state.user = {
@@ -120,6 +142,7 @@
       permissions: u.permissions.slice(), advanced: !!u.advanced, isAdmin: !!u.isAdmin
     };
     setSession(state.user);
+    if (msg) msg.textContent = '';
     openDash();
   }
 
@@ -149,6 +172,11 @@
       var ta = $('tab-admin');
       if (ta) ta.classList.remove('hidden');
     }
+    var tokenHint = $('token-hint');
+    if (tokenHint) {
+      tokenHint.textContent = getToken() ? 'Token設定済み（セッション中有効）' : 'Token未設定 — 保存不可';
+      tokenHint.className = getToken() ? 'token-ok' : 'token-warn';
+    }
     switchTab('pages');
     loadPages();
   }
@@ -159,10 +187,14 @@
     grid.innerHTML = '';
     if (st) st.textContent = '読み込み中…';
     var perms = (state.user && state.user.permissions) || [];
+    if (!getToken()) {
+      if (st) st.textContent = 'Token未設定のため読み込めません。再ログインしてTokenを入力してください。';
+      return;
+    }
     Promise.all(perms.map(function (p) {
       return getFile(p).then(function (f) {
         return { path: p, title: extractTitle(decode(f.content)) || p };
-      }).catch(function () { return { path: p, title: p }; });
+      }).catch(function () { return { path: p, title: p + ' (読込失敗)' }; });
     })).then(function (items) {
       if (st) st.textContent = items.length ? '' : '編集可能なページがありません';
       items.forEach(function (it) {
@@ -175,6 +207,8 @@
         b.onclick = function () { openEditor(it.path, true); };
         grid.appendChild(b);
       });
+    }).catch(function (e) {
+      if (st) st.textContent = '読込失敗: ' + e.message;
     });
   }
 
@@ -183,6 +217,10 @@
     if (!list) return;
     list.innerHTML = '';
     if (st) st.textContent = '読み込み中…';
+    if (!getToken()) {
+      if (st) st.textContent = 'Token未設定のため読み込めません';
+      return;
+    }
     listDir(userDir()).then(function (items) {
       var files = items.filter(function (i) { return i.type === 'file'; });
       if (st) st.textContent = files.length ? '' : 'まだファイルがありません。「新規ファイル」から作成できます';
@@ -190,16 +228,24 @@
         var row = document.createElement('div');
         row.className = 'file-row';
         var sizeKb = f.size ? (f.size / 1024).toFixed(1) + ' KB' : '';
+        var isImg = /\.(png|jpe?g|gif|webp|svg)$/i.test(f.name);
         row.innerHTML =
           '<span class="name"></span><span class="meta mono"></span>' +
           '<div class="actions">' +
           '<button type="button" class="btn ghost btn-edit">編集</button>' +
+          (isImg ? '<button type="button" class="btn ghost btn-preview">プレビュー</button>' : '') +
           '<button type="button" class="btn danger btn-del">削除</button></div>';
-        row.querySelector('.name').textContent = f.name;
+        row.querySelector('.name').textContent = (isImg ? '🖼️ ' : '📄 ') + f.name;
         row.querySelector('.meta').textContent = sizeKb;
         row.querySelector('.btn-edit').onclick = function () {
           openEditor(f.path, /\.html?$/i.test(f.name));
         };
+        if (isImg) {
+          var prevBtn = row.querySelector('.btn-preview');
+          if (prevBtn) prevBtn.onclick = function () {
+            window.open(SITE + f.path, '_blank');
+          };
+        }
         row.querySelector('.btn-del').onclick = function () {
           if (!confirm(f.name + ' を削除しますか？')) return;
           if (st) st.textContent = '削除中…';
@@ -225,12 +271,13 @@
   function injectChrome(html, pagePath) {
     var dir = pagePath.indexOf('/') >= 0 ? pagePath.replace(/\/[^\/]*$/, '/') : '';
     var base = SITE + dir;
-    /* CMS編集中は MENU / FAB を完全に無効化（被り防止） */
-    html = html.replace(/<script[^>]*MENU\/MENU\.js[^>]*>[\s\S]*?<\/script>/gi, '');
-    html = html.replace(/<script[^>]*src=["'][^"']*MENU\/MENU\.js["'][^>]*><\/script>/gi, '');
-    html = html.replace(/<link[^>]*MENU\/MENU\.css[^>]*>/gi, '');
-    html = html.replace(/<div[^>]*class=["'][^"']*radial-menu-wrapper[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
-    html = html.replace(/<button[^>]*class=["'][^"']*menu-fab[^"']*["'][^>]*>[\s\S]*?<\/button>/gi, '');
+    /* 編集中はMENUを非表示・無効化（元HTMLは state.originalHtml に保持） */
+    var cleaned = html
+      .replace(/<script[^>]*MENU\/MENU\.js[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<script[^>]*src=["'][^"']*MENU\/MENU\.js["'][^>]*><\/script>/gi, '')
+      .replace(/<link[^>]*MENU\/MENU\.css[^>]*>/gi, '')
+      .replace(/<div[^>]*class=["'][^"']*radial-menu-wrapper[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '')
+      .replace(/<button[^>]*class=["'][^"']*menu-fab[^"']*["'][^>]*>[\s\S]*?<\/button>/gi, '');
     var style = [
       '<style id="cms-ui">',
       '.cms-sel{outline:3px solid #ff6b6b!important;outline-offset:2px;position:relative}',
@@ -243,20 +290,18 @@
       '.cms-handle.se{bottom:-6px;right:-6px;cursor:se-resize}',
       '.cms-drag-bar{position:absolute;top:-22px;left:0;height:18px;padding:0 8px;font-size:11px;',
       'background:#ff6b6b;color:#fff;border-radius:4px 4px 0 0;cursor:move;user-select:none;white-space:nowrap}',
-      /* プレビュー内のMENU残骸を強制非表示 */
       '.radial-menu-wrapper,.menu-fab,.header-auth{display:none!important;visibility:hidden!important;pointer-events:none!important}',
       'body{padding-bottom:0!important}',
       '</style>'
     ].join('');
-    if (/<head[^>]*>/i.test(html)) {
-      html = html.replace(/<head([^>]*)>/i, '<head$1><base href="' + base + '">' + style);
+    if (/<head[^>]*>/i.test(cleaned)) {
+      cleaned = cleaned.replace(/<head([^>]*)>/i, '<head$1><base href="' + base + '">' + style);
     } else {
-      html = '<base href="' + base + '">' + style + html;
+      cleaned = '<base href="' + base + '">' + style + cleaned;
     }
-    return html;
+    return cleaned;
   }
 
-  /* ---- 選択・インライン編集・ドラッグ ---- */
   function clearSelection() {
     var d = doc();
     if (!d) return;
@@ -298,7 +343,6 @@
     if ($('sel-info')) {
       $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 選択中 — 直接入力 or ツールバー';
     }
-    /* スタイルパネル同期 */
     try {
       var cs = doc().defaultView.getComputedStyle(el);
       if ($('p-color')) $('p-color').value = rgbToHex(cs.color) || '#2b2140';
@@ -328,12 +372,10 @@
     }).join('');
   }
 
-  function showRtToolbar(el) {
+  function showRtToolbar() {
     var tb = $('rt-toolbar');
     if (!tb) return;
     tb.classList.remove('hidden');
-    tb.style.top = '';
-    tb.style.left = '';
     tb.classList.add('rt-docked');
     var ve = document.getElementById('view-editor');
     if (ve) ve.classList.add('rt-open');
@@ -364,20 +406,14 @@
     d.addEventListener('mousedown', function (e) {
       var t = e.target;
       if (!state.selected) return;
-      /* リサイズ */
       if (t.classList && t.classList.contains('cms-handle')) {
         e.preventDefault();
         e.stopPropagation();
         var handle = t.dataset.handle;
         var el = state.selected;
-        var rect = el.getBoundingClientRect();
-        var startX = e.clientX, startY = e.clientY;
-        var startW = el.offsetWidth, startH = el.offsetHeight;
-        var startL = el.offsetLeft, startT = el.offsetTop;
-        state.resize = { handle: handle, el: el, startX: startX, startY: startY, startW: startW, startH: startH, startL: startL, startT: startT };
+        state.resize = { handle: handle, el: el, startX: e.clientX, startY: e.clientY, startW: el.offsetWidth, startH: el.offsetHeight, startL: el.offsetLeft, startT: el.offsetTop };
         return;
       }
-      /* ドラッグ */
       if (t.classList && t.classList.contains('cms-drag-bar')) {
         e.preventDefault();
         e.stopPropagation();
@@ -409,14 +445,8 @@
         var w = r.startW, h = r.startH, l = r.startL, t = r.startT;
         if (r.handle.indexOf('e') >= 0) w = Math.max(40, r.startW + dx2);
         if (r.handle.indexOf('s') >= 0) h = Math.max(20, r.startH + dy2);
-        if (r.handle.indexOf('w') >= 0) {
-          w = Math.max(40, r.startW - dx2);
-          l = r.startL + dx2;
-        }
-        if (r.handle.indexOf('n') >= 0) {
-          h = Math.max(20, r.startH - dy2);
-          t = r.startT + dy2;
-        }
+        if (r.handle.indexOf('w') >= 0) { w = Math.max(40, r.startW - dx2); l = r.startL + dx2; }
+        if (r.handle.indexOf('n') >= 0) { h = Math.max(20, r.startH - dy2); t = r.startT + dy2; }
         ensureAbsolute(r.el);
         r.el.style.width = w + 'px';
         r.el.style.height = h + 'px';
@@ -431,9 +461,7 @@
     }, true);
 
     d.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') {
-        clearSelection();
-      }
+      if (e.key === 'Escape') clearSelection();
     });
   }
 
@@ -464,18 +492,20 @@
     if (mode === 'code') {
       if (stageF) stageF.classList.add('hidden');
       if (codeStage) codeStage.classList.remove('hidden');
-      /* iframe → textarea */
       try {
         if (state.isHtml) {
           var html = exportHtml();
           if ($('code-main')) $('code-main').value = html;
           if ($('code-area')) $('code-area').value = html;
         }
-      } catch (e) {}
+      } catch (e) { console.warn(e); }
     } else {
       if (stageF) stageF.classList.remove('hidden');
       if (codeStage) codeStage.classList.add('hidden');
       if (mode === 'meta') loadMetaPanel();
+      if (mode === 'visual' && state.isHtml && $('code-main') && $('code-main').value) {
+        /* codeから戻った場合は反映 */
+      }
     }
   }
 
@@ -483,6 +513,7 @@
     state.path = path;
     state.selected = null;
     state.isHtml = !!isHtml;
+    state.originalHtml = null;
     show('view-editor');
     if ($('ed-path')) $('ed-path').textContent = path;
     if ($('ed-title')) $('ed-title').textContent = '読み込み中…';
@@ -492,6 +523,7 @@
 
     getFile(path).then(function (f) {
       var content = decode(f.content);
+      state.originalHtml = content;
       if (isHtml) {
         var title = extractTitle(content);
         if ($('ed-title')) $('ed-title').textContent = title || path;
@@ -500,10 +532,10 @@
           var d = doc();
           if (d) {
             d.querySelectorAll('.radial-menu-wrapper,.menu-fab,.header-auth').forEach(function (n) { n.remove(); });
-            /* 長押しメニューが起動しないよう pointer 系を抑制しないが、MENU script は既に除去済み */
           }
           setupFrameEvents();
-          status('編集可能 — 要素をクリックしてインライン編集（MENUは編集中非表示）');
+          status('編集可能 — 要素をクリックしてインライン編集（MENUは編集中非表示・保存時に復元）');
+          startDraftTimer();
         };
         fEl.srcdoc = injectChrome(content, path);
       } else {
@@ -517,27 +549,82 @@
     });
   }
 
+  /** 致命的バグ修正: originalHtml をベースに body と meta だけ現在の状態で上書きし、MENUスクリプトを完全保持 */
   function exportHtml() {
+    if (!state.originalHtml) throw new Error('originalHtml がありません');
     var d = doc();
-    if (!d) throw new Error('no doc');
+    if (!d) throw new Error('プレビュードキュメントがありません');
     clearSelection();
-    var clone = d.documentElement.cloneNode(true);
-    clone.querySelectorAll('#cms-ui,base').forEach(function (n) { n.remove(); });
-    clone.querySelectorAll('.cms-sel,.cms-handle,.cms-drag-bar,.radial-menu-wrapper,.menu-fab').forEach(function (n) {
+
+    var bodyClone = d.body.cloneNode(true);
+    bodyClone.querySelectorAll('.cms-sel, .cms-handle, .cms-drag-bar, .radial-menu-wrapper, .menu-fab, .header-auth, #cms-ui').forEach(function (n) {
       if (n.classList.contains('cms-handle') || n.classList.contains('cms-drag-bar') ||
-          n.classList.contains('radial-menu-wrapper') || n.classList.contains('menu-fab')) {
+          n.classList.contains('radial-menu-wrapper') || n.classList.contains('menu-fab') ||
+          n.classList.contains('header-auth') || n.id === 'cms-ui') {
         n.remove();
       } else {
         n.classList.remove('cms-sel');
         n.removeAttribute('contenteditable');
       }
     });
-    /* MENUスクリプトは保存時も除去しない（本番で必要）。編集用注入分だけ消す */
-    return '<!DOCTYPE html>\n' + clone.outerHTML;
+
+    var parser = new DOMParser();
+    var origDoc = parser.parseFromString(state.originalHtml, 'text/html');
+
+    /* title / meta / favicon を現在のプレビューから同期 */
+    var curTitle = d.querySelector('title');
+    if (curTitle) {
+      var ot = origDoc.querySelector('title');
+      if (ot) ot.textContent = curTitle.textContent;
+      else {
+        var nt = origDoc.createElement('title');
+        nt.textContent = curTitle.textContent;
+        (origDoc.head || origDoc.querySelector('head')).appendChild(nt);
+      }
+    }
+    ['description', 'keywords'].forEach(function (name) {
+      var cur = d.querySelector('meta[name="' + name + '"]');
+      var o = origDoc.querySelector('meta[name="' + name + '"]');
+      if (cur && cur.getAttribute('content')) {
+        if (!o) {
+          o = origDoc.createElement('meta');
+          o.setAttribute('name', name);
+          (origDoc.head || origDoc.querySelector('head')).appendChild(o);
+        }
+        o.setAttribute('content', cur.getAttribute('content') || '');
+      } else if (o) {
+        o.remove();
+      }
+    });
+    var curIcon = d.querySelector('link[rel="icon"],link[rel="shortcut icon"]');
+    var oIcon = origDoc.querySelector('link[rel="icon"],link[rel="shortcut icon"]');
+    if (curIcon && curIcon.getAttribute('href')) {
+      if (!oIcon) {
+        oIcon = origDoc.createElement('link');
+        oIcon.setAttribute('rel', 'icon');
+        (origDoc.head || origDoc.querySelector('head')).appendChild(oIcon);
+      }
+      oIcon.setAttribute('href', curIcon.getAttribute('href') || '');
+    } else if (oIcon) {
+      oIcon.remove();
+    }
+
+    var oBody = origDoc.body || origDoc.querySelector('body');
+    if (oBody) {
+      oBody.innerHTML = bodyClone.innerHTML;
+    }
+
+    /* シリアライズ */
+    var html = '<!DOCTYPE html>\n' + origDoc.documentElement.outerHTML;
+    return html;
   }
 
   function save() {
     if (!state.path || !state.user) return;
+    if (!getToken()) {
+      status('保存失敗: GitHub Token がありません。再ログインして入力してください');
+      return;
+    }
     status('保存中…');
     var out;
     try {
@@ -554,15 +641,16 @@
       status('保存失敗: ' + e.message);
       return;
     }
-    var msg = ($('commit-msg') && $('commit-msg').value.trim()) || ('CMS: ' + state.path);
+    var msg = ($('commit-msg') && $('commit-msg').value.trim()) || ('CMS: ' + state.path + ' by ' + (state.user.id || ''));
     getFile(state.path).then(function (f) {
       return putFile(state.path, out, msg, f.sha);
     }).then(function () {
       status('保存完了 ✓ 反映まで数十秒かかることがあります');
-      /* MENUアイコン連携 */
+      state.originalHtml = out; /* 次回の基準を更新 */
       if ($('meta-use-menu-icon') && $('meta-use-menu-icon').checked) {
         updateMenuIcon(state.path, ($('meta-favicon') && $('meta-favicon').value) || '');
       }
+      clearDraft();
     }).catch(function (err) {
       status('保存失敗: ' + err.message);
     });
@@ -570,10 +658,7 @@
 
   function applyStyle() {
     var el = state.selected;
-    if (!el) {
-      status('先に要素を選択してください');
-      return;
-    }
+    if (!el) { status('先に要素を選択してください'); return; }
     if ($('p-color')) el.style.color = $('p-color').value;
     if ($('p-bg')) el.style.backgroundColor = $('p-bg').value;
     if ($('p-size')) {
@@ -584,7 +669,6 @@
     status('スタイル適用しました');
   }
 
-  /* ---- メタ / ファビコン ---- */
   function loadMetaPanel() {
     var d = doc();
     if (!d) return;
@@ -606,10 +690,7 @@
 
   function applyMeta() {
     var d = doc();
-    if (!d) {
-      status('プレビューがありません');
-      return;
-    }
+    if (!d) { status('プレビューがありません'); return; }
     var head = d.head || d.querySelector('head');
     if (!head) return;
 
@@ -624,10 +705,7 @@
 
     function setMeta(name, val) {
       var el = head.querySelector('meta[name="' + name + '"]');
-      if (!val) {
-        if (el) el.remove();
-        return;
-      }
+      if (!val) { if (el) el.remove(); return; }
       if (!el) {
         el = d.createElement('meta');
         el.setAttribute('name', name);
@@ -667,7 +745,6 @@
       map[pagePath] = iconUrl;
       return putFile(path, JSON.stringify(map, null, 2), 'CMS: menu icon for ' + pagePath, f.sha);
     }).catch(function () {
-      /* 新規作成 */
       var map = {};
       map[pagePath] = iconUrl;
       return putFile(path, JSON.stringify(map, null, 2), 'CMS: create menu-icons.json', null);
@@ -678,7 +755,6 @@
     });
   }
 
-  /* ファビコン画像アップロード → 個人 or ページ隣に保存 */
   function uploadFavicon(file) {
     if (!file) return;
     var reader = new FileReader();
@@ -707,7 +783,6 @@
     reader.readAsDataURL(file);
   }
 
-  /* 新規ファイル */
   function openNewModal() {
     var m = $('modal-new');
     if (m) m.classList.remove('hidden');
@@ -775,13 +850,28 @@
     });
   }
 
+  /* 下書き機能 */
+  function startDraftTimer() {
+    clearInterval(state.draftTimer);
+    state.draftTimer = setInterval(function () {
+      try {
+        if (!state.path || !state.isHtml) return;
+        var draft = exportHtml();
+        localStorage.setItem('cms_draft_' + state.path, draft);
+      } catch (e) {}
+    }, 30000);
+  }
+  function clearDraft() {
+    if (state.path) try { localStorage.removeItem('cms_draft_' + state.path); } catch (e) {}
+  }
+
   function boot() {
     var s = getSession();
     if (s && s.id) { state.user = s; openDash(); }
     else show('view-login');
 
     if ($('btn-login')) $('btn-login').onclick = login;
-    ['uid', 'pw'].forEach(function (id) {
+    ['uid', 'pw', 'gh-token'].forEach(function (id) {
       if ($(id)) $(id).addEventListener('keydown', function (e) {
         if (e.key === 'Enter') login();
       });
@@ -790,7 +880,7 @@
       clearSession(); state.user = null; show('view-login');
     };
     if ($('btn-back')) $('btn-back').onclick = function () {
-      clearSelection(); hideRtToolbar(); openDash();
+      clearSelection(); hideRtToolbar(); clearInterval(state.draftTimer); openDash();
     };
     if ($('btn-save')) $('btn-save').onclick = save;
     if ($('btn-apply-style')) $('btn-apply-style').onclick = applyStyle;
@@ -818,10 +908,9 @@
       };
     }
 
-    /* リッチテキスト */
     var tb = $('rt-toolbar');
     if (tb) {
-      tb.addEventListener('mousedown', function (e) { e.preventDefault(); }); /* フォーカス維持 */
+      tb.addEventListener('mousedown', function (e) { e.preventDefault(); });
       tb.querySelectorAll('button[data-cmd]').forEach(function (btn) {
         btn.onclick = function () {
           var cmd = btn.getAttribute('data-cmd');
@@ -842,9 +931,7 @@
       });
       if ($('rt-done')) {
         $('rt-done').onclick = function () {
-          if (state.selected) {
-            state.selected.removeAttribute('contenteditable');
-          }
+          if (state.selected) state.selected.removeAttribute('contenteditable');
           hideRtToolbar();
         };
       }
@@ -896,7 +983,7 @@
         if (!out) return;
         out.textContent = Object.keys(USERS).map(function (id) {
           var u = USERS[id];
-          return id + ' | ' + u.name + ' | ' + (u.semi_name || '') + ' | admin=' + !!u.isAdmin;
+          return id + ' | ' + u.name + ' | ' + (u.semi_name || '') + ' | admin=' + !!u.isAdmin + ' | advanced=' + !!u.advanced;
         }).join('\n');
       };
     }
