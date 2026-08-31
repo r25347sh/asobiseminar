@@ -14,6 +14,10 @@
       <p class="muted">遊びの探究ゼミ 専用ワークスペース<br>クリックでインライン編集・リッチテキスト・ドラッグ移動ができます</p>
       <label>ユーザーID<input id="uid" autocomplete="username" placeholder="例: r25xxx"></label>
       <label>パスワード<input id="pw" type="password" autocomplete="current-password"></label>
+      <label>GitHub Token（書き込み用）
+        <input id="gh-token" type="password" autocomplete="off" placeholder="github_pat_... または ghp_...">
+      </label>
+      <p class="muted" style="font-size:.75rem;margin-top:.4rem">Tokenはセッション中のみ保持されます。repo の contents:write 権限が必要です。<br>管理者から共有されたTokenを使用するか、自分のFine-grained PATを発行してください。</p>
       <button type="button" id="btn-login" class="btn primary">ログイン</button>
       <p id="login-msg" class="msg"></p>
     </div>
@@ -23,6 +27,7 @@
     <header class="app-bar">
       <a class="brand" href="index.html">🎮 Asobi Lab.</a>
       <div class="app-bar-right">
+        <span id="token-hint" class="token-hint"></span>
         <span id="dash-user" class="user-pill"></span>
         <button type="button" id="btn-logout" class="btn ghost">ログアウト</button>
       </div>
@@ -38,12 +43,12 @@
         <button type="button" class="tab hidden" data-tab="admin" id="tab-admin">⚙️ 管理</button>
       </nav>
       <section id="panel-pages" class="dash-panel">
-        <div class="panel-help">クリックでビジュアル編集。要素を選ぶと<strong>その場でインライン編集</strong>・リッチテキスト・ドラッグ移動ができます。</div>
+        <div class="panel-help">クリックでビジュアル編集。要素を選ぶと<strong>その場でインライン編集</strong>・リッチテキスト・ドラッグ移動ができます。保存時にMENUは自動で保持されます。</div>
         <div id="page-grid" class="page-grid"></div>
         <p id="dash-status" class="muted center"></p>
       </section>
       <section id="panel-files" class="dash-panel hidden">
-        <div class="panel-help">ここはあなた専用のフォルダです（<code id="files-path">users/…</code>）。</div>
+        <div class="panel-help">ここはあなた専用のフォルダです（<code id="files-path">users/…</code>）。画像はプレビュー可能です。</div>
         <div class="files-toolbar">
           <button type="button" id="btn-new-file" class="btn primary">＋ 新規ファイル</button>
           <button type="button" id="btn-upload" class="btn ghost">📤 アップロード</button>
@@ -131,6 +136,7 @@
               <li><strong>角ハンドル</strong> … サイズ変更</li>
               <li>ツールバーで太字・リスト・リンク</li>
               <li>「メタ/ファビコン」で title 等を変更</li>
+              <li>30秒ごとに下書きを自動保存</li>
             </ul>
           </section>
         </div>
@@ -139,8 +145,8 @@
       <aside class="rail hidden" id="rail-meta">
         <div class="rail-panels">
           <section class="rail-panel">
-            <h3 class="rail-h">ページ情報（&lt;head&gt;）</h3>
-            <label>タイトル（&lt;title&gt;）
+            <h3 class="rail-h">ページ情報（<head>）</h3>
+            <label>タイトル（<title>）
               <input type="text" id="meta-title" placeholder="ページタイトル">
             </label>
             <label>説明（meta description）
