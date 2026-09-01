@@ -6,6 +6,13 @@
     "semi_name": "遊びの探究ゼミ・ファッション",
     "group": "fashion",
     "class": "5E",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r22289hh.html",
       "pages/groups/fashion.html"
@@ -18,6 +25,13 @@
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
     "group": "skate",
     "class": "5A",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r22321fs.html",
       "pages/groups/skate.html"
@@ -30,6 +44,13 @@
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
     "group": "skate",
     "class": "5A",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r22497kk.html",
       "pages/groups/skate.html"
@@ -42,6 +63,13 @@
     "semi_name": "遊びの探究ゼミ・ファッション",
     "group": "fashion",
     "class": "5C",
+    "role": "leader",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r22570kr.html",
       "pages/groups/fashion.html"
@@ -54,6 +82,13 @@
     "semi_name": "遊びの探究ゼミ・建築",
     "group": "arch",
     "class": "5A",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r22661kk.html",
       "pages/groups/arch.html"
@@ -66,6 +101,13 @@
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
     "group": "skate",
     "class": "5F",
+    "role": "leader",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r25173ok.html",
       "pages/groups/skate.html"
@@ -78,6 +120,13 @@
     "semi_name": "遊びの探究ゼミ・建築",
     "group": "arch",
     "class": "5C",
+    "role": "leader",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r25321sa.html",
       "pages/groups/arch.html"
@@ -90,6 +139,13 @@
     "semi_name": "遊びの探究ゼミ・ファッション",
     "group": "fashion",
     "class": "5F",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r25339sc.html",
       "pages/groups/fashion.html"
@@ -102,6 +158,13 @@
     "semi_name": "遊びの探究ゼミ・ファッション",
     "group": "fashion",
     "class": "5F",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r25404jk.html",
       "pages/groups/fashion.html"
@@ -114,6 +177,13 @@
     "semi_name": "遊びの探究ゼミ・建築",
     "group": "arch",
     "class": "5D",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r25660na.html",
       "pages/groups/arch.html"
@@ -126,6 +196,13 @@
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
     "group": "skate",
     "class": "5F",
+    "role": "member",
+    "isAdmin": false,
+    "advanced": false,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": false,
     "permissions": [
       "pages/members/r25917yk.html",
       "pages/groups/skate.html"
@@ -136,6 +213,15 @@
     "name": "松丸先生",
     "semi_id": "matsumaru",
     "semi_name": "遊びの探究ゼミ・全体管理",
+    "group": "all",
+    "class": "teacher",
+    "role": "teacher",
+    "isAdmin": false,
+    "advanced": true,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": true,
     "permissions": [
       "pages/Matsumaru_T.html",
       "pages/about_This_Site.html",
@@ -161,6 +247,15 @@
     "name": "r25347sh",
     "semi_id": "admin",
     "semi_name": "サイト管理者",
+    "group": "all",
+    "class": "admin",
+    "role": "admin",
+    "isAdmin": true,
+    "advanced": true,
+    "canEditMeta": true,
+    "canUpload": true,
+    "canDelete": true,
+    "canBackupRestore": true,
     "permissions": [
       "index.html",
       "admin.html",
