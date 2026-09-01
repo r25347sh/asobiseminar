@@ -413,12 +413,17 @@
     clearHover();
     if (!el) return;
     el.classList.add('cms-locked-hover');
+    var rect = el.getBoundingClientRect();
     var badge = doc().createElement('div');
     badge.className = 'cms-lock-badge';
     badge.textContent = '🔒';
-    var cs = doc().defaultView.getComputedStyle(el);
-    if (cs.position === 'static') el.style.position = 'relative';
-    el.appendChild(badge);
+    badge.style.position = 'fixed';
+    badge.style.left = (rect.left + rect.width / 2) + 'px';
+    badge.style.top = (rect.top + rect.height / 2) + 'px';
+    badge.style.transform = 'translate(-50%, -50%)';
+    badge.style.filter = 'none';
+    badge.style.zIndex = '100002';
+    doc().body.appendChild(badge);
   }
 
   function showPen(el) {
@@ -479,7 +484,7 @@
     state.selected = null;
     hideRtToolbar();
     fillSideText(null);
-    if ($('sel-info')) $('sel-info').textContent = '要素にホバー → ✏️ で選択（data-lock="true" は不可）';
+    if ($('sel-info')) $('sel-info').textContent = 'クリックまたは ✏️ で編集（data-lock は不可）';
   }
 
   function attachHandles(el) {
@@ -523,7 +528,7 @@
       sel.addRange(range);
     } catch (e) {}
     if ($('sel-info')) {
-      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 直接編集中（Escで終了）';
+      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 編集中 — そのまま入力 / Escで終了';
     }
     try {
       var cs = doc().defaultView.getComputedStyle(el);
@@ -606,7 +611,6 @@
       var t = e.target;
       if (!t || t.nodeType !== 1) return;
       if (isChromeUi(t)) return;
-      /* ロック要素 */
       var locked = t.closest && t.closest('[data-lock="true"]');
       if (locked) {
         if (!locked.classList.contains('cms-locked-hover')) showLockBadge(locked);
@@ -622,11 +626,25 @@
       e.preventDefault();
       e.stopPropagation();
       var t = e.target;
-      /* ペン以外のクリックでは編集に入らない（長押しMENUとの干渉防止） */
-      if (t.classList && t.classList.contains('cms-pen')) return;
-      if (t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar'))) return;
-      if (state.selected && state.selected.contains(t)) return; /* 編集中のクリックは許可 */
-      /* 何もしない（選択解除は背景クリック時） */
+      if (!t) return;
+
+      /* ペンクリック → 親のホバー要素を編集 */
+      if (t.classList && t.classList.contains('cms-pen')) {
+        var host = t.parentElement;
+        if (host) enterEdit(host);
+        return;
+      }
+      if (t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar') || t.classList.contains('cms-lock-badge'))) return;
+
+      /* 編集中の要素内クリックは維持 */
+      if (state.selected && (t === state.selected || state.selected.contains(t))) return;
+
+      /* 通常クリックでも選択・直接編集に入る */
+      var target = pickTarget(t);
+      if (target) {
+        enterEdit(target);
+        return;
+      }
       if (t === d.body || t === d.documentElement) clearSelection();
     }, true);
 
@@ -817,7 +835,7 @@
           var d = doc();
           if (d) d.querySelectorAll('.radial-menu-wrapper,.menu-fab,.header-auth').forEach(function (n) { n.remove(); });
           setupFrameEvents();
-          status('ホバー → ✏️ → 左のテキスト欄で編集');
+          status('クリックまたは ✏️ で直接編集 / Escで終了');
           startDraftTimer();
         };
         fEl.srcdoc = injectChrome(content, path);
