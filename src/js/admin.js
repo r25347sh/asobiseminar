@@ -7,25 +7,31 @@
   var BACKUP_API = 'https://api.github.com/repos/' + OWNER + '/' + BACKUP_REPO + '/contents';
   var SITE = 'https://r25347sh.github.io/asobiseminar/';
   var SESSION = 'asobilab_user';
-  /* Token 分割直書き（2〜4分割） */
   var TOKEN = 'github_pat_11BXRNCFA0z6wQzD7P0p1A_' +
               'IRz7ii32tqH2LsbYQWCyp1YHSn' +
               'CXgrIDZr56epqgIkXZBW6YUHVK3v9kVPY';
 
-  var USERS = {}; /* users.json から動的ロード */
+  var USERS = {};
   var state = {
-    user: null,
-    path: null,
-    mode: 'visual',
-    selected: null,
-    isHtml: true,
-    originalHtml: null,
-    fileSha: null,
-    drag: null,
-    resize: null,
-    draftTimer: null,
-    history: []
+    user: null, path: null, mode: 'visual', selected: null,
+    isHtml: true, originalHtml: null, fileSha: null,
+    drag: null, resize: null, draftTimer: null
   };
+
+  var BLOCKS = [
+    { id: 'h2', label: '見出し H2', html: '<h2>新しい見出し</h2>' },
+    { id: 'h3', label: '見出し H3', html: '<h3>小見出し</h3>' },
+    { id: 'p', label: '段落', html: '<p>ここに本文を入力します。</p>' },
+    { id: 'lead', label: 'リード文', html: '<p class="page-sub">リード文・説明をここに。</p>' },
+    { id: 'card', label: 'カード', html: '<div class="card"><h3>カードタイトル</h3><p>カードの説明文です。</p></div>' },
+    { id: 'section', label: '編集セクション', html: '<section class="article_by_teacher"><h2>セクションタイトル</h2><p>このセクションは CMS から編集できます。</p></section>' },
+    { id: 'ul', label: '箇条書き', html: '<ul><li>項目1</li><li>項目2</li><li>項目3</li></ul>' },
+    { id: 'ol', label: '番号リスト', html: '<ol><li>手順1</li><li>手順2</li><li>手順3</li></ol>' },
+    { id: 'btn', label: 'ボタンリンク', html: '<p style="text-align:center;margin-top:1rem"><a class="btn-play" href="#">リンク先へ →</a></p>' },
+    { id: 'img', label: '画像プレースホルダ', html: '<p style="text-align:center"><img src="https://placehold.co/600x300/png?text=Image" alt="画像" style="max-width:100%;height:auto;border-radius:12px"></p>' },
+    { id: 'quote', label: '引用', html: '<blockquote style="border-left:4px solid #ff6b6b;padding:.75rem 1rem;margin:1rem 0;background:rgba(255,107,107,.08)">引用文をここに。</blockquote>' },
+    { id: 'hr', label: '区切り線', html: '<hr style="border:0;border-top:2px dashed rgba(43,33,64,.15);margin:1.5rem 0">' }
+  ];
 
   function $(id) { return document.getElementById(id); }
   function show(v) {
@@ -46,11 +52,20 @@
   function decode(c) { return decodeURIComponent(escape(atob(String(c).replace(/\n/g, '')))); }
   function encode(t) { return btoa(unescape(encodeURIComponent(t))); }
 
+  function friendlyErr(text, statusCode) {
+    if (statusCode === 403 || (text && text.indexOf('Resource not accessible') >= 0)) {
+      return '403: Tokenに書き込み権限がありません。GitHub → Settings → Developer settings → Fine-grained tokens で、asobiseminar と asobiseminar_backup の両方に Contents: Read and write を付与し、新しいTokenを admin.js に設定してください。';
+    }
+    if (statusCode === 401) return '401: Tokenが無効です。再発行してください。';
+    if (statusCode === 409) return '409: 競合しました。ページを開き直してから再保存してください。';
+    return text || ('HTTP ' + statusCode);
+  }
+
   function getFile(path, apiBase) {
     var base = apiBase || API;
     return fetch(base + '/' + path + '?ref=main', { headers: headers() })
       .then(function (r) {
-        if (!r.ok) throw new Error('GET ' + path + ' ' + r.status + (r.status === 401 ? ' (Token無効)' : ''));
+        if (!r.ok) throw new Error(friendlyErr('', r.status) || ('GET ' + path + ' ' + r.status));
         return r.json();
       });
   }
@@ -60,7 +75,9 @@
     if (sha) body.sha = sha;
     return fetch(base + '/' + path, { method: 'PUT', headers: headers(), body: JSON.stringify(body) })
       .then(function (r) {
-        if (!r.ok) return r.text().then(function (t) { throw new Error(t || ('PUT ' + r.status)); });
+        if (!r.ok) return r.text().then(function (t) {
+          throw new Error(friendlyErr(t, r.status));
+        });
         return r.json();
       });
   }
@@ -70,7 +87,7 @@
       headers: headers(),
       body: JSON.stringify({ message: message || 'CMS delete', sha: sha, branch: 'main' })
     }).then(function (r) {
-      if (!r.ok) return r.text().then(function (t) { throw new Error(t); });
+      if (!r.ok) return r.text().then(function (t) { throw new Error(friendlyErr(t, r.status)); });
       return r.json();
     });
   }
@@ -88,9 +105,6 @@
     return getFile('src/users.json').then(function (f) {
       USERS = JSON.parse(decode(f.content));
       return USERS;
-    }).catch(function (e) {
-      console.error('users.json load failed', e);
-      throw e;
     });
   }
 
@@ -119,22 +133,19 @@
       .then(function (t) { return (t || '').trim(); })
       .catch(function () { return ''; });
   }
-
   function formatNow() {
     var d = new Date();
     function p(n) { return (n < 10 ? '0' : '') + n; }
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
       'T' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
   }
-
   function buildCommitMessage(userMsg) {
     var uid = state.user ? state.user.id : 'unknown';
     var uname = state.user ? (state.user.name || uid) : 'unknown';
     var msg = (userMsg || '').trim() || '(no message)';
     var dt = formatNow();
     return getClientIp().then(function (ip) {
-      var ipPart = ip || 'N/A';
-      return '[' + uid + '] | [' + uname + '] | [' + msg + '] | [' + dt + '] | [' + ipPart + ']';
+      return '[' + uid + '] | [' + uname + '] | [' + msg + '] | [' + dt + '] | [' + (ip || 'N/A') + ']';
     });
   }
 
@@ -148,15 +159,10 @@
       return;
     }
     state.user = {
-      id: id,
-      name: u.name,
-      semi_name: u.semi_name || '',
-      group: u.group || '',
-      class: u.class || '',
-      role: u.role || 'member',
+      id: id, name: u.name, semi_name: u.semi_name || '',
+      group: u.group || '', class: u.class || '', role: u.role || 'member',
       permissions: (u.permissions || []).slice(),
-      isAdmin: !!u.isAdmin,
-      advanced: !!u.advanced,
+      isAdmin: !!u.isAdmin, advanced: !!u.advanced,
       canEditMeta: u.canEditMeta !== false,
       canUpload: u.canUpload !== false,
       canDelete: u.canDelete !== false,
@@ -208,10 +214,10 @@
     var perms = (state.user && state.user.permissions) || [];
     Promise.all(perms.map(function (p) {
       return getFile(p).then(function (f) {
-        return { path: p, title: extractTitle(decode(f.content)) || p, sha: f.sha };
-      }).catch(function () { return { path: p, title: p + ' (読込失敗)', sha: null }; });
+        return { path: p, title: extractTitle(decode(f.content)) || p };
+      }).catch(function () { return { path: p, title: p + ' (読込失敗)' }; });
     })).then(function (items) {
-      if (st) st.textContent = items.length ? items.length + ' ページ' : '編集可能なページがありません';
+      if (st) st.textContent = items.length ? items.length + ' ページ' : 'なし';
       items.forEach(function (it) {
         var b = document.createElement('button');
         b.type = 'button';
@@ -234,7 +240,7 @@
     if (st) st.textContent = '読み込み中…';
     listDir(userDir()).then(function (items) {
       var files = items.filter(function (i) { return i.type === 'file'; });
-      if (st) st.textContent = files.length ? files.length + ' ファイル' : 'まだファイルがありません';
+      if (st) st.textContent = files.length ? files.length + ' ファイル' : 'ファイルなし';
       files.forEach(function (f) {
         var row = document.createElement('div');
         row.className = 'file-row';
@@ -259,16 +265,12 @@
         var delBtn = row.querySelector('.btn-del');
         if (delBtn) {
           delBtn.onclick = function () {
-            if (!confirm(f.name + ' を削除しますか？')) return;
-            if (st) st.textContent = '削除中…';
+            if (!confirm(f.name + ' を削除？')) return;
             getFile(f.path).then(function (meta) {
               return buildCommitMessage('delete ' + f.name).then(function (cm) {
                 return deleteFile(f.path, meta.sha, cm);
               });
-            }).then(function () {
-              loadFiles();
-              appendLocalLog('delete', f.path, 'deleted');
-            }).catch(function (e) {
+            }).then(loadFiles).catch(function (e) {
               if (st) st.textContent = '削除失敗: ' + e.message;
             });
           };
@@ -290,45 +292,39 @@
       try { data = JSON.parse(decode(f.content)); } catch (e) {}
       if (!Array.isArray(data)) data = [];
       data = data.slice().reverse().slice(0, 80);
-      if (st) st.textContent = data.length ? data.length + ' 件の変更履歴' : '履歴がありません';
+      if (st) st.textContent = data.length ? data.length + ' 件' : '履歴なし';
       data.forEach(function (entry) {
         var row = document.createElement('div');
         row.className = 'file-row history-row';
         row.innerHTML =
-          '<div class="hist-main">' +
-          '<span class="name"></span>' +
-          '<span class="meta mono"></span>' +
-          '<span class="hist-msg"></span></div>' +
+          '<div class="hist-main"><span class="name"></span><span class="meta mono"></span><span class="hist-msg"></span></div>' +
           '<div class="actions">' +
           (state.user.canBackupRestore && entry.backupPath ?
             '<button type="button" class="btn primary btn-restore">復元</button>' : '') +
           '</div>';
-        row.querySelector('.name').textContent = entry.path || '(unknown)';
+        row.querySelector('.name').textContent = entry.path || '';
         row.querySelector('.meta').textContent =
-          (entry.userId || '') + ' · ' + (entry.datetime || '') + (entry.ip ? ' · IP:' + entry.ip : '');
+          (entry.userId || '') + ' · ' + (entry.datetime || '') + (entry.ip ? ' · ' + entry.ip : '');
         row.querySelector('.hist-msg').textContent = entry.message || '';
         var rb = row.querySelector('.btn-restore');
-        if (rb) {
-          rb.onclick = function () {
-            if (!confirm(entry.path + ' をこのバックアップから復元しますか？\n' + (entry.datetime || ''))) return;
-            restoreFromBackup(entry);
-          };
-        }
+        if (rb) rb.onclick = function () {
+          if (!confirm('復元しますか？\n' + entry.path + '\n' + entry.datetime)) return;
+          restoreFromBackup(entry);
+        };
         list.appendChild(row);
       });
     }).catch(function (e) {
-      if (st) st.textContent = '履歴読込失敗（バックアップリポジトリ未初期化の可能性）: ' + e.message;
+      if (st) st.textContent = '履歴読込失敗: ' + e.message;
     });
   }
 
-  function appendLocalLog(action, path, note) {
-    /* UI用の簡易メモ */
-  }
-
   function frame() { return $('frame'); }
-  function doc() {
-    var f = frame();
-    return f && f.contentDocument;
+  function doc() { var f = frame(); return f && f.contentDocument; }
+
+  /* data-lock="true" の要素・子孫は編集不可 */
+  function isLocked(el) {
+    if (!el || !el.closest) return false;
+    return !!el.closest('[data-lock="true"]');
   }
 
   function injectChrome(html, pagePath) {
@@ -342,17 +338,20 @@
       .replace(/<button[^>]*class=["'][^"']*menu-fab[^"']*["'][^>]*>[\s\S]*?<\/button>/gi, '');
     var style = [
       '<style id="cms-ui">',
-      '.cms-sel{outline:3px solid #ff6b6b!important;outline-offset:2px;position:relative}',
+      '.cms-sel{outline:3px solid #ff6b6b!important;outline-offset:2px;position:relative;min-height:1em}',
       '.cms-sel[contenteditable=true]{outline:3px solid #2ec4b6!important;cursor:text}',
-      '.cms-handle{position:absolute;width:12px;height:12px;background:#ff6b6b;border:2px solid #fff;',
-      'border-radius:2px;z-index:99999;box-shadow:0 1px 4px rgba(0,0,0,.3)}',
-      '.cms-handle.nw{top:-6px;left:-6px;cursor:nw-resize}',
-      '.cms-handle.ne{top:-6px;right:-6px;cursor:ne-resize}',
-      '.cms-handle.sw{bottom:-6px;left:-6px;cursor:sw-resize}',
-      '.cms-handle.se{bottom:-6px;right:-6px;cursor:se-resize}',
-      '.cms-drag-bar{position:absolute;top:-22px;left:0;height:18px;padding:0 8px;font-size:11px;',
-      'background:#ff6b6b;color:#fff;border-radius:4px 4px 0 0;cursor:move;user-select:none;white-space:nowrap}',
-      '.radial-menu-wrapper,.menu-fab,.header-auth{display:none!important;visibility:hidden!important;pointer-events:none!important}',
+      '[data-lock="true"]{outline:2px dashed #999!important;outline-offset:2px;opacity:.92;cursor:not-allowed!important}',
+      '[data-lock="true"] *{cursor:not-allowed!important}',
+      '.cms-handle{position:absolute;width:14px;height:14px;background:#ff6b6b;border:2px solid #fff;',
+      'border-radius:3px;z-index:99999;box-shadow:0 1px 4px rgba(0,0,0,.35);pointer-events:auto}',
+      '.cms-handle.nw{top:-7px;left:-7px;cursor:nwse-resize}',
+      '.cms-handle.ne{top:-7px;right:-7px;cursor:nesw-resize}',
+      '.cms-handle.sw{bottom:-7px;left:-7px;cursor:nesw-resize}',
+      '.cms-handle.se{bottom:-7px;right:-7px;cursor:nwse-resize}',
+      '.cms-drag-bar{position:absolute;top:-26px;left:0;height:22px;padding:0 10px;font-size:12px;line-height:22px;',
+      'background:#ff6b6b;color:#fff;border-radius:6px 6px 0 0;cursor:grab;user-select:none;white-space:nowrap;z-index:99999;pointer-events:auto}',
+      '.cms-drag-bar:active{cursor:grabbing}',
+      '.radial-menu-wrapper,.menu-fab,.header-auth{display:none!important}',
       'body{padding-bottom:0!important}',
       '</style>'
     ].join('');
@@ -374,14 +373,14 @@
     });
     state.selected = null;
     hideRtToolbar();
-    if ($('sel-info')) $('sel-info').textContent = '要素をクリック → その場で編集できます';
+    if ($('sel-info')) $('sel-info').textContent = '要素をクリックして選択・編集（data-lock="true" は編集不可）';
   }
 
   function attachHandles(el) {
     el.querySelectorAll('.cms-handle,.cms-drag-bar').forEach(function (h) { h.remove(); });
     var bar = document.createElement('div');
     bar.className = 'cms-drag-bar';
-    bar.textContent = '⋮⋮ ドラッグで移動';
+    bar.textContent = '⋮⋮ 移動';
     bar.setAttribute('contenteditable', 'false');
     el.appendChild(bar);
     ['nw', 'ne', 'sw', 'se'].forEach(function (pos) {
@@ -396,6 +395,12 @@
   function selectElement(el) {
     if (!el || el === doc().body || el === doc().documentElement) return;
     if (el.classList && (el.classList.contains('cms-handle') || el.classList.contains('cms-drag-bar'))) return;
+    if (isLocked(el)) {
+      status('この要素は data-lock="true" のため編集できません');
+      clearSelection();
+      return;
+    }
+    /* ロックされた親の中は選択不可 */
     clearSelection();
     el.classList.add('cms-sel');
     el.setAttribute('contenteditable', 'true');
@@ -403,7 +408,7 @@
     attachHandles(el);
     showRtToolbar();
     if ($('sel-info')) {
-      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 選択中 — 直接入力 or ツールバー';
+      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 選択中 — 入力 / ツールバー / 複製可';
     }
     try {
       var cs = doc().defaultView.getComputedStyle(el);
@@ -444,17 +449,50 @@
   }
   function hideRtToolbar() {
     var tb = $('rt-toolbar');
-    if (tb) {
-      tb.classList.add('hidden');
-      tb.classList.remove('rt-docked');
-    }
+    if (tb) { tb.classList.add('hidden'); tb.classList.remove('rt-docked'); }
     var ve = document.getElementById('view-editor');
     if (ve) ve.classList.remove('rt-open');
+  }
+
+  /** 座標を iframe 内ドキュメント基準に揃える */
+  function iframePoint(e) {
+    var d = doc();
+    var win = d && d.defaultView;
+    var sx = win ? win.scrollX || d.documentElement.scrollLeft || 0 : 0;
+    var sy = win ? win.scrollY || d.documentElement.scrollTop || 0 : 0;
+    return { x: e.clientX + sx, y: e.clientY + sy, clientX: e.clientX, clientY: e.clientY };
+  }
+
+  function ensureAbsolute(el) {
+    var d = doc();
+    var cs = d.defaultView.getComputedStyle(el);
+    if (cs.position === 'static' || !cs.position || cs.position === 'relative') {
+      var rect = el.getBoundingClientRect();
+      var body = d.body;
+      var bodyRect = body.getBoundingClientRect();
+      var scrollX = d.defaultView.scrollX || d.documentElement.scrollLeft || 0;
+      var scrollY = d.defaultView.scrollY || d.documentElement.scrollTop || 0;
+      /* body 基準の絶対座標 */
+      var left = rect.left - bodyRect.left + scrollX;
+      var top = rect.top - bodyRect.top + scrollY;
+      el.style.position = 'absolute';
+      el.style.left = Math.round(left) + 'px';
+      el.style.top = Math.round(top) + 'px';
+      el.style.width = Math.round(el.offsetWidth) + 'px';
+      el.style.margin = '0';
+      if (cs.position === 'static') {
+        /* body を relative に */
+        if (d.defaultView.getComputedStyle(body).position === 'static') {
+          body.style.position = 'relative';
+        }
+      }
+    }
   }
 
   function setupFrameEvents() {
     var d = doc();
     if (!d) return;
+
     d.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -462,68 +500,138 @@
       if (t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar'))) return;
       selectElement(t);
     }, true);
+
     d.addEventListener('mousedown', function (e) {
       var t = e.target;
       if (!state.selected) return;
+
       if (t.classList && t.classList.contains('cms-handle')) {
-        e.preventDefault(); e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
+        var el = state.selected;
+        ensureAbsolute(el);
         state.resize = {
-          handle: t.dataset.handle, el: state.selected,
-          startX: e.clientX, startY: e.clientY,
-          startW: state.selected.offsetWidth, startH: state.selected.offsetHeight,
-          startL: state.selected.offsetLeft, startT: state.selected.offsetTop
+          handle: t.dataset.handle,
+          el: el,
+          startX: e.clientX,
+          startY: e.clientY,
+          startW: el.offsetWidth,
+          startH: el.offsetHeight,
+          startL: parseFloat(el.style.left) || 0,
+          startT: parseFloat(el.style.top) || 0
         };
         return;
       }
+
       if (t.classList && t.classList.contains('cms-drag-bar')) {
-        e.preventDefault(); e.stopPropagation();
-        ensureAbsolute(state.selected);
+        e.preventDefault();
+        e.stopPropagation();
+        var el2 = state.selected;
+        ensureAbsolute(el2);
+        /* clientX の差分だけ使うので座標系が一致する */
         state.drag = {
-          el: state.selected,
-          startX: e.clientX, startY: e.clientY,
-          origL: parseFloat(state.selected.style.left) || state.selected.offsetLeft,
-          origT: parseFloat(state.selected.style.top) || state.selected.offsetTop
+          el: el2,
+          startX: e.clientX,
+          startY: e.clientY,
+          origL: parseFloat(el2.style.left) || 0,
+          origT: parseFloat(el2.style.top) || 0
         };
       }
     }, true);
+
     d.addEventListener('mousemove', function (e) {
       if (state.drag) {
         e.preventDefault();
-        state.drag.el.style.left = (state.drag.origL + e.clientX - state.drag.startX) + 'px';
-        state.drag.el.style.top = (state.drag.origT + e.clientY - state.drag.startY) + 'px';
+        var dx = e.clientX - state.drag.startX;
+        var dy = e.clientY - state.drag.startY;
+        state.drag.el.style.left = Math.round(state.drag.origL + dx) + 'px';
+        state.drag.el.style.top = Math.round(state.drag.origT + dy) + 'px';
       }
       if (state.resize) {
         e.preventDefault();
         var r = state.resize;
-        var dx = e.clientX - r.startX, dy = e.clientY - r.startY;
+        var dx2 = e.clientX - r.startX;
+        var dy2 = e.clientY - r.startY;
         var w = r.startW, h = r.startH, l = r.startL, t = r.startT;
-        if (r.handle.indexOf('e') >= 0) w = Math.max(40, r.startW + dx);
-        if (r.handle.indexOf('s') >= 0) h = Math.max(20, r.startH + dy);
-        if (r.handle.indexOf('w') >= 0) { w = Math.max(40, r.startW - dx); l = r.startL + dx; }
-        if (r.handle.indexOf('n') >= 0) { h = Math.max(20, r.startH - dy); t = r.startT + dy; }
-        ensureAbsolute(r.el);
-        r.el.style.width = w + 'px';
-        r.el.style.height = h + 'px';
-        if (r.handle.indexOf('w') >= 0) r.el.style.left = l + 'px';
-        if (r.handle.indexOf('n') >= 0) r.el.style.top = t + 'px';
+        if (r.handle.indexOf('e') >= 0) w = Math.max(40, r.startW + dx2);
+        if (r.handle.indexOf('s') >= 0) h = Math.max(20, r.startH + dy2);
+        if (r.handle.indexOf('w') >= 0) { w = Math.max(40, r.startW - dx2); l = r.startL + dx2; }
+        if (r.handle.indexOf('n') >= 0) { h = Math.max(20, r.startH - dy2); t = r.startT + dy2; }
+        r.el.style.width = Math.round(w) + 'px';
+        r.el.style.height = Math.round(h) + 'px';
+        if (r.handle.indexOf('w') >= 0) r.el.style.left = Math.round(l) + 'px';
+        if (r.handle.indexOf('n') >= 0) r.el.style.top = Math.round(t) + 'px';
       }
     }, true);
-    d.addEventListener('mouseup', function () { state.drag = null; state.resize = null; }, true);
-    d.addEventListener('keydown', function (e) { if (e.key === 'Escape') clearSelection(); });
+
+    d.addEventListener('mouseup', function () {
+      state.drag = null;
+      state.resize = null;
+    }, true);
+
+    d.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') clearSelection();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'd' && state.selected) {
+        e.preventDefault();
+        duplicateSelected();
+      }
+    });
   }
 
-  function ensureAbsolute(el) {
-    var cs = doc().defaultView.getComputedStyle(el);
-    if (cs.position === 'static' || !cs.position) {
-      var rect = el.getBoundingClientRect();
-      var parent = el.offsetParent || doc().body;
-      var pr = parent.getBoundingClientRect();
-      el.style.position = 'absolute';
-      el.style.left = (rect.left - pr.left) + 'px';
-      el.style.top = (rect.top - pr.top) + 'px';
-      el.style.width = el.offsetWidth + 'px';
-      el.style.margin = '0';
+  function duplicateSelected() {
+    if (!state.selected) { status('複製する要素を選択してください'); return; }
+    if (isLocked(state.selected)) { status('ロック要素は複製できません'); return; }
+    var el = state.selected;
+    var clone = el.cloneNode(true);
+    clone.classList.remove('cms-sel');
+    clone.removeAttribute('contenteditable');
+    clone.querySelectorAll('.cms-handle,.cms-drag-bar').forEach(function (h) { h.remove(); });
+    if (clone.style.position === 'absolute') {
+      var top = parseFloat(clone.style.top) || 0;
+      var left = parseFloat(clone.style.left) || 0;
+      clone.style.top = (top + 24) + 'px';
+      clone.style.left = (left + 24) + 'px';
     }
+    if (el.parentNode) {
+      if (el.nextSibling) el.parentNode.insertBefore(clone, el.nextSibling);
+      else el.parentNode.appendChild(clone);
+    }
+    selectElement(clone);
+    status('要素を複製しました');
+  }
+
+  function insertBlock(html) {
+    var d = doc();
+    if (!d) { status('プレビューがありません'); return; }
+    var wrap = d.createElement('div');
+    wrap.innerHTML = html;
+    var node = wrap.firstElementChild || wrap.firstChild;
+    if (!node) return;
+    if (state.selected && state.selected.parentNode && !isLocked(state.selected)) {
+      if (state.selected.nextSibling) {
+        state.selected.parentNode.insertBefore(node, state.selected.nextSibling);
+      } else {
+        state.selected.parentNode.appendChild(node);
+      }
+    } else {
+      d.body.appendChild(node);
+    }
+    if (node.nodeType === 1) selectElement(node);
+    status('ブロックを挿入しました');
+  }
+
+  function populateBlocks() {
+    var box = $('block-list');
+    if (!box) return;
+    box.innerHTML = '';
+    BLOCKS.forEach(function (b) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn ghost block-btn';
+      btn.textContent = b.label;
+      btn.onclick = function () { insertBlock(b.html); };
+      box.appendChild(btn);
+    });
   }
 
   function setEditorMode(mode) {
@@ -566,6 +674,7 @@
     status('読み込み中…');
     hideRtToolbar();
     setEditorMode(isHtml ? 'visual' : 'code');
+    populateBlocks();
 
     getFile(path).then(function (f) {
       var content = decode(f.content);
@@ -579,7 +688,7 @@
           var d = doc();
           if (d) d.querySelectorAll('.radial-menu-wrapper,.menu-fab,.header-auth').forEach(function (n) { n.remove(); });
           setupFrameEvents();
-          status('編集可能 — 保存前にコミットメッセージを入力してください');
+          status('編集OK — data-lock="true" 以外はすべて編集可。保存前にメッセージ入力');
           startDraftTimer();
         };
         fEl.srcdoc = injectChrome(content, path);
@@ -587,7 +696,7 @@
         if ($('ed-title')) $('ed-title').textContent = path.split('/').pop();
         if ($('code-main')) $('code-main').value = content;
         if ($('code-area')) $('code-area').value = content;
-        status('テキスト編集モード');
+        status('テキスト編集');
       }
     }).catch(function (e) {
       status('読込失敗: ' + e.message);
@@ -595,9 +704,9 @@
   }
 
   function exportHtml() {
-    if (!state.originalHtml) throw new Error('originalHtml がありません');
+    if (!state.originalHtml) throw new Error('originalHtml なし');
     var d = doc();
-    if (!d) throw new Error('プレビュードキュメントがありません');
+    if (!d) throw new Error('doc なし');
     clearSelection();
     var bodyClone = d.body.cloneNode(true);
     bodyClone.querySelectorAll('.cms-sel, .cms-handle, .cms-drag-bar, .radial-menu-wrapper, .menu-fab, .header-auth, #cms-ui').forEach(function (n) {
@@ -649,7 +758,6 @@
     return '<!DOCTYPE html>\n' + origDoc.documentElement.outerHTML;
   }
 
-  /** バックアップリポジトリへフルバックアップ + backup.json ログ追記 */
   function saveBackup(path, content, commitMsg, ip) {
     var ts = formatNow().replace(/[:T]/g, '-');
     var safePath = path.replace(/[^a-zA-Z0-9._\/-]/g, '_');
@@ -664,22 +772,17 @@
       ip: ip || '',
       backupPath: backupPath
     };
-
-    /* 1. コンテンツをバックアップrepoに保存 */
     return putFile(backupPath, content, 'backup: ' + path + ' @ ' + ts, null, BACKUP_API)
       .then(function () {
-        /* 2. backup.json を更新 */
         return getFile('src/backup.json', BACKUP_API).then(function (f) {
           var arr = [];
           try { arr = JSON.parse(decode(f.content)); } catch (e) {}
           if (!Array.isArray(arr)) arr = [];
           arr.push(entry);
-          /* 最新500件に制限 */
           if (arr.length > 500) arr = arr.slice(arr.length - 500);
           return putFile('src/backup.json', JSON.stringify(arr, null, 2), 'log: ' + path, f.sha, BACKUP_API);
         }).catch(function () {
-          /* 初回作成 */
-          return putFile('src/backup.json', JSON.stringify([entry], null, 2), 'log: init + ' + path, null, BACKUP_API);
+          return putFile('src/backup.json', JSON.stringify([entry], null, 2), 'log: init', null, BACKUP_API);
         });
       })
       .then(function () { return entry; });
@@ -691,16 +794,16 @@
     getFile(entry.backupPath, BACKUP_API).then(function (bf) {
       var content = decode(bf.content);
       return getFile(entry.path).then(function (cur) {
-        return buildCommitMessage('RESTORE from backup ' + (entry.datetime || '')).then(function (cm) {
+        return buildCommitMessage('RESTORE ' + (entry.datetime || '')).then(function (cm) {
           return putFile(entry.path, content, cm, cur.sha).then(function () {
-            status('復元完了 ✓ ' + entry.path);
+            status('復元完了 ✓');
             if (state.path === entry.path) openEditor(entry.path, /\.html?$/i.test(entry.path));
           });
         });
       });
     }).catch(function (e) {
       status('復元失敗: ' + e.message);
-      alert('復元失敗: ' + e.message);
+      alert(e.message);
     });
   }
 
@@ -712,15 +815,13 @@
       if ($('commit-msg')) $('commit-msg').focus();
       return;
     }
-    status('保存中…（SHA取得 → Push → バックアップ）');
+    status('保存中…');
     var out;
     try {
       if (state.isHtml) {
-        if (state.mode === 'code') {
-          out = ($('code-main') && $('code-main').value) || ($('code-area') && $('code-area').value) || '';
-        } else {
-          out = exportHtml();
-        }
+        out = state.mode === 'code'
+          ? (($('code-main') && $('code-main').value) || ($('code-area') && $('code-area').value) || '')
+          : exportHtml();
       } else {
         out = ($('code-main') && $('code-main').value) || ($('code-area') && $('code-area').value) || '';
       }
@@ -729,21 +830,21 @@
       return;
     }
 
-    /* 必ず最新SHAを取得してからPUT（競合回避） */
     getFile(state.path).then(function (f) {
       state.fileSha = f.sha;
       return buildCommitMessage(userMsg).then(function (cm) {
         return putFile(state.path, out, cm, f.sha).then(function (res) {
           state.originalHtml = out;
           state.fileSha = res.content && res.content.sha ? res.content.sha : state.fileSha;
-          /* IPはコミットメッセージに既に入っているので再取得してバックアップへ */
           return getClientIp().then(function (ip) {
             return saveBackup(state.path, out, userMsg, ip).then(function () {
-              status('保存完了 ✓ バックアップも作成しました');
+              status('保存完了 ✓ バックアップ済み');
               clearDraft();
               if ($('meta-use-menu-icon') && $('meta-use-menu-icon').checked) {
                 updateMenuIcon(state.path, ($('meta-favicon') && $('meta-favicon').value) || '');
               }
+            }).catch(function (be) {
+              status('本体は保存済み。バックアップ失敗: ' + be.message);
             });
           });
         });
@@ -786,9 +887,9 @@
   }
 
   function applyMeta() {
-    if (!state.user.canEditMeta) { status('メタ編集権限がありません'); return; }
+    if (!state.user.canEditMeta) { status('権限なし'); return; }
     var d = doc();
-    if (!d) { status('プレビューがありません'); return; }
+    if (!d) return;
     var head = d.head || d.querySelector('head');
     if (!head) return;
     var titleVal = ($('meta-title') && $('meta-title').value) || '';
@@ -815,7 +916,7 @@
       if (fav) { prev.src = fav; prev.style.display = 'block'; }
       else { prev.removeAttribute('src'); prev.style.display = 'none'; }
     }
-    status('メタ情報を適用（保存で確定）');
+    status('メタ適用（保存で確定）');
   }
 
   function updateMenuIcon(pagePath, iconUrl) {
@@ -825,36 +926,33 @@
       var map = {};
       try { map = JSON.parse(decode(f.content)); } catch (e) {}
       map[pagePath] = iconUrl;
-      return putFile(path, JSON.stringify(map, null, 2), 'CMS: menu icon ' + pagePath, f.sha);
+      return putFile(path, JSON.stringify(map, null, 2), 'CMS: menu icon', f.sha);
     }).catch(function () {
       var map = {}; map[pagePath] = iconUrl;
-      return putFile(path, JSON.stringify(map, null, 2), 'CMS: create menu-icons', null);
-    }).then(function () { status('MENUアイコンも更新'); }).catch(function () {});
+      return putFile(path, JSON.stringify(map, null, 2), 'CMS: menu-icons', null);
+    }).catch(function () {});
   }
 
   function uploadFavicon(file) {
     if (!file || !state.user.canUpload) return;
     var reader = new FileReader();
     reader.onload = function () {
-      var result = reader.result;
-      var b64 = typeof result === 'string' ? result.split(',')[1] : '';
+      var b64 = String(reader.result).split(',')[1];
       if (!b64) return;
       var ext = (file.name.split('.').pop() || 'png').toLowerCase();
       var dir = state.path.indexOf('/') >= 0 ? state.path.replace(/\/[^\/]*$/, '/') : '';
-      var fname = 'favicon-' + Date.now() + '.' + ext;
-      var fpath = dir + fname;
-      putFile(fpath, atob(b64) ? null : '', 'CMS: favicon', null).catch(function () {});
-      /* binaryはbase64で送る */
-      var body = { message: 'CMS: favicon ' + fpath, content: b64, branch: 'main' };
-      fetch(API + '/' + fpath, { method: 'PUT', headers: headers(), body: JSON.stringify(body) })
-        .then(function (r) {
-          if (!r.ok) return r.text().then(function (t) { throw new Error(t); });
-          var url = SITE + fpath;
-          if ($('meta-favicon')) $('meta-favicon').value = url;
-          var prev = $('favicon-preview');
-          if (prev) { prev.src = url; prev.style.display = 'block'; }
-          status('ファビコンアップロード完了');
-        }).catch(function (e) { status('アップロード失敗: ' + e.message); });
+      var fpath = dir + 'favicon-' + Date.now() + '.' + ext;
+      fetch(API + '/' + fpath, {
+        method: 'PUT', headers: headers(),
+        body: JSON.stringify({ message: 'CMS: favicon', content: b64, branch: 'main' })
+      }).then(function (r) {
+        if (!r.ok) return r.text().then(function (t) { throw new Error(friendlyErr(t, r.status)); });
+        var url = SITE + fpath;
+        if ($('meta-favicon')) $('meta-favicon').value = url;
+        var prev = $('favicon-preview');
+        if (prev) { prev.src = url; prev.style.display = 'block'; }
+        status('ファビコンOK');
+      }).catch(function (e) { status(e.message); });
     };
     reader.readAsDataURL(file);
   }
@@ -871,12 +969,12 @@
     if (m) m.classList.add('hidden');
   }
   function createNewFile() {
-    if (!state.user.canUpload) { if ($('new-msg')) $('new-msg').textContent = '権限がありません'; return; }
+    if (!state.user.canUpload) return;
     var name = (($('new-filename') && $('new-filename').value) || '').trim();
     var content = ($('new-content') && $('new-content').value) || '';
     var msgEl = $('new-msg');
     if (!name || /[\/\\]/.test(name) || name.indexOf('..') >= 0) {
-      if (msgEl) msgEl.textContent = 'ファイル名が不正です';
+      if (msgEl) msgEl.textContent = 'ファイル名不正';
       return;
     }
     var path = userDir() + '/' + name;
@@ -888,7 +986,7 @@
       switchTab('files');
       loadFiles();
     }).catch(function (e) {
-      if (msgEl) msgEl.textContent = '作成失敗: ' + e.message;
+      if (msgEl) msgEl.textContent = e.message;
     });
   }
 
@@ -902,8 +1000,7 @@
         return new Promise(function (resolve, reject) {
           var reader = new FileReader();
           reader.onload = function () {
-            var result = reader.result;
-            var b64 = typeof result === 'string' ? result.split(',')[1] : '';
+            var b64 = String(reader.result).split(',')[1];
             if (!b64) { reject(new Error('読込失敗')); return; }
             var path = userDir() + '/' + file.name.replace(/[\/\\]/g, '_');
             buildCommitMessage('upload ' + file.name).then(function (cm) {
@@ -912,7 +1009,7 @@
                 body: JSON.stringify({ message: cm, content: b64, branch: 'main' })
               });
             }).then(function (r) {
-              if (!r.ok) return r.text().then(function (t) { throw new Error(t); });
+              if (!r.ok) return r.text().then(function (t) { throw new Error(friendlyErr(t, r.status)); });
               resolve();
             }).catch(reject);
           };
@@ -923,9 +1020,9 @@
     });
     chain.then(function () {
       loadFiles();
-      if (st) st.textContent = 'アップロード完了';
+      if (st) st.textContent = '完了';
     }).catch(function (e) {
-      if (st) st.textContent = '失敗: ' + e.message;
+      if (st) st.textContent = e.message;
     });
   }
 
@@ -934,8 +1031,7 @@
     state.draftTimer = setInterval(function () {
       try {
         if (!state.path || !state.isHtml) return;
-        var draft = exportHtml();
-        localStorage.setItem('cms_draft_' + state.path, draft);
+        localStorage.setItem('cms_draft_' + state.path, exportHtml());
       } catch (e) {}
     }, 30000);
   }
@@ -944,22 +1040,15 @@
   }
 
   function boot() {
-    status('ユーザー情報を読み込み中…');
     loadUsers().then(function () {
       var s = getSession();
       if (s && s.id && USERS[s.id]) {
-        /* セッション復元時も最新の権限をusers.jsonから反映 */
         var u = USERS[s.id];
         state.user = {
-          id: s.id,
-          name: u.name,
-          semi_name: u.semi_name || '',
-          group: u.group || '',
-          class: u.class || '',
-          role: u.role || 'member',
+          id: s.id, name: u.name, semi_name: u.semi_name || '',
+          group: u.group || '', class: u.class || '', role: u.role || 'member',
           permissions: (u.permissions || []).slice(),
-          isAdmin: !!u.isAdmin,
-          advanced: !!u.advanced,
+          isAdmin: !!u.isAdmin, advanced: !!u.advanced,
           canEditMeta: u.canEditMeta !== false,
           canUpload: u.canUpload !== false,
           canDelete: u.canDelete !== false,
@@ -967,12 +1056,10 @@
         };
         setSession(state.user);
         openDash();
-      } else {
-        show('view-login');
-      }
+      } else show('view-login');
     }).catch(function (e) {
       var msg = $('login-msg');
-      if (msg) msg.textContent = 'users.json の読込に失敗: ' + e.message;
+      if (msg) msg.textContent = 'users.json 読込失敗: ' + e.message;
       show('view-login');
     });
 
@@ -990,6 +1077,7 @@
     };
     if ($('btn-save')) $('btn-save').onclick = save;
     if ($('btn-apply-style')) $('btn-apply-style').onclick = applyStyle;
+    if ($('btn-duplicate')) $('btn-duplicate').onclick = duplicateSelected;
     if ($('p-size')) {
       $('p-size').oninput = function () {
         if ($('p-size-v')) $('p-size-v').textContent = $('p-size').value;
@@ -997,20 +1085,20 @@
     }
     if ($('btn-make-absolute')) {
       $('btn-make-absolute').onclick = function () {
-        if (!state.selected) { status('先に要素を選択'); return; }
+        if (!state.selected) { status('先に選択'); return; }
         ensureAbsolute(state.selected);
         attachHandles(state.selected);
-        status('ドラッグ・リサイズ可能');
+        status('ドラッグ可能にしました');
       };
     }
     if ($('btn-delete-el')) {
       $('btn-delete-el').onclick = function () {
         if (!state.selected) return;
-        if (!confirm('この要素を削除しますか？')) return;
+        if (!confirm('削除しますか？')) return;
         state.selected.remove();
         state.selected = null;
         hideRtToolbar();
-        status('要素を削除');
+        status('削除しました');
       };
     }
 
@@ -1025,14 +1113,13 @@
           if (!d) return;
           d.defaultView.focus();
           if (cmd === 'createLink') {
-            var url = prompt('リンクURL', 'https://');
+            var url = prompt('URL', 'https://');
             if (url) d.execCommand('createLink', false, url);
           } else if (cmd === 'formatBlock' && val) {
             d.execCommand('formatBlock', false, val);
           } else {
             d.execCommand(cmd, false, val);
           }
-          status('書式適用');
         };
       });
       if ($('rt-done')) {
@@ -1085,8 +1172,7 @@
         if (!out) return;
         out.textContent = Object.keys(USERS).map(function (id) {
           var u = USERS[id];
-          return id + ' | ' + u.name + ' | ' + (u.role || '') + ' | admin=' + !!u.isAdmin +
-            ' | restore=' + !!u.canBackupRestore + ' | ' + (u.semi_name || '');
+          return id + ' | ' + u.name + ' | ' + (u.role || '') + ' | admin=' + !!u.isAdmin;
         }).join('\n');
       };
     }
