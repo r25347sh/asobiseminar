@@ -39,7 +39,7 @@
         <button type="button" class="tab hidden" data-tab="admin" id="tab-admin">⚙️ 管理</button>
       </nav>
       <section id="panel-pages" class="dash-panel">
-        <div class="panel-help"><strong>data-lock="true"</strong> 以外はすべて編集可。保存時はコミットメッセージ必須。自動バックアップあり。</div>
+        <div class="panel-help">要素にホバー → 右上の ✏️ を押して編集。<strong>data-lock="true"</strong> のみ編集不可。</div>
         <div id="page-grid" class="page-grid"></div>
         <p id="dash-status" class="muted center"></p>
       </section>
@@ -109,8 +109,17 @@
     <div class="editor-body">
       <aside class="rail" id="rail-visual">
         <div class="rail-panels">
+          <section class="rail-panel" id="text-edit-panel">
+            <div class="sel-info" id="sel-info">要素にホバー → ✏️ で選択</div>
+            <label class="text-edit-label">テキスト編集（リアルタイム反映）
+              <textarea id="side-text" class="side-text" rows="6" placeholder="要素を選択するとここにテキストが表示されます。ここに入力するとその場で反映されます。" disabled></textarea>
+            </label>
+            <p class="muted" style="font-size:.75rem;margin-top:.35rem">HTMLタグを含む場合は下の「HTMLとして反映」を使ってください。</p>
+            <label class="check-label" style="margin-top:.4rem">
+              <input type="checkbox" id="side-as-html"> HTMLとして反映
+            </label>
+          </section>
           <section class="rail-panel">
-            <div class="sel-info" id="sel-info">要素をクリックして選択・編集</div>
             <div class="row2">
               <label>文字色<input type="color" id="p-color" value="#2b2140"></label>
               <label>背景<input type="color" id="p-bg" value="#ffffff"></label>
@@ -138,10 +147,10 @@
           <section class="rail-panel">
             <p class="muted" style="font-size:.78rem;margin-bottom:.4rem">操作</p>
             <ul class="tips">
-              <li>クリック … 選択＋編集</li>
+              <li>ホバー … ✏️ 表示</li>
+              <li>✏️ … 選択＆サイドで編集</li>
               <li>data-lock="true" … 編集不可</li>
-              <li>⋮⋮ バー … ドラッグ移動</li>
-              <li>角 … リサイズ</li>
+              <li>⋮⋮ … ドラッグ移動</li>
               <li>Ctrl/Cmd+D … 複製</li>
             </ul>
           </section>
