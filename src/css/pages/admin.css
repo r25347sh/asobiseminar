@@ -60,12 +60,15 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .editor-modes{display:flex;gap:.25rem;flex-wrap:wrap}
 .mode-btn{padding:.35rem .7rem;font-size:.75rem}
 .mode-btn.active{border-color:var(--coral);background:rgba(255,107,107,.12);color:var(--coral)}
-.editor-body{display:grid;grid-template-columns:280px 1fr;min-height:calc(100dvh - 58px)}
+.editor-body{display:grid;grid-template-columns:300px 1fr;min-height:calc(100dvh - 58px)}
 @media(max-width:800px){.editor-body{grid-template-columns:1fr}.rail{border-right:0;border-bottom:2px solid rgba(43,33,64,.08)}}
 .rail{background:#fff;border-right:2px solid rgba(43,33,64,.08);padding:1rem;overflow:auto}
 .rail-panel{margin-bottom:1.2rem}
 .rail-panel label{display:block;margin-top:.7rem;font-size:.8rem;font-weight:600}
 .rail-panel input,.rail-panel textarea,.rail-panel select{width:100%;margin-top:.25rem;padding:.45rem;border-radius:10px;border:2px solid var(--border);font:inherit}
+.side-text{min-height:120px;resize:vertical;line-height:1.5;font-size:.9rem}
+.side-text:disabled{opacity:.55;background:#f5f5f5}
+.text-edit-label{margin-top:0!important}
 .rail-h{font-family:Fredoka,sans-serif;font-size:1rem;margin-bottom:.5rem}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .sel-info{font-size:.82rem;padding:.55rem;background:rgba(76,201,240,.12);border-radius:10px;margin-bottom:.5rem}
