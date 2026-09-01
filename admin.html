@@ -93,6 +93,9 @@
       <button type="button" data-cmd="underline" title="下線"><u>U</u></button>
       <button type="button" data-cmd="strikeThrough" title="取消線"><s>S</s></button>
       <span class="rt-sep"></span>
+      <label class="rt-color" title="文字色">文字<input type="color" id="rt-fore" value="#2b2140"></label>
+      <label class="rt-color" title="マーカー">マーカー<input type="color" id="rt-back" value="#ffe566"></label>
+      <span class="rt-sep"></span>
       <button type="button" data-cmd="insertUnorderedList">• リスト</button>
       <button type="button" data-cmd="insertOrderedList">1. リスト</button>
       <button type="button" data-cmd="createLink">🔗</button>
@@ -110,15 +113,13 @@
       <aside class="rail" id="rail-visual">
         <div class="rail-panels">
           <section class="rail-panel">
-            <div class="sel-info" id="sel-info">クリックまたは ✏️ で直接編集</div>
+            <div class="sel-info" id="sel-info">クリックで直接編集</div>
             <p class="muted" style="font-size:.78rem;line-height:1.5">要素をクリックするとその場で編集できます。data-lock="true" は編集不可です。</p>
           </section>
           <section class="rail-panel">
-            <div class="row2">
-              <label>文字色<input type="color" id="p-color" value="#2b2140"></label>
-              <label>背景<input type="color" id="p-bg" value="#ffffff"></label>
-            </div>
-            <label>サイズ <span id="p-size-v">16</span>px
+            <h3 class="rail-h">見た目</h3>
+            <label>背景色<input type="color" id="p-bg" value="#ffffff"></label>
+            <label>文字サイズ <span id="p-size-v">16</span>px
               <input type="range" id="p-size" min="10" max="72" value="16">
             </label>
             <label>太さ
@@ -129,22 +130,67 @@
                 <option value="700">太字</option>
               </select>
             </label>
-            <button type="button" id="btn-apply-style" class="btn primary block">スタイル適用</button>
+            <label>字体
+              <select id="p-font-style">
+                <option value="">そのまま</option>
+                <option value="normal">通常</option>
+                <option value="italic">斜体</option>
+                <option value="oblique">斜体（強）</option>
+              </select>
+            </label>
+            <label>角丸 <span id="p-radius-v">0</span>px
+              <input type="range" id="p-radius" min="0" max="48" value="0">
+            </label>
+            <label>内側余白 <span id="p-pad-v">0</span>px
+              <input type="range" id="p-pad" min="0" max="64" value="0">
+            </label>
+            <label>外側余白 <span id="p-margin-v">0</span>px
+              <input type="range" id="p-margin" min="0" max="64" value="0">
+            </label>
+            <div class="row2">
+              <label>枠の太さ
+                <input type="number" id="p-border-w" min="0" max="20" value="0" style="width:100%">
+              </label>
+              <label>枠の色
+                <input type="color" id="p-border-c" value="#2b2140">
+              </label>
+            </div>
+            <label>枠の種類
+              <select id="p-border-style">
+                <option value="solid">実線</option>
+                <option value="dashed">破線</option>
+                <option value="dotted">点線</option>
+                <option value="double">二重線</option>
+                <option value="none">なし</option>
+              </select>
+            </label>
+            <button type="button" id="btn-apply-style" class="btn primary block">見た目を適用</button>
+            <button type="button" id="btn-auto-layout" class="btn ghost block">✨ 選択を自動配置</button>
+            <button type="button" id="btn-auto-layout-all" class="btn ghost block">✨ 全体を自動配置</button>
             <button type="button" id="btn-duplicate" class="btn ghost block">⧉ 要素を複製</button>
             <button type="button" id="btn-make-absolute" class="btn ghost block">ドラッグ可能にする</button>
             <button type="button" id="btn-delete-el" class="btn danger block">要素を削除</button>
           </section>
           <section class="rail-panel">
-            <h3 class="rail-h">ブロック挿入</h3>
+            <h3 class="rail-h">パーツ追加</h3>
             <div id="block-list" class="block-list"></div>
+          </section>
+          <section class="rail-panel">
+            <h3 class="rail-h">デザインセット</h3>
+            <div id="design-list" class="block-list"></div>
+          </section>
+          <section class="rail-panel">
+            <h3 class="rail-h">アニメーションセット</h3>
+            <div id="anim-list" class="block-list"></div>
           </section>
           <section class="rail-panel">
             <p class="muted" style="font-size:.78rem;margin-bottom:.4rem">操作</p>
             <ul class="tips">
-              <li>クリック / ✏️ … 直接編集</li>
+              <li>クリック … 直接編集</li>
+              <li>Ctrl+A … 要素内の文字だけ全選択</li>
+              <li>文字色・マーカー … 上部バー</li>
               <li>Esc … 編集終了</li>
               <li>data-lock … 編集不可（🔒）</li>
-              <li>⋮⋮ … ドラッグ移動</li>
               <li>Ctrl/Cmd+D … 複製</li>
             </ul>
           </section>
