@@ -11,13 +11,9 @@
     <div class="login-panel">
       <div class="login-brand">🎮 Asobi Lab. <span>CMS</span></div>
       <h1>メンバーログイン</h1>
-      <p class="muted">遊びの探究ゼミ 専用ワークスペース<br>クリックでインライン編集・リッチテキスト・ドラッグ移動ができます</p>
+      <p class="muted">遊びの探究ゼミ 専用ワークスペース<br>ビジュアル編集・リッチテキスト・バックアップ対応</p>
       <label>ユーザーID<input id="uid" autocomplete="username" placeholder="例: r25xxx"></label>
       <label>パスワード<input id="pw" type="password" autocomplete="current-password"></label>
-      <label>GitHub Token（書き込み用）
-        <input id="gh-token" type="password" autocomplete="off" placeholder="github_pat_... または ghp_...">
-      </label>
-      <p class="muted" style="font-size:.75rem;margin-top:.4rem">Tokenはセッション中のみ保持されます。repo の contents:write 権限が必要です。<br>管理者から共有されたTokenを使用するか、自分のFine-grained PATを発行してください。</p>
       <button type="button" id="btn-login" class="btn primary">ログイン</button>
       <p id="login-msg" class="msg"></p>
     </div>
@@ -27,7 +23,6 @@
     <header class="app-bar">
       <a class="brand" href="index.html">🎮 Asobi Lab.</a>
       <div class="app-bar-right">
-        <span id="token-hint" class="token-hint"></span>
         <span id="dash-user" class="user-pill"></span>
         <button type="button" id="btn-logout" class="btn ghost">ログアウト</button>
       </div>
@@ -35,22 +30,23 @@
     <main class="dash-main">
       <div class="dash-head">
         <h1>ワークスペース</h1>
-        <p class="muted">編集するページや、自分のファイルスペースを選んでください</p>
+        <p class="muted">ページ編集・個人ファイル・変更履歴・バックアップ復元</p>
       </div>
       <nav class="dash-tabs" role="tablist">
         <button type="button" class="tab active" data-tab="pages" id="tab-pages">📄 編集可能ページ</button>
-        <button type="button" class="tab" data-tab="files" id="tab-files">📁 個人ファイルスペース</button>
+        <button type="button" class="tab" data-tab="files" id="tab-files">📁 個人ファイル</button>
+        <button type="button" class="tab" data-tab="history" id="tab-history">📜 変更履歴</button>
         <button type="button" class="tab hidden" data-tab="admin" id="tab-admin">⚙️ 管理</button>
       </nav>
       <section id="panel-pages" class="dash-panel">
-        <div class="panel-help">クリックでビジュアル編集。要素を選ぶと<strong>その場でインライン編集</strong>・リッチテキスト・ドラッグ移動ができます。保存時にMENUは自動で保持されます。</div>
+        <div class="panel-help">クリックでビジュアル編集。保存時は<strong>コミットメッセージ必須</strong>。MENUは保持され、フルバックアップが自動作成されます。</div>
         <div id="page-grid" class="page-grid"></div>
         <p id="dash-status" class="muted center"></p>
       </section>
       <section id="panel-files" class="dash-panel hidden">
-        <div class="panel-help">ここはあなた専用のフォルダです（<code id="files-path">users/…</code>）。画像はプレビュー可能です。</div>
+        <div class="panel-help">専用フォルダ（<code id="files-path">users/…</code>）。画像プレビュー対応。</div>
         <div class="files-toolbar">
-          <button type="button" id="btn-new-file" class="btn primary">＋ 新規ファイル</button>
+          <button type="button" id="btn-new-file" class="btn primary">＋ 新規</button>
           <button type="button" id="btn-upload" class="btn ghost">📤 アップロード</button>
           <input type="file" id="file-input" class="hidden" multiple>
           <button type="button" id="btn-refresh-files" class="btn ghost">🔄 更新</button>
@@ -58,10 +54,16 @@
         <div id="files-list" class="files-list"></div>
         <p id="files-status" class="muted center"></p>
       </section>
+      <section id="panel-history" class="dash-panel hidden">
+        <div class="panel-help">全ユーザーの変更履歴（バックアップリポジトリ）。権限がある場合はワンクリック復元できます。</div>
+        <div id="history-list" class="files-list"></div>
+        <p id="history-status" class="muted center"></p>
+      </section>
       <section id="panel-admin" class="dash-panel hidden">
-        <div class="panel-help">管理者向け機能です。</div>
+        <div class="panel-help">管理者向け機能</div>
         <div class="admin-actions">
-          <button type="button" id="btn-list-all-users" class="btn primary">ユーザー一覧を確認</button>
+          <button type="button" id="btn-list-all-users" class="btn primary">ユーザー一覧</button>
+          <button type="button" id="btn-open-backup" class="btn ghost">バックアップサイトを開く</button>
         </div>
         <pre id="admin-out" class="admin-out mono"></pre>
       </section>
@@ -78,11 +80,11 @@
       <div class="bar-spacer"></div>
       <div class="editor-modes">
         <button type="button" class="btn ghost mode-btn active" data-mode="visual" id="mode-visual">ビジュアル</button>
-        <button type="button" class="btn ghost mode-btn" data-mode="meta" id="mode-meta">メタ/ファビコン</button>
+        <button type="button" class="btn ghost mode-btn" data-mode="meta" id="mode-meta">メタ</button>
         <button type="button" class="btn ghost mode-btn" data-mode="code" id="mode-code">コード</button>
       </div>
-      <input id="commit-msg" class="commit" placeholder="変更メモ（任意）">
-      <button type="button" id="btn-save" class="btn primary">保存</button>
+      <input id="commit-msg" class="commit" placeholder="コミットメッセージ（必須）" required>
+      <button type="button" id="btn-save" class="btn primary">保存＋バックアップ</button>
     </header>
 
     <div id="rt-toolbar" class="rt-toolbar hidden">
@@ -108,7 +110,7 @@
       <aside class="rail" id="rail-visual">
         <div class="rail-panels">
           <section class="rail-panel">
-            <div class="sel-info" id="sel-info">要素をクリック → その場で編集できます</div>
+            <div class="sel-info" id="sel-info">要素をクリック → その場で編集</div>
             <div class="row2">
               <label>文字色<input type="color" id="p-color" value="#2b2140"></label>
               <label>背景<input type="color" id="p-bg" value="#ffffff"></label>
@@ -129,14 +131,13 @@
             <button type="button" id="btn-delete-el" class="btn danger block">要素を削除</button>
           </section>
           <section class="rail-panel">
-            <p class="muted" style="font-size:.78rem;margin-bottom:.5rem">操作ヒント</p>
+            <p class="muted" style="font-size:.78rem;margin-bottom:.5rem">ヒント</p>
             <ul class="tips">
-              <li><strong>クリック</strong> … 選択 + インライン編集</li>
-              <li><strong>ドラッグ</strong> … 位置移動（絶対配置時）</li>
+              <li><strong>クリック</strong> … 選択＋インライン編集</li>
+              <li><strong>ドラッグ</strong> … 位置移動</li>
               <li><strong>角ハンドル</strong> … サイズ変更</li>
-              <li>ツールバーで太字・リスト・リンク</li>
-              <li>「メタ/ファビコン」で title 等を変更</li>
-              <li>30秒ごとに下書きを自動保存</li>
+              <li>保存時コミットメッセージ必須</li>
+              <li>自動でフルバックアップ作成</li>
             </ul>
           </section>
         </div>
@@ -145,28 +146,20 @@
       <aside class="rail hidden" id="rail-meta">
         <div class="rail-panels">
           <section class="rail-panel">
-            <h3 class="rail-h">ページ情報（<head>）</h3>
-            <label>タイトル（<title>）
-              <input type="text" id="meta-title" placeholder="ページタイトル">
-            </label>
-            <label>説明（meta description）
-              <textarea id="meta-desc" rows="3" placeholder="検索結果などに表示される説明文"></textarea>
-            </label>
-            <label>キーワード（任意）
-              <input type="text" id="meta-keywords" placeholder="遊び, 探究, ゼミ">
-            </label>
-            <label>ファビコン URL またはパス
-              <input type="text" id="meta-favicon" placeholder="例: data:image/svg+xml,... または icon.png">
-            </label>
+            <h3 class="rail-h">ページ情報</h3>
+            <label>タイトル<input type="text" id="meta-title" placeholder="ページタイトル"></label>
+            <label>説明<textarea id="meta-desc" rows="3" placeholder="description"></textarea></label>
+            <label>キーワード<input type="text" id="meta-keywords" placeholder="遊び, 探究"></label>
+            <label>ファビコン<input type="text" id="meta-favicon" placeholder="URL or path"></label>
             <div class="favicon-row">
               <img id="favicon-preview" class="favicon-preview" alt="" width="32" height="32">
-              <button type="button" id="btn-favicon-upload" class="btn ghost">📤 画像アップロード</button>
+              <button type="button" id="btn-favicon-upload" class="btn ghost">📤 画像</button>
               <input type="file" id="favicon-input" class="hidden" accept="image/*">
             </div>
             <label class="check-label">
-              <input type="checkbox" id="meta-use-menu-icon"> このファビコンを MENU のアイコンに使う
+              <input type="checkbox" id="meta-use-menu-icon"> MENUアイコンにも使う
             </label>
-            <button type="button" id="btn-apply-meta" class="btn primary block">メタ情報を適用</button>
+            <button type="button" id="btn-apply-meta" class="btn primary block">メタを適用</button>
           </section>
         </div>
       </aside>
@@ -174,7 +167,7 @@
       <aside class="rail hidden" id="rail-code">
         <div class="rail-panels">
           <section class="rail-panel">
-            <p class="muted">HTML / テキスト 直接編集</p>
+            <p class="muted">HTML / テキスト直接編集</p>
             <label>内容<textarea id="code-area" rows="22" class="code-area" spellcheck="false"></textarea></label>
           </section>
         </div>
@@ -194,10 +187,9 @@
 
   <div id="modal-new" class="modal hidden">
     <div class="modal-panel">
-      <h2>新規ファイル作成</h2>
-      <p class="muted">ファイル名を入力（例: memo.txt / note.html）</p>
+      <h2>新規ファイル</h2>
       <label>ファイル名<input id="new-filename" placeholder="my-note.txt"></label>
-      <label>初期内容（任意）<textarea id="new-content" rows="5" placeholder="ここに自由に書いてください"></textarea></label>
+      <label>初期内容<textarea id="new-content" rows="5"></textarea></label>
       <div class="modal-actions">
         <button type="button" id="btn-new-cancel" class="btn ghost">キャンセル</button>
         <button type="button" id="btn-new-create" class="btn primary">作成</button>
