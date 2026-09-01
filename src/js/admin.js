@@ -321,7 +321,6 @@
   function frame() { return $('frame'); }
   function doc() { var f = frame(); return f && f.contentDocument; }
 
-  /* data-lock="true" の要素・子孫は編集不可 */
   function isLocked(el) {
     if (!el || !el.closest) return false;
     return !!el.closest('[data-lock="true"]');
@@ -338,10 +337,14 @@
       .replace(/<button[^>]*class=["'][^"']*menu-fab[^"']*["'][^>]*>[\s\S]*?<\/button>/gi, '');
     var style = [
       '<style id="cms-ui">',
-      '.cms-sel{outline:3px solid #ff6b6b!important;outline-offset:2px;position:relative;min-height:1em}',
-      '.cms-sel[contenteditable=true]{outline:3px solid #2ec4b6!important;cursor:text}',
-      '[data-lock="true"]{outline:2px dashed #999!important;outline-offset:2px;opacity:.92;cursor:not-allowed!important}',
+      '.cms-hover{outline:2px solid rgba(46,196,182,.7)!important;outline-offset:2px;opacity:.85!important;transition:opacity .15s,outline .15s;position:relative}',
+      '.cms-sel{outline:3px solid #2ec4b6!important;outline-offset:2px;position:relative;min-height:1em;opacity:1!important}',
+      '[data-lock="true"]{outline:2px dashed #999!important;outline-offset:2px;opacity:.9;cursor:not-allowed!important}',
       '[data-lock="true"] *{cursor:not-allowed!important}',
+      '.cms-pen{position:absolute;top:2px;right:2px;width:28px;height:28px;border:0;border-radius:50%;',
+      'background:#2ec4b6;color:#fff;font-size:14px;line-height:28px;text-align:center;cursor:pointer;',
+      'z-index:100000;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:auto;padding:0}',
+      '.cms-pen:hover{transform:scale(1.08);background:#ff6b6b}',
       '.cms-handle{position:absolute;width:14px;height:14px;background:#ff6b6b;border:2px solid #fff;',
       'border-radius:3px;z-index:99999;box-shadow:0 1px 4px rgba(0,0,0,.35);pointer-events:auto}',
       '.cms-handle.nw{top:-7px;left:-7px;cursor:nwse-resize}',
@@ -363,52 +366,124 @@
     return cleaned;
   }
 
+  function isChromeUi(el) {
+    if (!el || !el.classList) return false;
+    return el.classList.contains('cms-handle') || el.classList.contains('cms-drag-bar') ||
+      el.classList.contains('cms-pen') || el.id === 'cms-ui';
+  }
+
+  function pickTarget(el) {
+    if (!el || el.nodeType !== 1) return null;
+    if (el === doc().body || el === doc().documentElement) return null;
+    if (isChromeUi(el)) return null;
+    if (isLocked(el)) return null;
+    var cur = el;
+    var TEXTISH = { P:1, H1:1, H2:1, H3:1, H4:1, H5:1, H6:1, SPAN:1, A:1, LI:1, LABEL:1, BUTTON:1, TD:1, TH:1, BLOCKQUOTE:1, FIGCAPTION:1, STRONG:1, EM:1, B:1, I:1, SMALL:1, CODE:1 };
+    while (cur && cur !== doc().body) {
+      if (isLocked(cur)) return null;
+      if (TEXTISH[cur.tagName]) return cur;
+      if (cur.children && cur.children.length === 0 && (cur.textContent || '').trim()) return cur;
+      cur = cur.parentElement;
+    }
+    return el !== doc().body ? el : null;
+  }
+
+  function clearHover() {
+    var d = doc();
+    if (!d) return;
+    d.querySelectorAll('.cms-hover').forEach(function (n) { n.classList.remove('cms-hover'); });
+    d.querySelectorAll('.cms-pen').forEach(function (n) { n.remove(); });
+  }
+
+  function showPen(el) {
+    clearHover();
+    if (!el || isLocked(el) || el === state.selected) return;
+    var cs = doc().defaultView.getComputedStyle(el);
+    if (cs.position === 'static') el.style.position = 'relative';
+    el.classList.add('cms-hover');
+    var pen = doc().createElement('button');
+    pen.type = 'button';
+    pen.className = 'cms-pen';
+    pen.title = '編集';
+    pen.textContent = '✏️';
+    pen.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      selectElement(el);
+    });
+    el.appendChild(pen);
+  }
+
+  function fillSideText(el) {
+    var ta = $('side-text');
+    if (!ta) return;
+    if (!el) {
+      ta.value = '';
+      ta.disabled = true;
+      return;
+    }
+    ta.disabled = false;
+    var asHtml = $('side-as-html') && $('side-as-html').checked;
+    ta.value = asHtml ? el.innerHTML : (el.innerText || el.textContent || '');
+    try { ta.focus(); } catch (e) {}
+  }
+
+  function applySideText() {
+    if (!state.selected) return;
+    var ta = $('side-text');
+    if (!ta) return;
+    var asHtml = $('side-as-html') && $('side-as-html').checked;
+    if (asHtml) state.selected.innerHTML = ta.value;
+    else state.selected.textContent = ta.value;
+  }
+
   function clearSelection() {
     var d = doc();
     if (!d) return;
+    clearHover();
     d.querySelectorAll('.cms-sel').forEach(function (n) {
       n.classList.remove('cms-sel');
       n.removeAttribute('contenteditable');
-      n.querySelectorAll('.cms-handle,.cms-drag-bar').forEach(function (h) { h.remove(); });
+      n.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) { h.remove(); });
     });
     state.selected = null;
     hideRtToolbar();
-    if ($('sel-info')) $('sel-info').textContent = '要素をクリックして選択・編集（data-lock="true" は編集不可）';
+    fillSideText(null);
+    if ($('sel-info')) $('sel-info').textContent = '要素にホバー → ✏️ で選択（data-lock="true" は不可）';
   }
 
   function attachHandles(el) {
-    el.querySelectorAll('.cms-handle,.cms-drag-bar').forEach(function (h) { h.remove(); });
+    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) { h.remove(); });
     var bar = document.createElement('div');
     bar.className = 'cms-drag-bar';
     bar.textContent = '⋮⋮ 移動';
-    bar.setAttribute('contenteditable', 'false');
     el.appendChild(bar);
     ['nw', 'ne', 'sw', 'se'].forEach(function (pos) {
       var h = document.createElement('div');
       h.className = 'cms-handle ' + pos;
-      h.setAttribute('contenteditable', 'false');
       h.dataset.handle = pos;
       el.appendChild(h);
     });
   }
 
   function selectElement(el) {
+    el = pickTarget(el) || el;
     if (!el || el === doc().body || el === doc().documentElement) return;
-    if (el.classList && (el.classList.contains('cms-handle') || el.classList.contains('cms-drag-bar'))) return;
+    if (isChromeUi(el)) return;
     if (isLocked(el)) {
-      status('この要素は data-lock="true" のため編集できません');
+      status('data-lock="true" のため編集できません');
       clearSelection();
       return;
     }
-    /* ロックされた親の中は選択不可 */
     clearSelection();
+    el.classList.remove('cms-hover');
     el.classList.add('cms-sel');
-    el.setAttribute('contenteditable', 'true');
     state.selected = el;
     attachHandles(el);
     showRtToolbar();
+    fillSideText(el);
     if ($('sel-info')) {
-      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 選択中 — 入力 / ツールバー / 複製可';
+      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 選択中 — 左のテキスト欄で編集';
     }
     try {
       var cs = doc().defaultView.getComputedStyle(el);
@@ -425,7 +500,7 @@
         if ($('p-size-v')) $('p-size-v').textContent = fs;
       }
     } catch (e) {}
-    status('編集中');
+    status('サイドパネルでテキスト編集中');
   }
 
   function rgbToHex(rgb) {
@@ -454,15 +529,6 @@
     if (ve) ve.classList.remove('rt-open');
   }
 
-  /** 座標を iframe 内ドキュメント基準に揃える */
-  function iframePoint(e) {
-    var d = doc();
-    var win = d && d.defaultView;
-    var sx = win ? win.scrollX || d.documentElement.scrollLeft || 0 : 0;
-    var sy = win ? win.scrollY || d.documentElement.scrollTop || 0 : 0;
-    return { x: e.clientX + sx, y: e.clientY + sy, clientX: e.clientX, clientY: e.clientY };
-  }
-
   function ensureAbsolute(el) {
     var d = doc();
     var cs = d.defaultView.getComputedStyle(el);
@@ -472,7 +538,6 @@
       var bodyRect = body.getBoundingClientRect();
       var scrollX = d.defaultView.scrollX || d.documentElement.scrollLeft || 0;
       var scrollY = d.defaultView.scrollY || d.documentElement.scrollTop || 0;
-      /* body 基準の絶対座標 */
       var left = rect.left - bodyRect.left + scrollX;
       var top = rect.top - bodyRect.top + scrollY;
       el.style.position = 'absolute';
@@ -481,7 +546,6 @@
       el.style.width = Math.round(el.offsetWidth) + 'px';
       el.style.margin = '0';
       if (cs.position === 'static') {
-        /* body を relative に */
         if (d.defaultView.getComputedStyle(body).position === 'static') {
           body.style.position = 'relative';
         }
@@ -493,12 +557,21 @@
     var d = doc();
     if (!d) return;
 
+    d.addEventListener('mouseover', function (e) {
+      if (state.drag || state.resize) return;
+      var t = pickTarget(e.target);
+      if (!t || t === state.selected) return;
+      if (t.classList && t.classList.contains('cms-hover')) return;
+      showPen(t);
+    }, true);
+
     d.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
       var t = e.target;
-      if (t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar'))) return;
-      selectElement(t);
+      if (t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar') || t.classList.contains('cms-pen'))) return;
+      var target = pickTarget(t);
+      if (target) selectElement(target);
     }, true);
 
     d.addEventListener('mousedown', function (e) {
@@ -528,7 +601,6 @@
         e.stopPropagation();
         var el2 = state.selected;
         ensureAbsolute(el2);
-        /* clientX の差分だけ使うので座標系が一致する */
         state.drag = {
           el: el2,
           startX: e.clientX,
@@ -585,7 +657,7 @@
     var clone = el.cloneNode(true);
     clone.classList.remove('cms-sel');
     clone.removeAttribute('contenteditable');
-    clone.querySelectorAll('.cms-handle,.cms-drag-bar').forEach(function (h) { h.remove(); });
+    clone.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) { h.remove(); });
     if (clone.style.position === 'absolute') {
       var top = parseFloat(clone.style.top) || 0;
       var left = parseFloat(clone.style.left) || 0;
@@ -675,6 +747,7 @@
     hideRtToolbar();
     setEditorMode(isHtml ? 'visual' : 'code');
     populateBlocks();
+    fillSideText(null);
 
     getFile(path).then(function (f) {
       var content = decode(f.content);
@@ -688,7 +761,7 @@
           var d = doc();
           if (d) d.querySelectorAll('.radial-menu-wrapper,.menu-fab,.header-auth').forEach(function (n) { n.remove(); });
           setupFrameEvents();
-          status('編集OK — data-lock="true" 以外はすべて編集可。保存前にメッセージ入力');
+          status('ホバー → ✏️ → 左のテキスト欄で編集');
           startDraftTimer();
         };
         fEl.srcdoc = injectChrome(content, path);
@@ -709,8 +782,8 @@
     if (!d) throw new Error('doc なし');
     clearSelection();
     var bodyClone = d.body.cloneNode(true);
-    bodyClone.querySelectorAll('.cms-sel, .cms-handle, .cms-drag-bar, .radial-menu-wrapper, .menu-fab, .header-auth, #cms-ui').forEach(function (n) {
-      if (n.classList.contains('cms-handle') || n.classList.contains('cms-drag-bar') ||
+    bodyClone.querySelectorAll('.cms-sel, .cms-hover, .cms-handle, .cms-drag-bar, .cms-pen, .radial-menu-wrapper, .menu-fab, .header-auth, #cms-ui').forEach(function (n) {
+      if (n.classList.contains('cms-handle') || n.classList.contains('cms-drag-bar') || n.classList.contains('cms-pen') || n.classList.contains('cms-hover') ||
           n.classList.contains('radial-menu-wrapper') || n.classList.contains('menu-fab') ||
           n.classList.contains('header-auth') || n.id === 'cms-ui') {
         n.remove();
@@ -1078,6 +1151,14 @@
     if ($('btn-save')) $('btn-save').onclick = save;
     if ($('btn-apply-style')) $('btn-apply-style').onclick = applyStyle;
     if ($('btn-duplicate')) $('btn-duplicate').onclick = duplicateSelected;
+    if ($('side-text')) {
+      $('side-text').addEventListener('input', applySideText);
+    }
+    if ($('side-as-html')) {
+      $('side-as-html').addEventListener('change', function () {
+        if (state.selected) fillSideText(state.selected);
+      });
+    }
     if ($('p-size')) {
       $('p-size').oninput = function () {
         if ($('p-size-v')) $('p-size-v').textContent = $('p-size').value;
@@ -1098,6 +1179,7 @@
         state.selected.remove();
         state.selected = null;
         hideRtToolbar();
+        fillSideText(null);
         status('削除しました');
       };
     }
@@ -1110,23 +1192,26 @@
           var cmd = btn.getAttribute('data-cmd');
           var val = btn.getAttribute('data-val') || null;
           var d = doc();
-          if (!d) return;
-          d.defaultView.focus();
+          if (!d || !state.selected) return;
+          /* サイドテキスト経由の方が安定なので、選択中要素に直接適用 */
+          if (cmd === 'bold' || cmd === 'italic' || cmd === 'underline') {
+            status('書式はテキスト選択後、必要ならコードモードで調整してください');
+          }
           if (cmd === 'createLink') {
             var url = prompt('URL', 'https://');
-            if (url) d.execCommand('createLink', false, url);
-          } else if (cmd === 'formatBlock' && val) {
-            d.execCommand('formatBlock', false, val);
-          } else {
-            d.execCommand(cmd, false, val);
+            if (url && state.selected) {
+              var a = d.createElement('a');
+              a.href = url;
+              a.textContent = state.selected.textContent;
+              state.selected.textContent = '';
+              state.selected.appendChild(a);
+              fillSideText(state.selected);
+            }
           }
         };
       });
       if ($('rt-done')) {
-        $('rt-done').onclick = function () {
-          if (state.selected) state.selected.removeAttribute('contenteditable');
-          hideRtToolbar();
-        };
+        $('rt-done').onclick = function () { hideRtToolbar(); };
       }
     }
 
