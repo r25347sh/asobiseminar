@@ -92,6 +92,7 @@
 
   var menuEl, itemsContainer, orbitsContainer, coreBtn, canvas, ctx;
   var timer, startX, startY, isOpen = false, menuStack = [];
+  var pieDisabled = false;
   var tapCount = 0, tapTimer = null;
 
   function navigateWithDelay(url) {
@@ -309,9 +310,10 @@
       document.body.appendChild(fab);
       fab.onclick = function (e) {
         e.stopPropagation();
-        openMenu(window.innerWidth / 2, window.innerHeight * 0.42);
+        openHamburger();
       };
     }
+    ensureHamburgerUI();
   }
 
   function initEvents() {
@@ -329,12 +331,14 @@
         clearTimeout(timer);
         timer = null;
         tapCount = 0;
-        openMenu(startX, startY);
+        if (!pieDisabled) openMenu(startX, startY);
         return;
       }
       tapTimer = setTimeout(function () { tapCount = 0; }, TRIPLE_TAP_DELAY_MS);
+      if (pieDisabled) return;
       clearTimeout(timer);
       timer = setTimeout(function () {
+        if (pieDisabled) return;
         tapCount = 0;
         openMenu(startX, startY);
       }, LONG_PRESS_MS);
@@ -355,11 +359,104 @@
     document.addEventListener('keydown', function (e) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
+        if (pieDisabled) return;
         if (isOpen) closeMenu();
         else openMenu();
       }
+      if (e.key === 'Escape' && pieDisabled) closeHamburger();
       if (e.key === 'Escape' && isOpen) closeMenu();
     });
+  }
+
+
+  function ensureHamburgerUI() {
+    if (document.getElementById('ham-overlay')) return;
+    var style = document.createElement('style');
+    style.id = 'ham-style';
+    style.textContent = [
+      '#ham-overlay{position:fixed;inset:0;z-index:100000;display:none;background:rgba(20,16,32,.55);backdrop-filter:blur(6px);}',
+      '#ham-overlay.open{display:block}',
+      '#ham-panel{position:fixed;inset:0;z-index:100001;display:none;flex-direction:column;',
+      'background:linear-gradient(165deg,#1e1b2e 0%,#2b2140 55%,#3d2a5c 100%);color:#fff;padding:1.25rem 1.25rem 2rem;overflow:auto}',
+      '#ham-panel.open{display:flex}',
+      '#ham-panel .ham-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}',
+      '#ham-panel .ham-title{font-weight:700;font-size:1.2rem;letter-spacing:.02em}',
+      '#ham-panel .ham-close{border:0;background:rgba(255,255,255,.12);color:#fff;width:42px;height:42px;border-radius:50%;font-size:1.25rem;cursor:pointer}',
+      '#ham-panel .ham-list{display:flex;flex-direction:column;gap:.55rem;max-width:520px;margin:0 auto;width:100%}',
+      '#ham-panel .ham-link,#ham-panel .ham-group-btn{display:block;width:100%;text-align:left;border:0;border-radius:14px;',
+      'padding:.95rem 1.1rem;font:inherit;font-weight:600;font-size:1rem;cursor:pointer;text-decoration:none;color:#fff;',
+      'background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}',
+      '#ham-panel .ham-link:hover,#ham-panel .ham-group-btn:hover{background:rgba(255,107,107,.28)}',
+      '#ham-panel .ham-sub{margin:.15rem 0 .35rem 1rem;display:flex;flex-direction:column;gap:.35rem}',
+      '#ham-panel .ham-sub a{font-size:.92rem;padding:.7rem 1rem;border-radius:12px;background:rgba(0,0,0,.2);color:#f0eaf8;text-decoration:none}',
+      '#ham-panel .ham-hint{margin-top:auto;padding-top:1.5rem;font-size:.8rem;opacity:.7;text-align:center}'
+    ].join('');
+    document.head.appendChild(style);
+    var ov = document.createElement('div');
+    ov.id = 'ham-overlay';
+    var panel = document.createElement('div');
+    panel.id = 'ham-panel';
+    panel.innerHTML = '<div class="ham-top"><div class="ham-title">🎮 Asobi Lab. Menu</div>' +
+      '<button type="button" class="ham-close" id="ham-close" aria-label="閉じる">✕</button></div>' +
+      '<div class="ham-list" id="ham-list"></div>' +
+      '<p class="ham-hint">閉じると長押しパイメニューが再び使えます</p>';
+    document.body.appendChild(ov);
+    document.body.appendChild(panel);
+    document.getElementById('ham-close').onclick = closeHamburger;
+    ov.onclick = closeHamburger;
+  }
+
+  function openHamburger() {
+    ensureHamburgerUI();
+    pieDisabled = true;
+    closeMenu();
+    var list = document.getElementById('ham-list');
+    list.innerHTML = '';
+    loadMenuIcons(function () {
+      var data = buildMenuData();
+      data.forEach(function (item) {
+        if (item.items && item.items.length) {
+          var wrap = document.createElement('div');
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'ham-group-btn';
+          btn.textContent = (item.icon ? item.icon + ' ' : '') + item.label;
+          var sub = document.createElement('div');
+          sub.className = 'ham-sub';
+          sub.style.display = 'none';
+          item.items.forEach(function (subItem) {
+            var a = document.createElement('a');
+            a.href = subItem.url || '#';
+            a.textContent = (subItem.icon ? subItem.icon + ' ' : '') + subItem.label;
+            sub.appendChild(a);
+          });
+          btn.onclick = function () {
+            sub.style.display = sub.style.display === 'none' ? 'flex' : 'none';
+          };
+          wrap.appendChild(btn);
+          wrap.appendChild(sub);
+          list.appendChild(wrap);
+        } else {
+          var a = document.createElement('a');
+          a.className = 'ham-link';
+          a.href = item.url || '#';
+          a.textContent = (item.icon ? item.icon + ' ' : '') + item.label;
+          list.appendChild(a);
+        }
+      });
+      document.getElementById('ham-overlay').classList.add('open');
+      document.getElementById('ham-panel').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  function closeHamburger() {
+    var ov = document.getElementById('ham-overlay');
+    var panel = document.getElementById('ham-panel');
+    if (ov) ov.classList.remove('open');
+    if (panel) panel.classList.remove('open');
+    document.body.style.overflow = '';
+    pieDisabled = false;
   }
 
   function boot() {
