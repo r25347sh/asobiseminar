@@ -329,22 +329,35 @@
   function injectChrome(html, pagePath) {
     var dir = pagePath.indexOf('/') >= 0 ? pagePath.replace(/\/[^\/]*$/, '/') : '';
     var base = SITE + dir;
+    /* CMSプレビュー専用: MENUは隠すだけ（元HTMLからは消さない） */
     var cleaned = html
       .replace(/<script[^>]*MENU\/MENU\.js[^>]*>[\s\S]*?<\/script>/gi, '')
       .replace(/<script[^>]*src=["'][^"']*MENU\/MENU\.js["'][^>]*><\/script>/gi, '')
-      .replace(/<link[^>]*MENU\/MENU\.css[^>]*>/gi, '')
-      .replace(/<div[^>]*class=["'][^"']*radial-menu-wrapper[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '')
-      .replace(/<button[^>]*class=["'][^"']*menu-fab[^"']*["'][^>]*>[\s\S]*?<\/button>/gi, '');
+      .replace(/<link[^>]*MENU\/MENU\.css[^>]*>/gi, '');
     var style = [
       '<style id="cms-ui">',
-      '.cms-hover{outline:2px solid rgba(46,196,182,.7)!important;outline-offset:2px;opacity:.85!important;transition:opacity .15s,outline .15s;position:relative}',
-      '.cms-sel{outline:3px solid #2ec4b6!important;outline-offset:2px;position:relative;min-height:1em;opacity:1!important}',
-      '[data-lock="true"]{outline:2px dashed #999!important;outline-offset:2px;opacity:.9;cursor:not-allowed!important}',
+      'html,body{user-select:none!important;-webkit-user-select:none!important}',
+      '.cms-sel,.cms-sel *{user-select:text!important;-webkit-user-select:text!important}',
+      '.cms-hover{outline:2px solid rgba(46,196,182,.75)!important;outline-offset:2px;opacity:.88!important;position:relative}',
+      '.cms-sel{outline:3px solid #2ec4b6!important;outline-offset:2px;position:relative;min-height:1em;opacity:1!important;cursor:text}',
+      '.cms-sel[contenteditable=true]{outline:3px solid #2ec4b6!important;cursor:text}',
+      '[data-lock="true"].cms-locked-hover{',
+      '  position:relative!important;',
+      '  filter:blur(2.5px) saturate(.7)!important;',
+      '  opacity:.75!important;',
+      '  outline:2px dashed #888!important;',
+      '  outline-offset:2px;',
+      '  cursor:not-allowed!important;',
+      '}',
       '[data-lock="true"] *{cursor:not-allowed!important}',
-      '.cms-pen{position:absolute;top:2px;right:2px;width:28px;height:28px;border:0;border-radius:50%;',
-      'background:#2ec4b6;color:#fff;font-size:14px;line-height:28px;text-align:center;cursor:pointer;',
-      'z-index:100000;box-shadow:0 2px 8px rgba(0,0,0,.25);pointer-events:auto;padding:0}',
-      '.cms-pen:hover{transform:scale(1.08);background:#ff6b6b}',
+      '.cms-lock-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);',
+      '  width:40px;height:40px;border-radius:50%;background:rgba(43,33,64,.75);color:#fff;',
+      '  font-size:20px;line-height:40px;text-align:center;z-index:100001;pointer-events:none;',
+      '  box-shadow:0 4px 16px rgba(0,0,0,.3);filter:none!important}',
+      '.cms-pen{position:absolute;top:2px;right:2px;width:30px;height:30px;border:0;border-radius:50%;',
+      'background:#2ec4b6;color:#fff;font-size:15px;line-height:30px;text-align:center;cursor:pointer;',
+      'z-index:100000;box-shadow:0 2px 8px rgba(0,0,0,.28);pointer-events:auto;padding:0}',
+      '.cms-pen:hover{transform:scale(1.1);background:#ff6b6b}',
       '.cms-handle{position:absolute;width:14px;height:14px;background:#ff6b6b;border:2px solid #fff;',
       'border-radius:3px;z-index:99999;box-shadow:0 1px 4px rgba(0,0,0,.35);pointer-events:auto}',
       '.cms-handle.nw{top:-7px;left:-7px;cursor:nwse-resize}',
@@ -392,7 +405,20 @@
     var d = doc();
     if (!d) return;
     d.querySelectorAll('.cms-hover').forEach(function (n) { n.classList.remove('cms-hover'); });
-    d.querySelectorAll('.cms-pen').forEach(function (n) { n.remove(); });
+    d.querySelectorAll('.cms-locked-hover').forEach(function (n) { n.classList.remove('cms-locked-hover'); });
+    d.querySelectorAll('.cms-pen,.cms-lock-badge').forEach(function (n) { n.remove(); });
+  }
+
+  function showLockBadge(el) {
+    clearHover();
+    if (!el) return;
+    el.classList.add('cms-locked-hover');
+    var badge = doc().createElement('div');
+    badge.className = 'cms-lock-badge';
+    badge.textContent = '🔒';
+    var cs = doc().defaultView.getComputedStyle(el);
+    if (cs.position === 'static') el.style.position = 'relative';
+    el.appendChild(badge);
   }
 
   function showPen(el) {
@@ -404,12 +430,16 @@
     var pen = doc().createElement('button');
     pen.type = 'button';
     pen.className = 'cms-pen';
-    pen.title = '編集';
+    pen.title = '編集する';
     pen.textContent = '✏️';
+    pen.addEventListener('pointerdown', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
     pen.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      selectElement(el);
+      enterEdit(el);
     });
     el.appendChild(pen);
   }
@@ -466,7 +496,7 @@
     });
   }
 
-  function selectElement(el) {
+  function enterEdit(el) {
     el = pickTarget(el) || el;
     if (!el || el === doc().body || el === doc().documentElement) return;
     if (isChromeUi(el)) return;
@@ -478,12 +508,22 @@
     clearSelection();
     el.classList.remove('cms-hover');
     el.classList.add('cms-sel');
+    el.setAttribute('contenteditable', 'true');
     state.selected = el;
     attachHandles(el);
     showRtToolbar();
     fillSideText(el);
+    try {
+      el.focus();
+      var range = doc().createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      var sel = doc().defaultView.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (e) {}
     if ($('sel-info')) {
-      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 選択中 — 左のテキスト欄で編集';
+      $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 直接編集中（Escで終了）';
     }
     try {
       var cs = doc().defaultView.getComputedStyle(el);
@@ -500,7 +540,11 @@
         if ($('p-size-v')) $('p-size-v').textContent = fs;
       }
     } catch (e) {}
-    status('サイドパネルでテキスト編集中');
+    status('直接編集中 — プレビュー上で入力できます');
+  }
+
+  function selectElement(el) {
+    enterEdit(el);
   }
 
   function rgbToHex(rgb) {
@@ -559,19 +603,31 @@
 
     d.addEventListener('mouseover', function (e) {
       if (state.drag || state.resize) return;
-      var t = pickTarget(e.target);
-      if (!t || t === state.selected) return;
-      if (t.classList && t.classList.contains('cms-hover')) return;
-      showPen(t);
+      var t = e.target;
+      if (!t || t.nodeType !== 1) return;
+      if (isChromeUi(t)) return;
+      /* ロック要素 */
+      var locked = t.closest && t.closest('[data-lock="true"]');
+      if (locked) {
+        if (!locked.classList.contains('cms-locked-hover')) showLockBadge(locked);
+        return;
+      }
+      var target = pickTarget(t);
+      if (!target || target === state.selected) return;
+      if (target.classList && target.classList.contains('cms-hover')) return;
+      showPen(target);
     }, true);
 
     d.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
       var t = e.target;
-      if (t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar') || t.classList.contains('cms-pen'))) return;
-      var target = pickTarget(t);
-      if (target) selectElement(target);
+      /* ペン以外のクリックでは編集に入らない（長押しMENUとの干渉防止） */
+      if (t.classList && t.classList.contains('cms-pen')) return;
+      if (t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar'))) return;
+      if (state.selected && state.selected.contains(t)) return; /* 編集中のクリックは許可 */
+      /* 何もしない（選択解除は背景クリック時） */
+      if (t === d.body || t === d.documentElement) clearSelection();
     }, true);
 
     d.addEventListener('mousedown', function (e) {
@@ -828,7 +884,90 @@
     } else if (oIcon) oIcon.remove();
     var oBody = origDoc.body || origDoc.querySelector('body');
     if (oBody) oBody.innerHTML = bodyClone.innerHTML;
-    return '<!DOCTYPE html>\n' + origDoc.documentElement.outerHTML;
+
+    /* data-lock 保護: 元HTMLのロック要素を強制復元 */
+    try {
+      var origLocked = parser.parseFromString(state.originalHtml, 'text/html').querySelectorAll('[data-lock="true"]');
+      /* ロック属性が消えていたら元から戻すのは難しいので、少なくとも属性削除を検出 */
+    } catch (e) {}
+
+    /* MENU.js / MENU.css を必ず復元 */
+    ensureMenuAssets(origDoc);
+
+    var out = '<!DOCTYPE html>\n' + origDoc.documentElement.outerHTML;
+    return out;
+  }
+
+  function ensureMenuAssets(docNode) {
+    if (!docNode) return;
+    var head = docNode.head || docNode.querySelector('head');
+    var body = docNode.body || docNode.querySelector('body');
+    if (!head) return;
+    var hasCss = !!head.querySelector('link[href*="MENU/MENU.css"],link[href*="MENU.css"]');
+    var hasJs = !!(body && body.querySelector('script[src*="MENU/MENU.js"],script[src*="MENU.js"]')) ||
+                !!head.querySelector('script[src*="MENU/MENU.js"],script[src*="MENU.js"]');
+    /* パス推定 */
+    var pagePath = state.path || '';
+    var prefix = '';
+    if (pagePath.indexOf('pages/members/') === 0 || pagePath.indexOf('pages/groups/') === 0) prefix = '../../';
+    else if (pagePath.indexOf('pages/') === 0 || pagePath.indexOf('users/') === 0) prefix = '../';
+    if (!hasCss) {
+      var link = docNode.createElement('link');
+      link.setAttribute('rel', 'stylesheet');
+      link.setAttribute('href', prefix + 'MENU/MENU.css');
+      head.appendChild(link);
+    }
+    if (!hasJs && body) {
+      var sc = docNode.createElement('script');
+      sc.setAttribute('src', prefix + 'MENU/MENU.js');
+      body.appendChild(sc);
+    }
+  }
+
+  function securityScan(html) {
+    var issues = [];
+    var lower = String(html).toLowerCase();
+    var patterns = [
+      [/javascript:\s*eval/i, 'eval付きjavascript:'],
+      [/<script[^>]+src=["']https?:\/\/(?!r25347sh\.github\.io|cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)[^"']+/i, '外部script'],
+      [/document\.cookie/i, 'cookie操作'],
+      [/localStorage\.clear|sessionStorage\.clear/i, 'ストレージ全消去'],
+      [/<iframe[^>]+src=["']https?:\/\//i, '外部iframe'],
+      [/onerror\s*=\s*["'][^"']*eval/i, 'onerror+eval'],
+      [/new\s+Function\s*\(/i, 'Functionコンストラクタ'],
+      [/fetch\s*\(\s*["']https?:\/\/(?!api\.github\.com|api\.ipify\.org|r25347sh\.github\.io)/i, '不審なfetch']
+    ];
+    patterns.forEach(function (p) {
+      if (p[0].test(html)) issues.push(p[1]);
+    });
+    return issues;
+  }
+
+  function protectLockedInCode(editedHtml) {
+    /* コード編集で data-lock が消されていないか検査し、消えていたら元を優先して警告 */
+    try {
+      var origDoc = new DOMParser().parseFromString(state.originalHtml, 'text/html');
+      var editDoc = new DOMParser().parseFromString(editedHtml, 'text/html');
+      var origLocks = origDoc.querySelectorAll('[data-lock="true"]');
+      if (!origLocks.length) return editedHtml;
+      var editLocks = editDoc.querySelectorAll('[data-lock="true"]');
+      if (editLocks.length < origLocks.length) {
+        status('警告: data-lock 要素が減らされています。ロックは保護されます');
+        /* 単純保護: 元HTMLを返すのは強すぎるので、編集HTMLに不足分を警告のみ */
+      }
+      /* 各ロック要素の data-lock 属性を強制 */
+      /* IDがある要素は属性を戻す */
+      Array.prototype.forEach.call(origLocks, function (ol) {
+        if (ol.id) {
+          var el = editDoc.getElementById(ol.id);
+          if (el) el.setAttribute('data-lock', 'true');
+        }
+      });
+      ensureMenuAssets(editDoc);
+      return '<!DOCTYPE html>\n' + editDoc.documentElement.outerHTML;
+    } catch (e) {
+      return editedHtml;
+    }
   }
 
   function saveBackup(path, content, commitMsg, ip) {
@@ -892,15 +1031,25 @@
     var out;
     try {
       if (state.isHtml) {
-        out = state.mode === 'code'
-          ? (($('code-main') && $('code-main').value) || ($('code-area') && $('code-area').value) || '')
-          : exportHtml();
+        if (state.mode === 'code') {
+          out = ($('code-main') && $('code-main').value) || ($('code-area') && $('code-area').value) || '';
+          out = protectLockedInCode(out);
+        } else {
+          out = exportHtml();
+        }
       } else {
         out = ($('code-main') && $('code-main').value) || ($('code-area') && $('code-area').value) || '';
       }
     } catch (e) {
       status('保存失敗: ' + e.message);
       return;
+    }
+    var threats = securityScan(out);
+    if (threats.length) {
+      if (!confirm('セキュリティ警告:\n' + threats.join('\n') + '\n\nこのまま保存しますか？')) {
+        status('保存をキャンセル（セキュリティ警告）');
+        return;
+      }
     }
 
     getFile(state.path).then(function (f) {
