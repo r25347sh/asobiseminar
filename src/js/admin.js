@@ -175,14 +175,70 @@
     });
   }
 
-  function login() {
-    var id = (($('uid') && $('uid').value) || '').trim();
-    var pw = ($('pw') && $('pw').value) || '';
+  function parseQrCredential(text) {
+    var s = String(text || '').trim();
+    if (!s) return null;
+    /* 形式: {id,pass} */
+    var m = s.match(/^\{([^,\{\}]+),([^\{\}]*)\}$/);
+    if (m) return { id: m[1].trim(), pw: m[2] };
+    /* 予備: id,pass / id:pass */
+    m = s.match(/^([^,:\{\}\s]+)[,:](.+)$/);
+    if (m) return { id: m[1].trim(), pw: m[2].trim() };
+    try {
+      var j = JSON.parse(s);
+      if (j && (j.id || j.uid) && (j.pass != null || j.password != null)) {
+        return { id: String(j.id || j.uid).trim(), pw: String(j.pass != null ? j.pass : j.password) };
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function recordLoginLog(userId) {
+    var linePrefix = '[' + userId + ']';
+    return getClientIp().then(function (ip) {
+      var line = linePrefix + ' | [' + (ip || 'N/A') + '] | [' + formatNow() + ']';
+      var logPath = 'src/login-log.json';
+      return getFile(logPath, BACKUP_API).then(function (f) {
+        var arr = [];
+        try { arr = JSON.parse(decode(f.content)); } catch (e) { arr = []; }
+        if (!Array.isArray(arr)) arr = [];
+        arr.unshift({
+          line: line,
+          id: userId,
+          ip: ip || 'N/A',
+          datetime: formatNow(),
+          ts: Date.now()
+        });
+        /* 直近 500 件まで */
+        if (arr.length > 500) arr = arr.slice(0, 500);
+        var body = JSON.stringify(arr, null, 2);
+        return putFile(logPath, body, 'login: ' + userId, f.sha, BACKUP_API);
+      }).catch(function () {
+        var arr = [{
+          line: linePrefix + ' | [N/A] | [' + formatNow() + ']',
+          id: userId,
+          ip: 'N/A',
+          datetime: formatNow(),
+          ts: Date.now()
+        }];
+        /* IP 再取得済みの line を使う */
+        return getClientIp().then(function (ip2) {
+          var line = linePrefix + ' | [' + (ip2 || 'N/A') + '] | [' + formatNow() + ']';
+          arr[0] = { line: line, id: userId, ip: ip2 || 'N/A', datetime: formatNow(), ts: Date.now() };
+          return putFile(logPath, JSON.stringify(arr, null, 2), 'login: ' + userId, null, BACKUP_API);
+        });
+      });
+    }).catch(function (err) {
+      console.warn('login log failed', err);
+    });
+  }
+
+  function completeLogin(id, pw, viaQr) {
     var msg = $('login-msg');
     var u = USERS[id];
     if (!u || String(u.password) !== String(pw)) {
-      if (msg) msg.textContent = 'ID またはパスワードが違います';
-      return;
+      if (msg) msg.textContent = viaQr ? 'QRのIDまたはパスワードが違います' : 'ID またはパスワードが違います';
+      return false;
     }
     state.user = {
       id: id, name: u.name, semi_name: u.semi_name || '',
@@ -195,9 +251,83 @@
       canBackupRestore: !!u.canBackupRestore || !!u.isAdmin
     };
     setSession(state.user);
-    if (msg) msg.textContent = '';
+    if (msg) msg.textContent = viaQr ? 'QRログイン成功…' : '';
+    stopQrScanner();
+    /* ログは待たずにダッシュボードへ */
+    recordLoginLog(id);
     openDash();
+    return true;
   }
+
+  function login() {
+    var id = (($('uid') && $('uid').value) || '').trim();
+    var pw = ($('pw') && $('pw').value) || '';
+    completeLogin(id, pw, false);
+  }
+
+  var qrScanner = null;
+  var qrScanLock = false;
+
+  function loadHtml5Qrcode(cb) {
+    if (window.Html5Qrcode) { cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+    s.onload = function () { cb(); };
+    s.onerror = function () {
+      var msg = $('login-msg');
+      if (msg) msg.textContent = 'QR読取ライブラリの読み込みに失敗しました';
+    };
+    document.head.appendChild(s);
+  }
+
+  function startQrScanner() {
+    var panel = $('qr-panel');
+    var msg = $('login-msg');
+    if (panel) panel.classList.remove('hidden');
+    if (msg) msg.textContent = 'カメラを起動しています…';
+    qrScanLock = false;
+    loadHtml5Qrcode(function () {
+      if (!window.Html5Qrcode) return;
+      if (qrScanner) {
+        stopQrScanner();
+      }
+      qrScanner = new Html5Qrcode('qr-reader');
+      qrScanner.start(
+        { facingMode: 'environment' },
+        { fps: 8, qrbox: { width: 240, height: 240 } },
+        function onSuccess(decoded) {
+          if (qrScanLock) return;
+          var cred = parseQrCredential(decoded);
+          if (!cred) {
+            if (msg) msg.textContent = '形式が違います。{id,pass} のQRをかざしてください';
+            return;
+          }
+          qrScanLock = true;
+          if (msg) msg.textContent = '読み取りました。ログイン中…';
+          var ok = completeLogin(cred.id, cred.pw, true);
+          if (!ok) qrScanLock = false;
+        },
+        function onFail() { /* フレームごとの未検出は無視 */ }
+      ).then(function () {
+        if (msg) msg.textContent = 'QRコードを枠内に入れてください';
+      }).catch(function (err) {
+        if (msg) msg.textContent = 'カメラを起動できません: ' + (err && err.message ? err.message : err);
+      });
+    });
+  }
+
+  function stopQrScanner() {
+    var panel = $('qr-panel');
+    if (panel) panel.classList.add('hidden');
+    if (qrScanner) {
+      var s = qrScanner;
+      qrScanner = null;
+      try {
+        s.stop().then(function () { try { s.clear(); } catch (e1) {} }).catch(function () {});
+      } catch (e) {}
+    }
+  }
+
 
   function extractTitle(html) {
     var m = String(html).match(/<title[^>]*>([\s\S]*?)<\/title>/i);
@@ -1524,6 +1654,13 @@
     });
 
     if ($('btn-login')) $('btn-login').onclick = login;
+    if ($('btn-qr-login')) $('btn-qr-login').onclick = startQrScanner;
+    if ($('btn-qr-stop')) $('btn-qr-stop').onclick = stopQrScanner;
+    if ($('pw')) {
+      $('pw').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') login();
+      });
+    }
     ['uid', 'pw'].forEach(function (id) {
       if ($(id)) $(id).addEventListener('keydown', function (e) {
         if (e.key === 'Enter') login();
