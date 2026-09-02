@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Asobi Lab. — 麗澤高等学校 遊びの探究ゼミ">
   <title>ホーム | Asobi Lab.</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+  <link rel="icon" href="src/img/favicons/home.svg" type="image/svg+xml">
   <link rel="stylesheet" href="src/css/common.css">
   <link rel="stylesheet" href="src/css/pages/index.css">
   <link rel="stylesheet" href="MENU/MENU.css">
@@ -13,7 +13,7 @@
 <body>
   <header class="site-header" data-lock="true">
     <a class="site-logo" href="index.html">🎮 Asobi Lab. <span>Play · Inquiry · Create</span></a>
-    <nav class="nav-desktop">
+    <nav class="nav-desktop" data-lock="true">
       <a href="index.html">HOME</a>
       <a href="pages/about_asobi.html">Asobi Labとは</a>
       <a href="pages/about_This_Site.html">このサイトについて</a>
@@ -27,40 +27,49 @@
       <a class="btn-play" href="#groups">グループを見る →</a>
     </section>
 
-    <h2 class="page-title" id="pages">ページ一覧</h2>
-    <p class="page-sub">サイト内の主なページ</p>
+    <h2 class="section-title" id="groups">探究グループ</h2>
+    <p class="page-sub">3つのグループと、個人で探求するメンバーがいます</p>
+    <section class="card-grid">
+      <a class="card" href="pages/groups/skate.html">
+        <h3>🛹 スケボーと俺等の青春</h3>
+        <p>リーダー：奥村京太</p>
+      </a>
+      <a class="card" href="pages/groups/arch.html">
+        <h3>🏗️ 脆い割り箸ビルを探求で強くする</h3>
+        <p>リーダー：齊藤絢太</p>
+      </a>
+      <a class="card" href="pages/groups/fashion.html">
+        <h3>👗 ファッションについて</h3>
+        <p>リーダー：草深りお</p>
+      </a>
+    </section>
+
+    <h2 class="section-title" id="members">メンバー</h2>
+    <p class="page-sub">ゼミメンバーのページ</p>
+    <section class="card-grid">
+      <a class="card" href="pages/members/r22497kk.html"><h3>川端也大</h3><p>5A · スケボーと俺等の青春</p></a>
+      <a class="card" href="pages/members/r25404jk.html"><h3>神季美花</h3><p>5F · ファッションについて</p></a>
+      <a class="card" href="pages/members/r25917yk.html"><h3>柳原康希</h3><p>5F · スケボーと俺等の青春</p></a>
+      <a class="card" href="pages/members/r25660na.html"><h3>野田彩夏</h3><p>5D · 脆い割り箸ビルを探求で強くする</p></a>
+      <a class="card" href="pages/members/r25339sc.html"><h3>佐藤ちほ</h3><p>5F · ファッションについて</p></a>
+      <a class="card" href="pages/members/r25173ok.html"><h3>奥村京太</h3><p>5F · スケボーと俺等の青春</p></a>
+      <a class="card" href="pages/members/r25321sa.html"><h3>齊藤絢太</h3><p>5C · 脆い割り箸ビルを探求で強くする</p></a>
+      <a class="card" href="pages/members/r22661kk.html"><h3>小林和輝</h3><p>5A · 脆い割り箸ビルを探求で強くする</p></a>
+      <a class="card" href="pages/members/r22321fs.html"><h3>福島駿</h3><p>5A · 個人探求</p></a>
+      <a class="card" href="pages/members/r22289hh.html"><h3>樊澤熙</h3><p>5E · ファッションについて</p></a>
+      <a class="card" href="pages/members/r22570kr.html"><h3>草深りお</h3><p>5C · ファッションについて</p></a>
+      <a class="card" href="pages/members/r25347sh.html"><h3>佐藤晴</h3><p>5G · 個人探求</p></a>
+    </section>
+
+    <h2 class="section-title" id="pages">その他のページ</h2>
     <section class="card-grid">
       <a class="card" href="pages/about_asobi.html"><h3>🎮 Asobi Labとは</h3><p>遊びの探究ゼミの紹介</p></a>
-      <a class="card" href="pages/about_This_Site.html"><h3>ℹ️ このサイトについて</h3><p>サイトの使い方・CMSについて</p></a>
+      <a class="card" href="pages/about_This_Site.html"><h3>ℹ️ このサイトについて</h3><p>サイトの使い方・CMS</p></a>
       <a class="card" href="pages/Matsumaru_T.html"><h3>🎯 松丸先生</h3><p>担当教員ページ</p></a>
-    </section>
-
-    <h2 class="page-title" id="groups">探究グループ</h2>
-    <p class="page-sub">3つのチームと2人の専門者が、それぞれの「遊び」を探究中</p>
-    <section class="card-grid">
-      <a class="card" href="pages/groups/skate.html"><h3>🛹 すけぼぉ</h3><p>スケボーの技術向上とそのための思考</p></a>
-      <a class="card" href="pages/groups/fashion.html"><h3>👗 ファッション</h3><p>何をもっておしゃれと感じるのか</p></a>
-      <a class="card" href="pages/groups/arch.html"><h3>🏗️ 建築</h3><p>脆い割り箸ビルを探求で強くする</p></a>
-    </section>
-
-    <h2 class="page-title" id="members">メンバー</h2>
-    <p class="page-sub">遊びの探究ゼミ 11名</p>
-    <section class="card-grid">
-      <a class="card" href="pages/members/r22289hh.html"><h3>樊澤熙</h3><p>ファッション · 5E</p></a>
-      <a class="card" href="pages/members/r22321fs.html"><h3>福島駿</h3><p>英語とゲーム · 5A</p></a>
-      <a class="card" href="pages/members/r22497kk.html"><h3>川端也大</h3><p>すけぼぉ · 5A</p></a>
-      <a class="card" href="pages/members/r22570kr.html"><h3>草深りお</h3><p>ファッション · 5C</p></a>
-      <a class="card" href="pages/members/r22661kk.html"><h3>小林和輝</h3><p>建築 · 5A</p></a>
-      <a class="card" href="pages/members/r25173ok.html"><h3>奥村京太</h3><p>すけぼぉ · 5F</p></a>
-      <a class="card" href="pages/members/r25321sa.html"><h3>齊藤絢太</h3><p>建築 · 5C</p></a>
-      <a class="card" href="pages/members/r25339sc.html"><h3>佐藤ちほ</h3><p>ファッション · 5F</p></a>
-      <a class="card" href="pages/members/r25404jk.html"><h3>神季美花</h3><p>ファッション · 5F</p></a>
-      <a class="card" href="pages/members/r25660na.html"><h3>野田彩夏</h3><p>建築 · 5D</p></a>
-      <a class="card" href="pages/members/r25917yk.html"><h3>柳原康希</h3><p>すけぼぉ · 5F</p></a>
+      <a class="card" href="map.html"><h3>🗺️ サイトマップ</h3><p>ページ一覧</p></a>
     </section>
   </main>
-  <footer class="site-footer" data-lock="true">© 2026 Asobi Lab. · 麗澤高等学校 遊びの探究ゼミ</footer>
-  <script src="src/js/main.js"></script>
+  <footer class="site-footer" data-lock="true">© 2026 Asobi Lab. · 遊びの探求ゼミ</footer>
   <script src="MENU/MENU.js"></script>
 </body>
 </html>
