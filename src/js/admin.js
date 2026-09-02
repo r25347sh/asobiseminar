@@ -38,14 +38,15 @@
   ];
 
   var DESIGN_SETS = [
-    { id: 'soft-card', label: 'やわらかカード', styles: { background: '#ffffff', borderRadius: '16px', boxShadow: '0 8px 28px rgba(43,33,64,.10)', padding: '1.25rem', border: '1px solid rgba(43,33,64,.06)' } },
-    { id: 'glass', label: 'ガラス風', styles: { background: 'rgba(255,255,255,.55)', backdropFilter: 'blur(10px)', borderRadius: '18px', border: '1px solid rgba(255,255,255,.45)', boxShadow: '0 8px 32px rgba(43,33,64,.12)', padding: '1.2rem' } },
-    { id: 'grad-warm', label: '暖色グラデ', styles: { background: 'linear-gradient(135deg,#ffecd2 0%,#fcb69f 100%)', borderRadius: '16px', padding: '1.25rem', color: '#2b2140' } },
-    { id: 'grad-cool', label: '寒色グラデ', styles: { background: 'linear-gradient(135deg,#a1c4fd 0%,#c2e9fb 100%)', borderRadius: '16px', padding: '1.25rem', color: '#1a2744' } },
-    { id: 'neon', label: 'ネオン枠', styles: { background: '#1a1428', color: '#fff', borderRadius: '14px', padding: '1.2rem', border: '2px solid #ff6b6b', boxShadow: '0 0 0 1px rgba(255,107,107,.25), 0 0 24px rgba(255,107,107,.35)' } },
-    { id: 'minimal', label: 'ミニマル線', styles: { background: 'transparent', borderTop: '2px solid #2b2140', borderBottom: '2px solid #2b2140', borderLeft: '0', borderRight: '0', borderRadius: '0', padding: '1rem 0' } },
-    { id: 'pill', label: 'ピル型', styles: { display: 'inline-block', borderRadius: '999px', padding: '.55rem 1.25rem', background: '#2ec4b6', color: '#fff', fontWeight: '700' } },
-    { id: 'shadow-float', label: 'ふわっと影', styles: { boxShadow: '0 16px 40px rgba(43,33,64,.14)', borderRadius: '20px', background: '#fff', padding: '1.5rem' } }
+    { id: 'soft-card', label: 'やわらかカード', styles: { background: '#ffffff', color: '#2b2140', borderRadius: '16px', boxShadow: '0 8px 28px rgba(43,33,64,.10)', padding: '1.25rem', border: '1px solid rgba(43,33,64,.08)' } },
+    { id: 'mint-panel', label: 'ミントパネル', styles: { background: '#e8faf7', color: '#163a36', borderRadius: '16px', padding: '1.25rem', border: '1px solid #9ad9cf' } },
+    { id: 'lavender', label: 'ラベンダー', styles: { background: '#f3eefc', color: '#2b2140', borderRadius: '16px', padding: '1.25rem', border: '1px solid #cbb8f0' } },
+    { id: 'grad-warm', label: '暖色グラデ', styles: { background: 'linear-gradient(135deg,#ffe8cc 0%,#ffc9a8 100%)', color: '#3b2416', borderRadius: '16px', padding: '1.25rem' } },
+    { id: 'grad-cool', label: '寒色グラデ', styles: { background: 'linear-gradient(135deg,#d7e6ff 0%,#c8f0ff 100%)', color: '#15263d', borderRadius: '16px', padding: '1.25rem' } },
+    { id: 'night', label: 'ナイト（高コントラスト）', styles: { background: '#1a1428', color: '#ffffff', borderRadius: '14px', padding: '1.2rem', border: '2px solid #ff8e8e', boxShadow: '0 0 20px rgba(255,107,107,.25)' } },
+    { id: 'minimal', label: 'ミニマル線', styles: { background: '#ffffff', color: '#2b2140', borderTop: '3px solid #2b2140', borderBottom: '3px solid #2b2140', borderLeft: '0', borderRight: '0', borderRadius: '0', padding: '1rem 0.25rem' } },
+    { id: 'pill', label: 'ピル型バッジ', styles: { display: 'inline-block', borderRadius: '999px', padding: '.55rem 1.25rem', background: '#0f766e', color: '#ffffff', fontWeight: '700' } },
+    { id: 'shadow-float', label: 'ふわっと影', styles: { boxShadow: '0 16px 40px rgba(43,33,64,.14)', borderRadius: '20px', background: '#ffffff', color: '#2b2140', padding: '1.5rem', border: '1px solid rgba(43,33,64,.06)' } }
   ];
 
   var ANIM_SETS = [
