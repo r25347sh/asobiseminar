@@ -1487,7 +1487,6 @@
       userName: state.user ? state.user.name : '',
       message: commitMsg,
       datetime: formatNow(),
-      ip: ip || '',
       backupPath: backupPath
     };
     return putFile(backupPath, content, 'backup: ' + path + ' @ ' + ts, null, BACKUP_API)
@@ -1574,16 +1573,14 @@
             });
           }
           return cssPromise.then(function () {
-            return getClientIp().then(function (ip) {
-              return saveBackup(state.path, out, userMsg, ip).then(function () {
-                status('保存完了 ✓ デザインCSSも更新');
-                clearDraft();
-                if ($('meta-use-menu-icon') && $('meta-use-menu-icon').checked) {
-                  updateMenuIcon(state.path, ($('meta-favicon') && $('meta-favicon').value) || '');
-                }
-              }).catch(function (be) {
-                status('本体は保存済み。バックアップ失敗: ' + be.message);
-              });
+            return saveBackup(state.path, out, userMsg, '').then(function () {
+              status('保存完了 ✓ デザインCSSも更新');
+              clearDraft();
+              if ($('meta-use-menu-icon') && $('meta-use-menu-icon').checked) {
+                updateMenuIcon(state.path, ($('meta-favicon') && $('meta-favicon').value) || '');
+              }
+            }).catch(function (be) {
+              status('本体は保存済み。バックアップ失敗: ' + be.message);
             });
           });
         });
