@@ -20,15 +20,21 @@
 
   var menuIcons = {};
   function loadMenuIcons(cb) {
+    if (menuIconsLoaded) {
+      if (cb) cb();
+      return;
+    }
     var url = root + 'src/cms/menu-icons.json';
     fetch(url + '?t=' + Date.now()).then(function (r) {
       if (!r.ok) return {};
       return r.json();
     }).then(function (data) {
       menuIcons = data || {};
+      menuIconsLoaded = true;
       if (cb) cb();
     }).catch(function () {
       menuIcons = {};
+      menuIconsLoaded = true;
       if (cb) cb();
     });
   }
@@ -47,9 +53,9 @@
       { label: 'サイトについて', icon: 'ℹ️', url: root + 'pages/about_This_Site.html' },
       {
         label: 'グループ', icon: '👥', items: [
-          { label: 'すけぼぉ', icon: '🛹', url: root + 'pages/groups/skate.html' },
-          { label: 'ファッション', icon: '👗', url: root + 'pages/groups/fashion.html' },
-          { label: '建築', icon: '🏗️', url: root + 'pages/groups/arch.html' }
+          { label: 'スケボーと俺等の青春', icon: '🛹', url: root + 'pages/groups/skate.html' },
+          { label: 'ファッションについて', icon: '👗', url: root + 'pages/groups/fashion.html' },
+          { label: '脆い割り箸ビルを探求で強くする', icon: '🏗️', url: root + 'pages/groups/arch.html' }
         ]
       },
       {
@@ -94,6 +100,7 @@
   var menuEl, itemsContainer, orbitsContainer, coreBtn, canvas, ctx;
   var timer, startX, startY, isOpen = false, menuStack = [];
   var pieDisabled = false;
+  var menuIconsLoaded = false;
   var tapCount = 0, tapTimer = null;
 
   function navigateWithDelay(url) {
@@ -204,7 +211,9 @@
       btn.style.setProperty('--y', data.y + 'px');
       btn.style.transitionDelay = (index * 0.024) + 's';
       btn.addEventListener('click', function (e) {
+        e.preventDefault();
         e.stopPropagation();
+        if (e.stopImmediatePropagation) e.stopImmediatePropagation();
         if (data.item.items && data.item.items.length) {
           menuStack.push(items);
           renderMenuLevel(data.item.items);
@@ -266,6 +275,9 @@
     isOpen = true;
     menuStack = [];
     loadMenuIcons(function () {
+      /* サブメニュー表示中に遅延コールバックでルートに戻さない */
+      if (!isOpen) return;
+      if (menuStack.length > 0) return;
       renderMenuLevel(buildMenuData());
       triggerParticleBurst();
     });
@@ -319,7 +331,7 @@
 
   function initEvents() {
     document.addEventListener('pointerdown', function (e) {
-      if (e.target.closest && (e.target.closest('.menu-fab') || e.target.closest('.header-auth'))) return;
+      if (e.target.closest && (e.target.closest('.menu-fab') || e.target.closest('.header-auth') || e.target.closest('.radial-menu-wrapper') || e.target.closest('#ham-panel') || e.target.closest('#ham-overlay'))) return;
       if (isOpen && menuEl && !menuEl.contains(e.target)) {
         closeMenu();
         return;
@@ -405,6 +417,7 @@
     document.body.appendChild(panel);
     document.getElementById('ham-close').onclick = closeHamburger;
     ov.onclick = closeHamburger;
+    document.getElementById('ham-panel').addEventListener('click', function (e) { e.stopPropagation(); });
   }
 
   function openHamburger() {
