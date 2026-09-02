@@ -202,3 +202,14 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
     grid-template-rows: minmax(180px, 38%) 1fr;
   }
 }
+
+
+/* QR login */
+.login-or{display:flex;align-items:center;gap:.75rem;margin:1rem 0 .75rem;color:rgba(43,33,64,.45);font-size:.8rem}
+.login-or::before,.login-or::after{content:"";flex:1;height:1px;background:rgba(43,33,64,.12)}
+.login-qr-hint{font-size:.75rem;margin:.45rem 0 0;text-align:center}
+.login-qr-hint code{background:rgba(43,33,64,.06);padding:.1rem .35rem;border-radius:6px}
+.qr-panel{margin-top:.85rem}
+.qr-reader{width:100%;max-width:320px;margin:0 auto;overflow:hidden;border-radius:14px;background:#111}
+.qr-reader video{width:100%!important;border-radius:14px}
+.btn.block{width:100%}
