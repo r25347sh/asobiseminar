@@ -156,12 +156,6 @@
     return 'users/' + (state.user && state.user.id ? state.user.id : 'guest');
   }
 
-  function getClientIp() {
-    return fetch('https://api.ipify.org/?format=text', { cache: 'no-store' })
-      .then(function (r) { return r.ok ? r.text() : ''; })
-      .then(function (t) { return (t || '').trim(); })
-      .catch(function () { return ''; });
-  }
   function formatNow() {
     var d = new Date();
     function p(n) { return (n < 10 ? '0' : '') + n; }
@@ -173,9 +167,8 @@
     var uname = state.user ? (state.user.name || uid) : 'unknown';
     var msg = (userMsg || '').trim() || '(no message)';
     var dt = formatNow();
-    return getClientIp().then(function (ip) {
-      return '[' + uid + '] | [' + uname + '] | [' + msg + '] | [' + dt + '] | [' + (ip || 'N/A') + ']';
-    });
+    /* プライバシーのため IP は記録しない */
+    return Promise.resolve('[' + uid + '] | [' + uname + '] | [' + msg + '] | [' + dt + ']');
   }
 
   function parseQrCredential(text) {
@@ -1476,7 +1469,7 @@
     }
   }
 
-  function saveBackup(path, content, commitMsg, ip) {
+  function saveBackup(path, content, commitMsg) {
     var ts = formatNow().replace(/[:T]/g, '-');
     var safePath = path.replace(/[^a-zA-Z0-9._\/-]/g, '_');
     var backupPath = 'data/' + safePath + '/' + ts + '.html';
@@ -1573,7 +1566,7 @@
             });
           }
           return cssPromise.then(function () {
-            return saveBackup(state.path, out, userMsg, '').then(function () {
+            return saveBackup(state.path, out, userMsg).then(function () {
               status('保存完了 ✓ デザインCSSも更新');
               clearDraft();
               if ($('meta-use-menu-icon') && $('meta-use-menu-icon').checked) {
