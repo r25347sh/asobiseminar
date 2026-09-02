@@ -274,6 +274,8 @@
 
   var qrScanner = null;
   var qrScanLock = false;
+  /* environment=アウカメ, user=インカメ */
+  var qrFacingMode = 'environment';
 
   function loadHtml5Qrcode(cb) {
     if (window.Html5Qrcode) { cb(); return; }
@@ -287,52 +289,83 @@
     document.head.appendChild(s);
   }
 
-  function startQrScanner() {
+  function qrFacingLabel() {
+    return qrFacingMode === 'user' ? 'インカメ（前面）' : 'アウカメ（背面）';
+  }
+
+  function stopQrScannerOnly() {
+    if (!qrScanner) return Promise.resolve();
+    var s = qrScanner;
+    qrScanner = null;
+    return s.stop().then(function () {
+      try { s.clear(); } catch (e1) {}
+    }).catch(function () {
+      try { s.clear(); } catch (e2) {}
+    });
+  }
+
+  function startQrScanner(keepPanel) {
     var panel = $('qr-panel');
     var msg = $('login-msg');
     if (panel) panel.classList.remove('hidden');
-    if (msg) msg.textContent = 'カメラを起動しています…';
+    if (msg) msg.textContent = 'カメラを起動しています…（' + qrFacingLabel() + '）';
     qrScanLock = false;
     loadHtml5Qrcode(function () {
       if (!window.Html5Qrcode) return;
-      if (qrScanner) {
-        stopQrScanner();
-      }
-      qrScanner = new Html5Qrcode('qr-reader');
-      qrScanner.start(
-        { facingMode: 'environment' },
-        { fps: 8, qrbox: { width: 240, height: 240 } },
-        function onSuccess(decoded) {
-          if (qrScanLock) return;
-          var cred = parseQrCredential(decoded);
-          if (!cred) {
-            if (msg) msg.textContent = '形式が違います。{id,pass} のQRをかざしてください';
+      stopQrScannerOnly().then(function () {
+        qrScanner = new Html5Qrcode('qr-reader');
+        var config = { fps: 8, qrbox: { width: 240, height: 240 } };
+        var cameraConfig = { facingMode: qrFacingMode };
+        qrScanner.start(
+          cameraConfig,
+          config,
+          function onSuccess(decoded) {
+            if (qrScanLock) return;
+            var cred = parseQrCredential(decoded);
+            if (!cred) {
+              if (msg) msg.textContent = '形式が違います。{id,pass} のQRをかざしてください';
+              return;
+            }
+            qrScanLock = true;
+            if (msg) msg.textContent = '読み取りました。ログイン中…';
+            var ok = completeLogin(cred.id, cred.pw, true);
+            if (!ok) qrScanLock = false;
+          },
+          function onFail() { /* 未検出は無視 */ }
+        ).then(function () {
+          if (msg) msg.textContent = 'QRを枠内に — いま: ' + qrFacingLabel();
+          var flip = $('btn-qr-flip');
+          if (flip) flip.textContent = qrFacingMode === 'user' ? '🔄 アウカメに切替' : '🔄 インカメに切替';
+        }).catch(function (err) {
+          /* 指定カメラが無い場合はもう一方を試す */
+          var other = qrFacingMode === 'environment' ? 'user' : 'environment';
+          if (!startQrScanner._retried) {
+            startQrScanner._retried = true;
+            qrFacingMode = other;
+            if (msg) msg.textContent = 'カメラ切替して再試行…';
+            startQrScanner(true);
             return;
           }
-          qrScanLock = true;
-          if (msg) msg.textContent = '読み取りました。ログイン中…';
-          var ok = completeLogin(cred.id, cred.pw, true);
-          if (!ok) qrScanLock = false;
-        },
-        function onFail() { /* フレームごとの未検出は無視 */ }
-      ).then(function () {
-        if (msg) msg.textContent = 'QRコードを枠内に入れてください';
-      }).catch(function (err) {
-        if (msg) msg.textContent = 'カメラを起動できません: ' + (err && err.message ? err.message : err);
+          startQrScanner._retried = false;
+          if (msg) msg.textContent = 'カメラを起動できません: ' + (err && err.message ? err.message : err);
+        });
       });
     });
+  }
+
+  function flipQrCamera() {
+    var msg = $('login-msg');
+    qrFacingMode = (qrFacingMode === 'environment') ? 'user' : 'environment';
+    startQrScanner._retried = false;
+    if (msg) msg.textContent = '切り替え中…（' + qrFacingLabel() + '）';
+    startQrScanner(true);
   }
 
   function stopQrScanner() {
     var panel = $('qr-panel');
     if (panel) panel.classList.add('hidden');
-    if (qrScanner) {
-      var s = qrScanner;
-      qrScanner = null;
-      try {
-        s.stop().then(function () { try { s.clear(); } catch (e1) {} }).catch(function () {});
-      } catch (e) {}
-    }
+    startQrScanner._retried = false;
+    stopQrScannerOnly();
   }
 
 
@@ -1661,7 +1694,8 @@
     });
 
     if ($('btn-login')) $('btn-login').onclick = login;
-    if ($('btn-qr-login')) $('btn-qr-login').onclick = startQrScanner;
+    if ($('btn-qr-login')) $('btn-qr-login').onclick = function () { startQrScanner._retried = false; startQrScanner(); };
+    if ($('btn-qr-flip')) $('btn-qr-flip').onclick = flipQrCamera;
     if ($('btn-qr-stop')) $('btn-qr-stop').onclick = stopQrScanner;
     if ($('pw')) {
       $('pw').addEventListener('keydown', function (e) {
