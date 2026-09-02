@@ -129,7 +129,28 @@
           </section>
           <section class="rail-panel">
             <h3 class="rail-h">見た目</h3>
-            <label>背景色<input type="color" id="p-bg" value="#ffffff"></label>
+            <p class="muted" style="font-size:.75rem;margin:.2rem 0 .5rem">※下の「背景色」は<strong>選択中の要素</strong>用です</p>
+            <label>要素の背景色<input type="color" id="p-bg" value="#ffffff"></label>
+            <div class="body-bg-box">
+              <h4 class="rail-h" style="font-size:.9rem;margin-top:.8rem">ページ全体の背景（body）</h4>
+              <p class="muted" style="font-size:.72rem;margin:0 0 .4rem">サイトのグラデ背景など、画面全体の背景を変更します（子要素の背景とは別）</p>
+              <label>種類
+                <select id="body-bg-mode">
+                  <option value="keep-site">サイト標準のグラデ</option>
+                  <option value="solid">単色</option>
+                  <option value="warm">暖色グラデ</option>
+                  <option value="cool">寒色グラデ</option>
+                  <option value="sunset">夕焼けグラデ</option>
+                  <option value="night">ナイトグラデ</option>
+                </select>
+              </label>
+              <label>単色のとき<input type="color" id="body-bg-color" value="#fffdf8"></label>
+              <button type="button" id="btn-body-bg" class="btn ghost block">ページ全体の背景を適用</button>
+            </div>
+            <div class="row2" style="margin-top:.6rem">
+              <button type="button" id="btn-undo" class="btn ghost">↶ 戻す</button>
+              <button type="button" id="btn-redo" class="btn ghost">↷ 進む</button>
+            </div>
             <label>文字サイズ <span id="p-size-v">16</span>px
               <input type="range" id="p-size" min="10" max="72" value="16">
             </label>
@@ -202,6 +223,8 @@
               <li>文字色・マーカー … 上部バー</li>
               <li>Esc … 編集終了</li>
               <li>data-lock … 編集不可（🔒）</li>
+              <li>Ctrl/Cmd+Z … 元に戻す</li>
+              <li>Ctrl/Cmd+Y … やり直し</li>
               <li>Ctrl/Cmd+D … 複製</li>
             </ul>
           </section>
