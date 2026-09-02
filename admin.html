@@ -136,15 +136,42 @@
               <p class="muted" style="font-size:.72rem;margin:0 0 .4rem">サイトのグラデ背景など、画面全体の背景を変更します（子要素の背景とは別）</p>
               <label>種類
                 <select id="body-bg-mode">
-                  <option value="keep-site">サイト標準のグラデ</option>
+                  <option value="keep-site">サイト標準</option>
                   <option value="solid">単色</option>
-                  <option value="warm">暖色グラデ</option>
-                  <option value="cool">寒色グラデ</option>
-                  <option value="sunset">夕焼けグラデ</option>
-                  <option value="night">ナイトグラデ</option>
+                  <option value="linear">2色グラデ（直線）</option>
+                  <option value="radial">2色グラデ（円形）</option>
+                  <option value="image">画像URL</option>
+                  <option value="custom">カスタムCSS</option>
+                  <option value="warm">暖色プリセット</option>
+                  <option value="cool">寒色プリセット</option>
+                  <option value="sunset">夕焼けプリセット</option>
+                  <option value="night">ナイトプリセット</option>
+                  <option value="forest">森プリセット</option>
+                  <option value="sakura">桜プリセット</option>
                 </select>
               </label>
-              <label>単色のとき<input type="color" id="body-bg-color" value="#fffdf8"></label>
+              <label>色1<input type="color" id="body-bg-color" value="#fffdf8"></label>
+              <label>色2<input type="color" id="body-bg-color2" value="#e8f5e9"></label>
+              <label>グラデ角度 <span id="body-bg-angle-v">135</span>°
+                <input type="range" id="body-bg-angle" min="0" max="360" value="135">
+              </label>
+              <label>画像URL<input type="text" id="body-bg-image" placeholder="https://..."></label>
+              <label>画像サイズ
+                <select id="body-bg-size">
+                  <option value="cover">cover</option>
+                  <option value="contain">contain</option>
+                  <option value="auto">auto</option>
+                </select>
+              </label>
+              <label>固定
+                <select id="body-bg-attach">
+                  <option value="scroll">スクロール</option>
+                  <option value="fixed">固定（parallax風）</option>
+                </select>
+              </label>
+              <label>カスタムCSS（background）
+                <textarea id="body-bg-custom" rows="2" placeholder="linear-gradient(...)"></textarea>
+              </label>
               <button type="button" id="btn-body-bg" class="btn ghost block">ページ全体の背景を適用</button>
             </div>
             <div class="row2" style="margin-top:.6rem">
