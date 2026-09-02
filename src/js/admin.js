@@ -236,7 +236,14 @@
   function completeLogin(id, pw, viaQr) {
     var msg = $('login-msg');
     var u = USERS[id];
-    if (!u || String(u.password) !== String(pw)) {
+    var ok = false;
+    if (u && window.AsobiAuth && typeof AsobiAuth.verify === 'function') {
+      ok = AsobiAuth.verify(id, pw, u.pass_hash || u.password);
+    } else if (u && u.password != null) {
+      /* 移行前フォールバック */
+      ok = String(u.password) === String(pw);
+    }
+    if (!u || !ok) {
       if (msg) msg.textContent = viaQr ? 'QRのIDまたはパスワードが違います' : 'ID またはパスワードが違います';
       return false;
     }
