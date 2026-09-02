@@ -21,7 +21,7 @@
   "P3fAb": {
     "name": "福島駿",
     "semi_id": "skate",
-    "semi_name": "遊びの探究ゼミ・すけぼぉ",
+    "semi_name": "遊びの探究ゼミ・スケボーと俺等の青春",
     "group": "skate",
     "class": "5A",
     "role": "member",
@@ -39,9 +39,9 @@
   },
   "nFbmO": {
     "name": "川端也大",
-    "semi_id": "skate",
-    "semi_name": "遊びの探究ゼミ・すけぼぉ",
-    "group": "skate",
+    "semi_id": "solo",
+    "semi_name": "遊びの探究ゼミ・個人探求",
+    "group": "solo",
     "class": "5A",
     "role": "member",
     "isAdmin": false,
@@ -51,8 +51,7 @@
     "canDelete": true,
     "canBackupRestore": false,
     "permissions": [
-      "pages/members/r22497kk.html",
-      "pages/groups/skate.html"
+      "pages/members/r22497kk.html"
     ],
     "pass_hash": "0848705cb63f6b01a6ea7fbbe327597414f488a7ceda33606cffedcc200beef1"
   },
