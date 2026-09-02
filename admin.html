@@ -15,6 +15,13 @@
       <label>ユーザーID<input id="uid" autocomplete="username" placeholder="例: r25xxx"></label>
       <label>パスワード<input id="pw" type="password" autocomplete="current-password"></label>
       <button type="button" id="btn-login" class="btn primary">ログイン</button>
+      <div class="login-or"><span>または</span></div>
+      <button type="button" id="btn-qr-login" class="btn ghost block">📷 QRコードでログイン</button>
+      <p class="muted login-qr-hint">QRの内容は <code>{id,pass}</code> 形式です</p>
+      <div id="qr-panel" class="qr-panel hidden">
+        <div id="qr-reader" class="qr-reader"></div>
+        <button type="button" id="btn-qr-stop" class="btn ghost block">カメラを閉じる</button>
+      </div>
       <p id="login-msg" class="msg"></p>
     </div>
   </div>
