@@ -235,6 +235,13 @@
             <div id="block-list" class="block-list"></div>
           </section>
           <section class="rail-panel">
+            <h3 class="rail-h">マイファイル（挿入）</h3>
+            <p class="muted" style="font-size:.72rem;margin:0 0 .4rem">専用フォルダのアップロード済みファイルをページに挿入</p>
+            <button type="button" id="btn-refresh-myfiles" class="btn ghost block" style="margin-bottom:.4rem">🔄 再読み込み</button>
+            <div id="myfiles-list" class="myfiles-list"></div>
+            <p id="myfiles-status" class="muted" style="font-size:.75rem;margin-top:.4rem"></p>
+          </section>
+          <section class="rail-panel">
             <h3 class="rail-h">デザインセット</h3>
             <div id="design-list" class="block-list"></div>
           </section>
@@ -310,6 +317,19 @@
         <button type="button" id="btn-new-create" class="btn primary">作成</button>
       </div>
       <p id="new-msg" class="msg"></p>
+    </div>
+  </div>
+
+  <div id="modal-preview" class="modal hidden">
+    <div class="modal-panel modal-preview-panel">
+      <div class="preview-header">
+        <h2 id="preview-title">プレビュー</h2>
+        <div class="preview-header-actions">
+          <a id="preview-open-ext" class="btn ghost" href="#" target="_blank" rel="noopener">別タブで開く</a>
+          <button type="button" id="btn-preview-close" class="btn primary">閉じる</button>
+        </div>
+      </div>
+      <div id="preview-body" class="preview-body"></div>
     </div>
   </div>
 
