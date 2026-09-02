@@ -239,7 +239,8 @@
       canEditMeta: u.canEditMeta !== false,
       canUpload: u.canUpload !== false,
       canDelete: u.canDelete !== false,
-      canBackupRestore: !!u.canBackupRestore || !!u.isAdmin
+      canBackupRestore: !!u.canBackupRestore || !!u.isAdmin,
+      fullAccess: !!u.fullAccess || !!u.isAdmin
     };
     setSession(state.user);
     if (msg) msg.textContent = viaQr ? 'QRログイン成功…' : '';
@@ -386,27 +387,44 @@
     loadPages();
   }
 
+  function canEditPath(path) {
+    if (!state.user) return false;
+    if (state.user.fullAccess || state.user.isAdmin) return true;
+    var perms = state.user.permissions || [];
+    return perms.indexOf(path) >= 0;
+  }
+
   function loadPages() {
     var grid = $('page-grid'), st = $('dash-status');
     if (!grid) return;
     grid.innerHTML = '';
     if (st) st.textContent = '読み込み中…';
-    var perms = (state.user && state.user.permissions) || [];
-    Promise.all(perms.map(function (p) {
-      return getFile(p).then(function (f) {
-        return { path: p, title: extractTitle(decode(f.content)) || p };
-      }).catch(function () { return { path: p, title: p + ' (読込失敗)' }; });
-    })).then(function (items) {
-      if (st) st.textContent = items.length ? items.length + ' ページ' : 'なし';
-      items.forEach(function (it) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'page-card';
-        b.innerHTML = '<span class="t"></span><span class="p mono"></span>';
-        b.querySelector('.t').textContent = it.title;
-        b.querySelector('.p').textContent = it.path;
-        b.onclick = function () { openEditor(it.path, true); };
-        grid.appendChild(b);
+    var permsPromise;
+    if (state.user && (state.user.fullAccess || state.user.isAdmin)) {
+      permsPromise = Promise.resolve((state.user.permissions || []).slice());
+    } else {
+      permsPromise = Promise.resolve((state.user && state.user.permissions) || []);
+    }
+    permsPromise.then(function (perms) {
+      return Promise.all(perms.map(function (p) {
+        return getFile(p).then(function (f) {
+          return { path: p, title: extractTitle(decode(f.content)) || p };
+        }).catch(function () { return { path: p, title: p + ' (読込失敗)' }; });
+      })).then(function (items) {
+        if (st) st.textContent = items.length ? items.length + ' ページ' : 'なし';
+        items.forEach(function (it) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'page-card';
+          b.innerHTML = '<span class="t"></span><span class="p mono"></span>';
+          b.querySelector('.t').textContent = it.title;
+          b.querySelector('.p').textContent = it.path;
+          b.onclick = function () {
+            if (!canEditPath(it.path)) { status('このページを編集する権限がありません'); return; }
+            openEditor(it.path, true);
+          };
+          grid.appendChild(b);
+        });
       });
     }).catch(function (e) {
       if (st) st.textContent = '読込失敗: ' + e.message;
@@ -1272,6 +1290,7 @@
   }
 
   function openEditor(path, isHtml) {
+    if (!canEditPath(path)) { status('このページを編集する権限がありません'); return; }
     state.path = path;
     state.selected = null;
     state.isHtml = !!isHtml;
