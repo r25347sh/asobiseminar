@@ -431,6 +431,113 @@
     });
   }
 
+  function classifyFile(name) {
+    var n = String(name || '').toLowerCase();
+    if (/\.(png|jpe?g|gif|webp|svg|bmp|ico|avif)$/i.test(n)) return 'image';
+    if (/\.(mp4|webm|ogv|mov|m4v)$/i.test(n)) return 'video';
+    if (/\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(n)) return 'audio';
+    if (/\.pdf$/i.test(n)) return 'pdf';
+    if (/\.(pptx?|odp|key)$/i.test(n)) return 'slide';
+    if (/\.(docx?|odt|rtf|txt|md|markdown|csv|tsv|json|xml|html?|css|js)$/i.test(n)) return 'doc';
+    return 'other';
+  }
+  function fileKindIcon(kind) {
+    return ({
+      image: '🖼️', video: '🎬', audio: '🎵', pdf: '📕',
+      slide: '📊', doc: '📄', other: '📎'
+    })[kind] || '📎';
+  }
+  function filePublicUrl(path) {
+    return SITE + String(path || '').replace(/^\//, '');
+  }
+
+  function openFilePreview(fileMeta) {
+    var modal = $('modal-preview');
+    var body = $('preview-body');
+    var title = $('preview-title');
+    if (!modal || !body) {
+      window.open(filePublicUrl(fileMeta.path), '_blank');
+      return;
+    }
+    var kind = classifyFile(fileMeta.name);
+    var url = filePublicUrl(fileMeta.path);
+    if (title) title.textContent = fileMeta.name || 'プレビュー';
+    body.innerHTML = '';
+    body.className = 'preview-body kind-' + kind;
+
+    if (kind === 'image') {
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = fileMeta.name || '';
+      img.className = 'preview-img';
+      body.appendChild(img);
+    } else if (kind === 'video') {
+      var vid = document.createElement('video');
+      vid.src = url;
+      vid.controls = true;
+      vid.className = 'preview-video';
+      vid.playsInline = true;
+      body.appendChild(vid);
+    } else if (kind === 'audio') {
+      var aud = document.createElement('audio');
+      aud.src = url;
+      aud.controls = true;
+      aud.className = 'preview-audio';
+      body.appendChild(aud);
+    } else if (kind === 'pdf') {
+      var ifr = document.createElement('iframe');
+      ifr.src = url;
+      ifr.className = 'preview-frame';
+      ifr.title = fileMeta.name || 'PDF';
+      body.appendChild(ifr);
+    } else if (kind === 'slide') {
+      body.innerHTML =
+        '<p class="muted">スライド形式はブラウザ直接プレビューに制限があります。</p>' +
+        '<p><a class="btn primary" href="' + url + '" target="_blank" rel="noopener">ダウンロード / 開く</a></p>' +
+        '<p class="muted" style="font-size:.8rem;margin-top:.75rem">Office Online 等で開く場合はファイルをダウンロードしてからご利用ください。</p>';
+    } else if (kind === 'doc') {
+      if (/\.(txt|md|markdown|csv|tsv|json|xml|css|js|html?)$/i.test(fileMeta.name || '')) {
+        body.innerHTML = '<p class="muted">読み込み中…</p>';
+        getFile(fileMeta.path).then(function (f) {
+          var text = decode(f.content);
+          var pre = document.createElement('pre');
+          pre.className = 'preview-text mono';
+          pre.textContent = text.length > 200000 ? text.slice(0, 200000) + '\n…(省略)' : text;
+          body.innerHTML = '';
+          body.appendChild(pre);
+        }).catch(function () {
+          body.innerHTML = '<p class="muted">テキスト読込に失敗しました</p>' +
+            '<p><a class="btn primary" href="' + url + '" target="_blank" rel="noopener">ファイルを開く</a></p>';
+        });
+      } else {
+        body.innerHTML =
+          '<p class="muted">このドキュメント形式は埋め込みプレビュー非対応です。</p>' +
+          '<p><a class="btn primary" href="' + url + '" target="_blank" rel="noopener">ダウンロード / 開く</a></p>';
+      }
+    } else {
+      body.innerHTML =
+        '<p class="muted">プレビュー非対応の形式です。</p>' +
+        '<p><a class="btn primary" href="' + url + '" target="_blank" rel="noopener">ダウンロード / 開く</a></p>';
+    }
+    var openExt = $('preview-open-ext');
+    if (openExt) {
+      openExt.href = url;
+      openExt.classList.remove('hidden');
+    }
+    modal.classList.remove('hidden');
+  }
+  function closeFilePreview() {
+    var modal = $('modal-preview');
+    var body = $('preview-body');
+    if (body) {
+      body.querySelectorAll('video,audio').forEach(function (m) {
+        try { m.pause(); } catch (e) {}
+      });
+      body.innerHTML = '';
+    }
+    if (modal) modal.classList.add('hidden');
+  }
+
   function loadFiles() {
     var list = $('files-list'), st = $('files-status');
     if (!list) return;
@@ -443,23 +550,25 @@
         var row = document.createElement('div');
         row.className = 'file-row';
         var sizeKb = f.size ? (f.size / 1024).toFixed(1) + ' KB' : '';
-        var isImg = /\.(png|jpe?g|gif|webp|svg)$/i.test(f.name);
+        var kind = classifyFile(f.name);
+        var canPreview = kind !== 'other';
         row.innerHTML =
           '<span class="name"></span><span class="meta mono"></span>' +
           '<div class="actions">' +
           '<button type="button" class="btn ghost btn-edit">編集</button>' +
-          (isImg ? '<button type="button" class="btn ghost btn-preview">プレビュー</button>' : '') +
+          (canPreview ? '<button type="button" class="btn ghost btn-preview">プレビュー</button>' : '') +
+          '<button type="button" class="btn ghost btn-open">開く</button>' +
           (state.user.canDelete ? '<button type="button" class="btn danger btn-del">削除</button>' : '') +
           '</div>';
-        row.querySelector('.name').textContent = (isImg ? '🖼️ ' : '📄 ') + f.name;
-        row.querySelector('.meta').textContent = sizeKb;
+        row.querySelector('.name').textContent = fileKindIcon(kind) + ' ' + f.name;
+        row.querySelector('.meta').textContent = sizeKb + (kind !== 'other' ? ' · ' + kind : '');
         row.querySelector('.btn-edit').onclick = function () {
           openEditor(f.path, /\.html?$/i.test(f.name));
         };
-        if (isImg) {
-          var prevBtn = row.querySelector('.btn-preview');
-          if (prevBtn) prevBtn.onclick = function () { window.open(SITE + f.path, '_blank'); };
-        }
+        var prevBtn = row.querySelector('.btn-preview');
+        if (prevBtn) prevBtn.onclick = function () { openFilePreview(f); };
+        var openBtn = row.querySelector('.btn-open');
+        if (openBtn) openBtn.onclick = function () { window.open(filePublicUrl(f.path), '_blank'); };
         var delBtn = row.querySelector('.btn-del');
         if (delBtn) {
           delBtn.onclick = function () {
@@ -949,6 +1058,118 @@
     return clone;
   }
 
+  function getEditablePlainText(el) {
+    if (!el) return '';
+    var clean = stripCmsChrome(el);
+    return String(clean.innerText || clean.textContent || '').replace(/\u200B/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  function selectEditableContents(el) {
+    var d = doc();
+    if (!d || !el) return;
+    /* CMS UI を除外して本文だけ選択 */
+    var walker = d.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (node) {
+        var p = node.parentElement;
+        if (p && (p.classList.contains('cms-handle') || p.classList.contains('cms-drag-bar') ||
+            p.classList.contains('cms-pen') || p.classList.contains('cms-lock-badge'))) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        if (!node.nodeValue || !String(node.nodeValue).replace(/\u200B/g, '').trim()) {
+          return NodeFilter.FILTER_REJECT;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var first = walker.nextNode();
+    var last = first;
+    var n;
+    while ((n = walker.nextNode())) last = n;
+    var sel = d.defaultView.getSelection();
+    sel.removeAllRanges();
+    var range = d.createRange();
+    if (first && last) {
+      range.setStart(first, 0);
+      range.setEnd(last, last.nodeValue.length);
+    } else {
+      range.selectNodeContents(el);
+      range.collapse(true);
+    }
+    sel.addRange(range);
+  }
+
+  function isSelectionCoveringElement(el) {
+    var d = doc();
+    if (!d || !el) return false;
+    var sel = d.defaultView.getSelection();
+    if (!sel || sel.rangeCount === 0) return false;
+    var plain = getEditablePlainText(el);
+    if (!plain) return true;
+    var selected = String(sel.toString() || '').replace(/\u200B/g, '').replace(/\s+/g, ' ').trim();
+    if (selected && selected === plain) return true;
+    /* 要素内の全テキストノードが選択範囲に含まれるか */
+    try {
+      var range = sel.getRangeAt(0);
+      if (!el.contains(range.commonAncestorContainer) && range.commonAncestorContainer !== el) return false;
+      var pre = d.createRange();
+      pre.selectNodeContents(el);
+      pre.setEnd(range.startContainer, range.startOffset);
+      var post = d.createRange();
+      post.selectNodeContents(el);
+      post.setStart(range.endContainer, range.endOffset);
+      var before = String(pre.toString() || '').replace(/\u200B/g, '').trim();
+      var after = String(post.toString() || '').replace(/\u200B/g, '').trim();
+      /* chrome UI テキストは無視（移動など） */
+      before = before.replace(/⋮⋮\s*移動/g, '').trim();
+      after = after.replace(/⋮⋮\s*移動/g, '').trim();
+      return !before && !after;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function shouldProtectElementDeletion(el, key) {
+    if (!el || !el.parentNode) return false;
+    var plain = getEditablePlainText(el);
+    if (!plain) return true;
+    if (isSelectionCoveringElement(el)) return true;
+    return false;
+  }
+
+  function clearEditableTextKeepElement(el) {
+    if (!el) return;
+    var chrome = [];
+    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
+      chrome.push(h);
+      if (h.parentNode) h.parentNode.removeChild(h);
+    });
+    /* 空にしつつ要素自体は残す（ゼロ幅スペースで一部ブラウザの要素削除をさらに抑止） */
+    el.innerHTML = '';
+    el.appendChild(doc().createTextNode('\u200B'));
+    chrome.forEach(function (h) { el.appendChild(h); });
+    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
+      h.setAttribute('contenteditable', 'false');
+      h.setAttribute('unselectable', 'on');
+      h.setAttribute('tabindex', '-1');
+    });
+    try {
+      var d = doc();
+      var range = d.createRange();
+      if (el.firstChild && el.firstChild.nodeType === 3) {
+        range.setStart(el.firstChild, 0);
+        range.collapse(true);
+      } else {
+        range.selectNodeContents(el);
+        range.collapse(true);
+      }
+      var sel = d.defaultView.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      el.focus();
+    } catch (e) {}
+    fillSideText(el);
+  }
+
   function fillSideText(el) {
     var ta = $('side-text');
     if (!ta) return;
@@ -1151,18 +1372,49 @@
           e.preventDefault();
           e.stopPropagation();
           try {
-            var range = d.createRange();
-            range.selectNodeContents(state.selected);
-            var sel = d.defaultView.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
+            selectEditableContents(state.selected);
           } catch (err) {}
+          return;
+        }
+      }
+      /* Backspace / Delete で要素ごと消えないように保護 */
+      if ((e.key === 'Backspace' || e.key === 'Delete') && state.selected &&
+          state.selected.getAttribute('contenteditable') === 'true' &&
+          !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (shouldProtectElementDeletion(state.selected, e.key)) {
+          e.preventDefault();
+          e.stopPropagation();
+          clearEditableTextKeepElement(state.selected);
+          status('要素は残します（空になりました）');
           return;
         }
       }
       if (e.key === 'Escape') {
         clearSelection();
         hideRtToolbar();
+      }
+    }, true);
+
+    d.addEventListener('beforeinput', function (e) {
+      if (!state.selected || state.selected.getAttribute('contenteditable') !== 'true') return;
+      var t = e.inputType || '';
+      if (t === 'deleteContentBackward' || t === 'deleteContentForward' || t === 'deleteByCut' || t === 'deleteByDrag') {
+        if (shouldProtectElementDeletion(state.selected, t.indexOf('Forward') >= 0 ? 'Delete' : 'Backspace')) {
+          e.preventDefault();
+          clearEditableTextKeepElement(state.selected);
+        }
+      }
+    }, true);
+
+    /* 万一ブラウザが要素を消した場合の復帰 */
+    d.addEventListener('keyup', function (e) {
+      if (e.key !== 'Backspace' && e.key !== 'Delete') return;
+      if (!state.selected) return;
+      if (!d.body.contains(state.selected)) {
+        status('要素削除を検知 — 元に戻すには Ctrl+Z');
+        state.selected = null;
+        hideRtToolbar();
+        fillSideText(null);
       }
     }, true);
 
@@ -1322,6 +1574,62 @@
     status('ブロックを挿入しました');
   }
 
+  function buildInsertHtmlForFile(f) {
+    var url = filePublicUrl(f.path);
+    var kind = classifyFile(f.name);
+    var safeName = String(f.name || 'file').replace(/[<>&"]/g, '');
+    if (kind === 'image') {
+      return '<p style="text-align:center"><img src="' + url + '" alt="' + safeName + '" style="max-width:100%;height:auto;border-radius:12px"></p>';
+    }
+    if (kind === 'video') {
+      return '<p style="text-align:center"><video src="' + url + '" controls playsinline style="max-width:100%;border-radius:12px"></video></p>';
+    }
+    if (kind === 'audio') {
+      return '<p style="text-align:center"><audio src="' + url + '" controls style="width:100%;max-width:420px"></audio></p>';
+    }
+    if (kind === 'pdf') {
+      return '<p><a class="btn-play" href="' + url + '" target="_blank" rel="noopener">📕 ' + safeName + ' を開く</a></p>' +
+        '<iframe src="' + url + '" title="' + safeName + '" style="width:100%;min-height:420px;border:1px solid rgba(43,33,64,.12);border-radius:12px"></iframe>';
+    }
+    return '<p><a class="btn-play" href="' + url + '" target="_blank" rel="noopener">' + fileKindIcon(kind) + ' ' + safeName + '</a></p>';
+  }
+
+  function insertUploadedFile(f) {
+    if (!f || !f.path) return;
+    insertBlock(buildInsertHtmlForFile(f));
+    status('ファイルを挿入: ' + (f.name || f.path));
+  }
+
+  function loadMyFilesPicker() {
+    var box = $('myfiles-list');
+    var st = $('myfiles-status');
+    if (!box) return;
+    box.innerHTML = '';
+    if (st) st.textContent = '読み込み中…';
+    listDir(userDir()).then(function (items) {
+      var files = items.filter(function (i) { return i.type === 'file'; });
+      if (!files.length) {
+        if (st) st.textContent = 'アップロード済みファイルなし';
+        return;
+      }
+      if (st) st.textContent = files.length + ' 件 — クリックでページに挿入';
+      files.forEach(function (f) {
+        var kind = classifyFile(f.name);
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn ghost block myfile-btn';
+        btn.title = f.path;
+        btn.innerHTML = '<span class="myfile-icon"></span><span class="myfile-name"></span>';
+        btn.querySelector('.myfile-icon').textContent = fileKindIcon(kind);
+        btn.querySelector('.myfile-name').textContent = f.name;
+        btn.onclick = function () { insertUploadedFile(f); };
+        box.appendChild(btn);
+      });
+    }).catch(function (e) {
+      if (st) st.textContent = '読込失敗: ' + e.message;
+    });
+  }
+
   function populateBlocks() {
     var box = $('block-list');
     if (box) {
@@ -1407,6 +1715,7 @@
     hideRtToolbar();
     setEditorMode(isHtml ? 'visual' : 'code');
     populateBlocks();
+    loadMyFilesPicker();
     fillSideText(null);
 
     getFile(path).then(function (f) {
@@ -2071,6 +2380,13 @@
         $('file-input').value = '';
       };
     }
+    if ($('btn-preview-close')) $('btn-preview-close').onclick = closeFilePreview;
+    if ($('modal-preview')) {
+      $('modal-preview').addEventListener('click', function (e) {
+        if (e.target === $('modal-preview')) closeFilePreview();
+      });
+    }
+    if ($('btn-refresh-myfiles')) $('btn-refresh-myfiles').onclick = loadMyFilesPicker;
     if ($('btn-list-all-users')) {
       $('btn-list-all-users').onclick = function () {
         var out = $('admin-out');
