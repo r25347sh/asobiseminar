@@ -535,10 +535,19 @@
     var style = [
       '<style id="cms-ui">',
       'html,body{user-select:none!important;-webkit-user-select:none!important}',
-      '.cms-sel,.cms-sel *{user-select:text!important;-webkit-user-select:text!important}',
+      '.cms-sel,.cms-sel *:not(.cms-handle):not(.cms-drag-bar):not(.cms-pen):not(.cms-lock-badge){user-select:text!important;-webkit-user-select:text!important}',
       '.cms-hover{outline:2px solid rgba(46,196,182,.75)!important;outline-offset:2px;opacity:.88!important;position:relative}',
       '.cms-sel{outline:3px solid #2ec4b6!important;outline-offset:2px;position:relative;min-height:1em;opacity:1!important;cursor:text}',
       '.cms-sel[contenteditable=true]{outline:3px solid #2ec4b6!important;cursor:text}',
+      /* CMS操作UIは contenteditable の子孫でも絶対に編集不可・選択不可 */
+      '.cms-handle,.cms-drag-bar,.cms-pen,.cms-lock-badge{',
+      '  -webkit-user-select:none!important;user-select:none!important;',
+      '  -webkit-user-modify:read-only!important;user-modify:read-only!important;',
+      '  cursor:inherit;',
+      '}',
+      '.cms-drag-bar{cursor:grab!important}',
+      '.cms-drag-bar:active{cursor:grabbing!important}',
+      '.cms-handle{cursor:inherit}',
       '[data-lock="true"].cms-locked-hover{',
       '  position:relative!important;',
       '  filter:blur(2.5px) saturate(.7)!important;',
@@ -931,6 +940,15 @@
     el.classList.add('cms-hover');
   }
 
+  function stripCmsChrome(node) {
+    if (!node || !node.querySelectorAll) return node;
+    var clone = node.cloneNode(true);
+    clone.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen,.cms-lock-badge,.cms-hover').forEach(function (h) { h.remove(); });
+    clone.classList.remove('cms-sel', 'cms-hover', 'cms-locked-hover');
+    clone.removeAttribute('contenteditable');
+    return clone;
+  }
+
   function fillSideText(el) {
     var ta = $('side-text');
     if (!ta) return;
@@ -941,7 +959,8 @@
     }
     ta.disabled = false;
     var asHtml = $('side-as-html') && $('side-as-html').checked;
-    ta.value = asHtml ? el.innerHTML : (el.innerText || el.textContent || '');
+    var clean = stripCmsChrome(el);
+    ta.value = asHtml ? clean.innerHTML : (clean.innerText || clean.textContent || '');
     try { ta.focus(); } catch (e) {}
   }
 
@@ -950,8 +969,22 @@
     var ta = $('side-text');
     if (!ta) return;
     var asHtml = $('side-as-html') && $('side-as-html').checked;
-    if (asHtml) state.selected.innerHTML = ta.value;
-    else state.selected.textContent = ta.value;
+    /* ハンドル等の CMS UI は消さずに本文だけ差し替える */
+    var el = state.selected;
+    var chrome = [];
+    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
+      chrome.push(h);
+      h.parentNode && h.parentNode.removeChild(h);
+    });
+    if (asHtml) el.innerHTML = ta.value;
+    else el.textContent = ta.value;
+    chrome.forEach(function (h) { el.appendChild(h); });
+    /* 念のため contenteditable=false を再付与 */
+    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
+      h.setAttribute('contenteditable', 'false');
+      h.setAttribute('unselectable', 'on');
+      h.setAttribute('tabindex', '-1');
+    });
   }
 
   function clearSelection() {
@@ -974,11 +1007,18 @@
     var bar = document.createElement('div');
     bar.className = 'cms-drag-bar';
     bar.textContent = '⋮⋮ 移動';
+    /* 親が contenteditable=true でも UI 自身は編集不可にする */
+    bar.setAttribute('contenteditable', 'false');
+    bar.setAttribute('unselectable', 'on');
+    bar.setAttribute('tabindex', '-1');
     el.appendChild(bar);
     ['nw', 'ne', 'sw', 'se'].forEach(function (pos) {
       var h = document.createElement('div');
       h.className = 'cms-handle ' + pos;
       h.dataset.handle = pos;
+      h.setAttribute('contenteditable', 'false');
+      h.setAttribute('unselectable', 'on');
+      h.setAttribute('tabindex', '-1');
       el.appendChild(h);
     });
   }
