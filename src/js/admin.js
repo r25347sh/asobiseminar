@@ -20,7 +20,9 @@
     pageKeyframes: {},
     undoStack: [],
     redoStack: [],
-    undoLock: false
+    undoLock: false,
+    chromeLayer: null,
+    chromeRaf: null
   };
 
   var BLOCKS = [
@@ -644,19 +646,42 @@
     var style = [
       '<style id="cms-ui">',
       'html,body{user-select:none!important;-webkit-user-select:none!important}',
-      '.cms-sel,.cms-sel *:not(.cms-handle):not(.cms-drag-bar):not(.cms-pen):not(.cms-lock-badge){user-select:text!important;-webkit-user-select:text!important}',
+      '.cms-sel,.cms-sel *{user-select:text!important;-webkit-user-select:text!important}',
       '.cms-hover{outline:2px solid rgba(46,196,182,.75)!important;outline-offset:2px;opacity:.88!important;position:relative}',
       '.cms-sel{outline:3px solid #2ec4b6!important;outline-offset:2px;position:relative;min-height:1em;opacity:1!important;cursor:text}',
       '.cms-sel[contenteditable=true]{outline:3px solid #2ec4b6!important;cursor:text}',
-      /* CMS操作UIは contenteditable の子孫でも絶対に編集不可・選択不可 */
+      /* 操作UIは編集要素の外（body直下オーバーレイ）に置く。編集対象に絶対に含めない */
+      '#cms-chrome-layer{',
+      '  position:fixed!important;left:0;top:0;width:0;height:0;z-index:2147483000!important;',
+      '  pointer-events:none!important;',
+      '  -webkit-user-select:none!important;user-select:none!important;',
+      '}',
+      '#cms-chrome-layer *{',
+      '  -webkit-user-select:none!important;user-select:none!important;',
+      '  -webkit-user-modify:read-only!important;',
+      '  contenteditable:false;',
+      '}',
       '.cms-handle,.cms-drag-bar,.cms-pen,.cms-lock-badge{',
       '  -webkit-user-select:none!important;user-select:none!important;',
-      '  -webkit-user-modify:read-only!important;user-modify:read-only!important;',
-      '  cursor:inherit;',
+      '  -webkit-user-modify:read-only!important;',
+      '  pointer-events:auto!important;',
       '}',
-      '.cms-drag-bar{cursor:grab!important}',
+      '.cms-drag-bar{',
+      '  position:fixed!important;height:22px;padding:0 10px;font-size:12px;line-height:22px;',
+      '  background:#ff6b6b;color:#fff;border-radius:6px 6px 0 0;cursor:grab!important;',
+      '  white-space:nowrap;z-index:2147483001!important;box-sizing:border-box;',
+      '  font-family:system-ui,sans-serif;font-weight:600;letter-spacing:.02em;',
+      '}',
       '.cms-drag-bar:active{cursor:grabbing!important}',
-      '.cms-handle{cursor:inherit}',
+      '.cms-handle{',
+      '  position:fixed!important;width:14px;height:14px;background:#ff6b6b;border:2px solid #fff;',
+      '  border-radius:3px;z-index:2147483001!important;box-shadow:0 1px 4px rgba(0,0,0,.35);',
+      '  box-sizing:border-box;padding:0;margin:0;',
+      '}',
+      '.cms-handle.nw{cursor:nwse-resize}',
+      '.cms-handle.ne{cursor:nesw-resize}',
+      '.cms-handle.sw{cursor:nesw-resize}',
+      '.cms-handle.se{cursor:nwse-resize}',
       '[data-lock="true"].cms-locked-hover{',
       '  position:relative!important;',
       '  filter:blur(2.5px) saturate(.7)!important;',
@@ -666,19 +691,9 @@
       '  cursor:not-allowed!important;',
       '}',
       '[data-lock="true"] *{cursor:not-allowed!important}',
-      '.cms-lock-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);',
-      '  width:40px;height:40px;border-radius:50%;background:rgba(43,33,64,.75);color:#fff;',
-      '  font-size:20px;line-height:40px;text-align:center;z-index:100001;pointer-events:none;',
+      '.cms-lock-badge{position:fixed;width:40px;height:40px;border-radius:50%;background:rgba(43,33,64,.75);color:#fff;',
+      '  font-size:20px;line-height:40px;text-align:center;z-index:2147483002;pointer-events:none;',
       '  box-shadow:0 4px 16px rgba(0,0,0,.3);filter:none!important}',
-      '.cms-handle{position:absolute;width:14px;height:14px;background:#ff6b6b;border:2px solid #fff;',
-      'border-radius:3px;z-index:99999;box-shadow:0 1px 4px rgba(0,0,0,.35);pointer-events:auto}',
-      '.cms-handle.nw{top:-7px;left:-7px;cursor:nwse-resize}',
-      '.cms-handle.ne{top:-7px;right:-7px;cursor:nesw-resize}',
-      '.cms-handle.sw{bottom:-7px;left:-7px;cursor:nesw-resize}',
-      '.cms-handle.se{bottom:-7px;right:-7px;cursor:nwse-resize}',
-      '.cms-drag-bar{position:absolute;top:-26px;left:0;height:22px;padding:0 10px;font-size:12px;line-height:22px;',
-      'background:#ff6b6b;color:#fff;border-radius:6px 6px 0 0;cursor:grab;user-select:none;white-space:nowrap;z-index:99999;pointer-events:auto}',
-      '.cms-drag-bar:active{cursor:grabbing}',
       '.radial-menu-wrapper,.menu-fab,.header-auth{display:none!important}',
       'body{padding-bottom:0!important}',
       '</style>'
@@ -692,9 +707,12 @@
   }
 
   function isChromeUi(el) {
-    if (!el || !el.classList) return false;
+    if (!el) return false;
+    if (el.id === 'cms-chrome-layer' || el.id === 'cms-ui') return true;
+    if (el.closest && el.closest('#cms-chrome-layer')) return true;
+    if (!el.classList) return false;
     return el.classList.contains('cms-handle') || el.classList.contains('cms-drag-bar') ||
-      el.classList.contains('cms-pen') || el.id === 'cms-ui';
+      el.classList.contains('cms-pen') || el.classList.contains('cms-lock-badge');
   }
 
   function pickTarget(el) {
@@ -1138,36 +1156,12 @@
 
   function clearEditableTextKeepElement(el) {
     if (!el) return;
-    var chrome = [];
-    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
-      chrome.push(h);
-      if (h.parentNode) h.parentNode.removeChild(h);
-    });
-    /* 空にしつつ要素自体は残す（ゼロ幅スペースで一部ブラウザの要素削除をさらに抑止） */
+    /* 操作UIは要素外なので、本文だけ空にする */
     el.innerHTML = '';
     el.appendChild(doc().createTextNode('\u200B'));
-    chrome.forEach(function (h) { el.appendChild(h); });
-    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
-      h.setAttribute('contenteditable', 'false');
-      h.setAttribute('unselectable', 'on');
-      h.setAttribute('tabindex', '-1');
-    });
-    try {
-      var d = doc();
-      var range = d.createRange();
-      if (el.firstChild && el.firstChild.nodeType === 3) {
-        range.setStart(el.firstChild, 0);
-        range.collapse(true);
-      } else {
-        range.selectNodeContents(el);
-        range.collapse(true);
-      }
-      var sel = d.defaultView.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      el.focus();
-    } catch (e) {}
+    placeCaretAtEnd(el);
     fillSideText(el);
+    scheduleChromeUpdate();
   }
 
   function fillSideText(el) {
@@ -1190,31 +1184,111 @@
     var ta = $('side-text');
     if (!ta) return;
     var asHtml = $('side-as-html') && $('side-as-html').checked;
-    /* ハンドル等の CMS UI は消さずに本文だけ差し替える */
     var el = state.selected;
-    var chrome = [];
-    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
-      chrome.push(h);
-      h.parentNode && h.parentNode.removeChild(h);
-    });
+    /* 操作UIは要素外。本文だけ差し替え */
     if (asHtml) el.innerHTML = ta.value;
     else el.textContent = ta.value;
-    chrome.forEach(function (h) { el.appendChild(h); });
-    /* 念のため contenteditable=false を再付与 */
-    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) {
+    scheduleChromeUpdate();
+  }
+
+  function removeChromeLayer() {
+    var d = doc();
+    if (state.chromeRaf) {
+      try { cancelAnimationFrame(state.chromeRaf); } catch (e0) {}
+      state.chromeRaf = null;
+    }
+    if (state.chromeLayer && state.chromeLayer.parentNode) {
+      try { state.chromeLayer.parentNode.removeChild(state.chromeLayer); } catch (e1) {}
+    }
+    state.chromeLayer = null;
+    if (d) {
+      /* 旧実装の残骸（要素内に付いていたハンドル）も掃除 */
+      d.querySelectorAll('#cms-chrome-layer,.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (n) {
+        try { n.remove(); } catch (e2) {}
+      });
+    }
+  }
+
+  function updateChromePositions(el) {
+    var d = doc();
+    if (!d || !el || !state.chromeLayer) return;
+    var rect;
+    try { rect = el.getBoundingClientRect(); } catch (e) { return; }
+    var bar = state.chromeLayer.querySelector('.cms-drag-bar');
+    if (bar) {
+      bar.style.left = Math.round(rect.left) + 'px';
+      bar.style.top = Math.round(rect.top - 26) + 'px';
+    }
+    var map = {
+      nw: [rect.left - 7, rect.top - 7],
+      ne: [rect.right - 7, rect.top - 7],
+      sw: [rect.left - 7, rect.bottom - 7],
+      se: [rect.right - 7, rect.bottom - 7]
+    };
+    state.chromeLayer.querySelectorAll('.cms-handle').forEach(function (h) {
+      var pos = h.dataset.handle;
+      var xy = map[pos];
+      if (!xy) return;
+      h.style.left = Math.round(xy[0]) + 'px';
+      h.style.top = Math.round(xy[1]) + 'px';
+    });
+  }
+
+  function scheduleChromeUpdate() {
+    if (state.chromeRaf) return;
+    state.chromeRaf = requestAnimationFrame(function () {
+      state.chromeRaf = null;
+      if (state.selected) updateChromePositions(state.selected);
+    });
+  }
+
+  function attachHandles(el) {
+    var d = doc();
+    if (!d || !el) return;
+    removeChromeLayer();
+
+    var layer = d.createElement('div');
+    layer.id = 'cms-chrome-layer';
+    layer.setAttribute('contenteditable', 'false');
+    layer.setAttribute('unselectable', 'on');
+    layer.setAttribute('aria-hidden', 'true');
+
+    var bar = d.createElement('div');
+    bar.className = 'cms-drag-bar';
+    bar.textContent = '⋮⋮ 移動';
+    bar.setAttribute('contenteditable', 'false');
+    bar.setAttribute('unselectable', 'on');
+    bar.setAttribute('tabindex', '-1');
+    bar.setAttribute('role', 'button');
+    bar.setAttribute('aria-label', '移動');
+    layer.appendChild(bar);
+
+    ['nw', 'ne', 'sw', 'se'].forEach(function (pos) {
+      var h = d.createElement('div');
+      h.className = 'cms-handle ' + pos;
+      h.dataset.handle = pos;
       h.setAttribute('contenteditable', 'false');
       h.setAttribute('unselectable', 'on');
       h.setAttribute('tabindex', '-1');
+      h.setAttribute('role', 'button');
+      h.setAttribute('aria-label', 'リサイズ ' + pos);
+      layer.appendChild(h);
     });
+
+    d.body.appendChild(layer);
+    state.chromeLayer = layer;
+    updateChromePositions(el);
   }
 
   function clearSelection() {
     var d = doc();
     if (!d) return;
     clearHover();
+    removeChromeLayer();
     d.querySelectorAll('.cms-sel').forEach(function (n) {
       n.classList.remove('cms-sel');
       n.removeAttribute('contenteditable');
+      /* 念のため旧ハンドルが残っていれば除去 */
       n.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) { h.remove(); });
     });
     state.selected = null;
@@ -1223,25 +1297,18 @@
     if ($('sel-info')) $('sel-info').textContent = 'クリックで編集（data-lock は不可）';
   }
 
-  function attachHandles(el) {
-    el.querySelectorAll('.cms-handle,.cms-drag-bar,.cms-pen').forEach(function (h) { h.remove(); });
-    var bar = document.createElement('div');
-    bar.className = 'cms-drag-bar';
-    bar.textContent = '⋮⋮ 移動';
-    /* 親が contenteditable=true でも UI 自身は編集不可にする */
-    bar.setAttribute('contenteditable', 'false');
-    bar.setAttribute('unselectable', 'on');
-    bar.setAttribute('tabindex', '-1');
-    el.appendChild(bar);
-    ['nw', 'ne', 'sw', 'se'].forEach(function (pos) {
-      var h = document.createElement('div');
-      h.className = 'cms-handle ' + pos;
-      h.dataset.handle = pos;
-      h.setAttribute('contenteditable', 'false');
-      h.setAttribute('unselectable', 'on');
-      h.setAttribute('tabindex', '-1');
-      el.appendChild(h);
-    });
+  function placeCaretAtEnd(el) {
+    var d = doc();
+    if (!d || !el) return;
+    try {
+      el.focus();
+      var range = d.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      var sel = d.defaultView.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (e) {}
   }
 
   function enterEdit(el) {
@@ -1256,6 +1323,7 @@
     clearSelection();
     el.classList.remove('cms-hover');
     el.classList.add('cms-sel');
+    /* 操作UIは要素の外に置くので、要素本体だけ contenteditable */
     el.setAttribute('contenteditable', 'true');
     state.selected = el;
     if (!el.__cmsUndoBound) {
@@ -1265,15 +1333,7 @@
     attachHandles(el);
     showRtToolbar();
     fillSideText(el);
-    try {
-      el.focus();
-      var range = doc().createRange();
-      range.selectNodeContents(el);
-      range.collapse(false);
-      var sel = doc().defaultView.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    } catch (e) {}
+    placeCaretAtEnd(el);
     if ($('sel-info')) {
       $('sel-info').textContent = '<' + el.tagName.toLowerCase() + '> 編集中 — Ctrl+Aで要素内全選択 / Escで終了';
     }
@@ -1413,10 +1473,29 @@
       if (!d.body.contains(state.selected)) {
         status('要素削除を検知 — 元に戻すには Ctrl+Z');
         state.selected = null;
+        removeChromeLayer();
         hideRtToolbar();
         fillSideText(null);
       }
     }, true);
+
+    d.addEventListener('input', function () {
+      scheduleChromeUpdate();
+    }, true);
+
+    /* 選択範囲が操作UIに飛ばないようにする */
+    d.addEventListener('selectionchange', function () {
+      try {
+        var sel = d.defaultView.getSelection();
+        if (!sel || !sel.rangeCount || !state.selected) return;
+        var node = sel.anchorNode;
+        if (!node) return;
+        var el = node.nodeType === 1 ? node : node.parentElement;
+        if (el && isChromeUi(el)) {
+          placeCaretAtEnd(state.selected);
+        }
+      } catch (err) {}
+    });
 
     d.addEventListener('mouseover', function (e) {
       if (state.drag || state.resize) return;
@@ -1498,6 +1577,7 @@
         var dy = e.clientY - state.drag.startY;
         state.drag.el.style.left = Math.round(state.drag.origL + dx) + 'px';
         state.drag.el.style.top = Math.round(state.drag.origT + dy) + 'px';
+        scheduleChromeUpdate();
       }
       if (state.resize) {
         e.preventDefault();
@@ -1513,13 +1593,25 @@
         r.el.style.height = Math.round(h) + 'px';
         if (r.handle.indexOf('w') >= 0) r.el.style.left = Math.round(l) + 'px';
         if (r.handle.indexOf('n') >= 0) r.el.style.top = Math.round(t) + 'px';
+        scheduleChromeUpdate();
       }
     }, true);
 
     d.addEventListener('mouseup', function () {
       state.drag = null;
       state.resize = null;
+      scheduleChromeUpdate();
     }, true);
+
+    d.addEventListener('scroll', function () {
+      scheduleChromeUpdate();
+    }, true);
+
+    if (d.defaultView) {
+      d.defaultView.addEventListener('resize', function () {
+        scheduleChromeUpdate();
+      });
+    }
 
     d.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') clearSelection();
@@ -1751,10 +1843,12 @@
     if (!d) throw new Error('doc なし');
     clearSelection();
     var bodyClone = d.body.cloneNode(true);
-    bodyClone.querySelectorAll('.cms-sel, .cms-hover, .cms-handle, .cms-drag-bar, .cms-pen, .radial-menu-wrapper, .menu-fab, .header-auth, #cms-ui, #cms-page-style').forEach(function (n) {
-      if (n.classList.contains('cms-handle') || n.classList.contains('cms-drag-bar') || n.classList.contains('cms-pen') || n.classList.contains('cms-hover') ||
+    bodyClone.querySelectorAll('.cms-sel, .cms-hover, .cms-handle, .cms-drag-bar, .cms-pen, .cms-lock-badge, .radial-menu-wrapper, .menu-fab, .header-auth, #cms-ui, #cms-page-style, #cms-chrome-layer').forEach(function (n) {
+      if (n.id === 'cms-chrome-layer' || n.id === 'cms-ui' || n.id === 'cms-page-style' ||
+          n.classList.contains('cms-handle') || n.classList.contains('cms-drag-bar') || n.classList.contains('cms-pen') ||
+          n.classList.contains('cms-hover') || n.classList.contains('cms-lock-badge') ||
           n.classList.contains('radial-menu-wrapper') || n.classList.contains('menu-fab') ||
-          n.classList.contains('header-auth') || n.id === 'cms-ui' || n.id === 'cms-page-style') {
+          n.classList.contains('header-auth')) {
         n.remove();
       } else {
         n.classList.remove('cms-sel');
