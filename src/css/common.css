@@ -40,3 +40,42 @@ section.article_by_teacher{background:var(--card);border:2px solid var(--border)
 section.article_by_teacher h2{font-family:var(--font-display);font-size:1.3rem;margin-bottom:.7rem;border-bottom:3px solid rgba(255,107,107,.35);padding-bottom:.4rem}
 .site-footer{text-align:center;padding:2rem 1rem 5rem;font-size:.78rem;color:var(--ink-soft);border-top:2px dashed rgba(43,33,64,.1);margin-top:2rem}
 @media(min-width:768px){.nav-desktop{display:flex}.site-header{padding:0 1.4rem}}
+
+
+/* ---- layout spacing v2 ---- */
+.main{padding:1.75rem 1.25rem 3.5rem;max-width:var(--max-w);margin:0 auto}
+.page-title{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.15rem);line-height:1.25;margin:0 0 .35rem}
+.section-title{font-family:var(--font-display);font-size:clamp(1.25rem,3vw,1.6rem);margin:2rem 0 .5rem}
+.page-sub{color:rgba(43,33,64,.72);margin:0 0 1.1rem;font-size:.95rem}
+.page-sub.center{text-align:center}
+
+.goal-banner{background:linear-gradient(135deg,rgba(46,196,182,.14),rgba(255,107,107,.10));border:1px solid rgba(43,33,64,.08);border-radius:16px;padding:1rem 1.2rem;margin:0 0 1.35rem}
+.goal-label{font-family:var(--font-display);font-size:.95rem;margin:0 0 .35rem;color:var(--grape)}
+.goal-text{margin:0;font-size:1.02rem;line-height:1.65;font-weight:600;color:var(--ink)}
+
+.wh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:0 0 1.5rem}
+@media (max-width:800px){.wh-grid{grid-template-columns:1fr}}
+.wh-block{background:#fff;border-radius:16px;padding:1.1rem 1.15rem;border:1px solid rgba(43,33,64,.08);box-shadow:0 8px 24px rgba(43,33,64,.06)}
+.wh-block h2{font-family:var(--font-display);font-size:1.15rem;margin:0 0 .2rem}
+.wh-block > p:not(.wh-body){margin:0 0 .55rem;font-size:.78rem;color:rgba(43,33,64,.55);font-weight:600}
+.wh-body{margin:0;line-height:1.7}
+.wh-what{border-top:4px solid #2ec4b6}
+.wh-why{border-top:4px solid #ff6b6b}
+.wh-how{border-top:4px solid #ffd166}
+
+.info-card,.content-block{background:#fff;border-radius:16px;padding:1.2rem 1.3rem;margin:0 0 1.25rem;border:1px solid rgba(43,33,64,.08);box-shadow:0 8px 24px rgba(43,33,64,.05)}
+.info-card h2,.content-block h2{font-family:var(--font-display);font-size:1.15rem;margin:0 0 .75rem}
+.info-list{list-style:none;display:grid;gap:.55rem}
+.info-list li{display:flex;flex-wrap:wrap;gap:.35rem .75rem;padding:.45rem 0;border-bottom:1px dashed rgba(43,33,64,.1)}
+.info-list li:last-child{border-bottom:0}
+.info-list li span{min-width:5.5rem;color:rgba(43,33,64,.55);font-size:.85rem;font-weight:600}
+.info-list li strong{font-weight:600;color:var(--ink)}
+
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:0 0 1.5rem}
+.card{display:block;background:#fff;border-radius:16px;padding:1.15rem 1.2rem;border:1px solid rgba(43,33,64,.08);box-shadow:0 8px 24px rgba(43,33,64,.05);transition:transform .2s var(--ease),box-shadow .2s ease;color:inherit}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(43,33,64,.1);color:inherit}
+.card h3{font-family:var(--font-display);font-size:1.05rem;margin:0 0 .35rem;line-height:1.35}
+.card p{margin:0;font-size:.88rem;color:rgba(43,33,64,.7);line-height:1.5}
+
+.cta-wrap{text-align:center;margin:1.5rem 0 .5rem}
+.site-footer{text-align:center;padding:1.5rem 1rem 2rem;color:rgba(43,33,64,.55);font-size:.85rem}
