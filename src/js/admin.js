@@ -647,8 +647,9 @@
       '<style id="cms-ui">',
       'html,body{user-select:none!important;-webkit-user-select:none!important}',
       '.cms-sel,.cms-sel *{user-select:text!important;-webkit-user-select:text!important}',
-      '.cms-hover{outline:2px solid rgba(46,196,182,.75)!important;outline-offset:2px;opacity:.88!important;position:relative}',
-      '.cms-sel{outline:3px solid #2ec4b6!important;outline-offset:2px;position:relative;min-height:1em;opacity:1!important;cursor:text}',
+      /* position は触らない（relative にすると absolute 配置やドラッグ基準が壊れる） */
+      '.cms-hover{outline:2px solid rgba(46,196,182,.75)!important;outline-offset:2px;opacity:.88!important}',
+      '.cms-sel{outline:3px solid #2ec4b6!important;outline-offset:2px;min-height:1em;opacity:1!important;cursor:text}',
       '.cms-sel[contenteditable=true]{outline:3px solid #2ec4b6!important;cursor:text}',
       /* 操作UIは編集要素の外（body直下オーバーレイ）に置く。編集対象に絶対に含めない */
       '#cms-chrome-layer{',
@@ -1385,28 +1386,110 @@
     if (ve) ve.classList.remove('rt-open');
   }
 
+  /**
+   * 要素のボーダーボックスを、body を基準にした absolute 座標へ変換する。
+   *
+   * 重要:
+   * - getBoundingClientRect() は既に「ビューポート基準」（スクロール込みの見た目位置）
+   * - bodyRect も同じくビューポート基準
+   * - したがって rect - bodyRect が body 左上からのオフセット
+   * - ここに window.scrollX/Y を足すと二重加算になり、スクロール時に大きくズレる
+   * - body 自身がスクロールする場合のみ body.scrollLeft/Top を足す
+   */
+  function offsetRelativeToBody(el) {
+    var d = doc();
+    var body = d.body;
+    var rect = el.getBoundingClientRect();
+    var bodyRect = body.getBoundingClientRect();
+    return {
+      left: rect.left - bodyRect.left + (body.scrollLeft || 0),
+      top: rect.top - bodyRect.top + (body.scrollTop || 0),
+      width: rect.width,
+      height: rect.height
+    };
+  }
+
   function ensureAbsolute(el) {
     var d = doc();
-    var cs = d.defaultView.getComputedStyle(el);
-    if (cs.position === 'static' || !cs.position || cs.position === 'relative') {
-      var rect = el.getBoundingClientRect();
-      var body = d.body;
-      var bodyRect = body.getBoundingClientRect();
-      var scrollX = d.defaultView.scrollX || d.documentElement.scrollLeft || 0;
-      var scrollY = d.defaultView.scrollY || d.documentElement.scrollTop || 0;
-      var left = rect.left - bodyRect.left + scrollX;
-      var top = rect.top - bodyRect.top + scrollY;
+    if (!d || !el) return null;
+    var win = d.defaultView;
+    var body = d.body;
+    var cs = win.getComputedStyle(el);
+
+    /* body を位置指定の基準にする（static のままだと absolute の基準がずれる） */
+    if (win.getComputedStyle(body).position === 'static') {
+      body.style.position = 'relative';
+    }
+
+    /* 変換前の見た目位置を必ず測る */
+    var before = offsetRelativeToBody(el);
+    var w = el.offsetWidth;
+    var h = el.offsetHeight;
+
+    var pos = cs.position;
+    if (pos !== 'absolute' && pos !== 'fixed') {
       el.style.position = 'absolute';
+      el.style.left = Math.round(before.left) + 'px';
+      el.style.top = Math.round(before.top) + 'px';
+      el.style.width = Math.round(w) + 'px';
+      /* 高さは内容に任せる（テキスト編集で潰さない）が、resize用に現状値も保持可能 */
+      el.style.margin = '0';
+      el.style.right = 'auto';
+      el.style.bottom = 'auto';
+    } else {
+      /* 既に absolute でも、インライン left/top が空だと parseFloat が 0 になりジャンプする */
+      if (!el.style.left || el.style.left === 'auto') {
+        el.style.left = Math.round(before.left) + 'px';
+      }
+      if (!el.style.top || el.style.top === 'auto') {
+        el.style.top = Math.round(before.top) + 'px';
+      }
+      if (!el.style.position) el.style.position = 'absolute';
+    }
+
+    /*
+     * margin 除去や containing block の影響で 1px でもズレたら、
+     * 実測値で left/top を書き直して視覚位置を固定する
+     */
+    var after = offsetRelativeToBody(el);
+    var dx = before.left - after.left;
+    var dy = before.top - after.top;
+    if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+      var curL = parseFloat(el.style.left);
+      var curT = parseFloat(el.style.top);
+      if (isNaN(curL)) curL = after.left;
+      if (isNaN(curT)) curT = after.top;
+      el.style.left = Math.round(curL + dx) + 'px';
+      el.style.top = Math.round(curT + dy) + 'px';
+    }
+
+    var finalOff = offsetRelativeToBody(el);
+    return {
+      left: finalOff.left,
+      top: finalOff.top,
+      width: el.offsetWidth,
+      height: el.offsetHeight
+    };
+  }
+
+  function readDragOrigin(el) {
+    /* ドラッグ開始時点の「実際の」left/top/size。style が空でも実測から取る */
+    var d = doc();
+    var left = parseFloat(el.style.left);
+    var top = parseFloat(el.style.top);
+    if (isNaN(left) || isNaN(top) || el.style.left === '' || el.style.top === '') {
+      var off = offsetRelativeToBody(el);
+      left = off.left;
+      top = off.top;
       el.style.left = Math.round(left) + 'px';
       el.style.top = Math.round(top) + 'px';
-      el.style.width = Math.round(el.offsetWidth) + 'px';
-      el.style.margin = '0';
-      if (cs.position === 'static') {
-        if (d.defaultView.getComputedStyle(body).position === 'static') {
-          body.style.position = 'relative';
-        }
-      }
     }
+    return {
+      left: left,
+      top: top,
+      width: el.offsetWidth,
+      height: el.offsetHeight
+    };
   }
 
   function setupFrameEvents() {
@@ -1536,22 +1619,28 @@
     d.addEventListener('mousedown', function (e) {
       var t = e.target;
       if (!state.selected) return;
+      if (isChromeUi(t) && !(t.classList && (t.classList.contains('cms-handle') || t.classList.contains('cms-drag-bar')))) {
+        return;
+      }
 
       if (t.classList && t.classList.contains('cms-handle')) {
         e.preventDefault();
         e.stopPropagation();
         var el = state.selected;
+        /* 見た目位置を保ったまま absolute 化 → その実測値を開始点にする */
         ensureAbsolute(el);
+        var originR = readDragOrigin(el);
         state.resize = {
           handle: t.dataset.handle,
           el: el,
           startX: e.clientX,
           startY: e.clientY,
-          startW: el.offsetWidth,
-          startH: el.offsetHeight,
-          startL: parseFloat(el.style.left) || 0,
-          startT: parseFloat(el.style.top) || 0
+          startW: originR.width,
+          startH: originR.height,
+          startL: originR.left,
+          startT: originR.top
         };
+        scheduleChromeUpdate();
         return;
       }
 
@@ -1560,13 +1649,17 @@
         e.stopPropagation();
         var el2 = state.selected;
         ensureAbsolute(el2);
+        var originD = readDragOrigin(el2);
         state.drag = {
           el: el2,
           startX: e.clientX,
           startY: e.clientY,
-          origL: parseFloat(el2.style.left) || 0,
-          origT: parseFloat(el2.style.top) || 0
+          /* clientX の差分はビューポート座標。absolute の left/top は body 基準。
+             差分は同じピクセル単位なので、開始 left/top が実測と一致していればズレない */
+          origL: originD.left,
+          origT: originD.top
         };
+        scheduleChromeUpdate();
       }
     }, true);
 
@@ -1584,15 +1677,15 @@
         var r = state.resize;
         var dx2 = e.clientX - r.startX;
         var dy2 = e.clientY - r.startY;
-        var w = r.startW, h = r.startH, l = r.startL, t = r.startT;
+        var w = r.startW, h = r.startH, l = r.startL, top = r.startT;
         if (r.handle.indexOf('e') >= 0) w = Math.max(40, r.startW + dx2);
         if (r.handle.indexOf('s') >= 0) h = Math.max(20, r.startH + dy2);
         if (r.handle.indexOf('w') >= 0) { w = Math.max(40, r.startW - dx2); l = r.startL + dx2; }
-        if (r.handle.indexOf('n') >= 0) { h = Math.max(20, r.startH - dy2); t = r.startT + dy2; }
+        if (r.handle.indexOf('n') >= 0) { h = Math.max(20, r.startH - dy2); top = r.startT + dy2; }
         r.el.style.width = Math.round(w) + 'px';
         r.el.style.height = Math.round(h) + 'px';
         if (r.handle.indexOf('w') >= 0) r.el.style.left = Math.round(l) + 'px';
-        if (r.handle.indexOf('n') >= 0) r.el.style.top = Math.round(t) + 'px';
+        if (r.handle.indexOf('n') >= 0) r.el.style.top = Math.round(top) + 'px';
         scheduleChromeUpdate();
       }
     }, true);
@@ -2385,7 +2478,8 @@
         if (!state.selected) { status('先に選択'); return; }
         ensureAbsolute(state.selected);
         attachHandles(state.selected);
-        status('ドラッグ可能にしました');
+        scheduleChromeUpdate();
+        status('ドラッグ可能にしました（見た目位置は維持）');
       };
     }
     if ($('btn-delete-el')) {
