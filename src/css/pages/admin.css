@@ -213,3 +213,6 @@ body.cms-app{font-family:'Noto Sans JP',system-ui,sans-serif;background:var(--bg
 .qr-reader{width:100%;max-width:320px;margin:0 auto;overflow:hidden;border-radius:14px;background:#111}
 .qr-reader video{width:100%!important;border-radius:14px}
 .btn.block{width:100%}
+
+.qr-actions{display:flex;flex-direction:column;gap:.45rem;margin-top:.65rem}
+.qr-actions .btn{width:100%}
