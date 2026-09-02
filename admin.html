@@ -20,7 +20,10 @@
       <p class="muted login-qr-hint">QRの内容は <code>{id,pass}</code> 形式です</p>
       <div id="qr-panel" class="qr-panel hidden">
         <div id="qr-reader" class="qr-reader"></div>
-        <button type="button" id="btn-qr-stop" class="btn ghost block">カメラを閉じる</button>
+        <div class="qr-actions">
+          <button type="button" id="btn-qr-flip" class="btn ghost">🔄 カメラ切替（イン/アウト）</button>
+          <button type="button" id="btn-qr-stop" class="btn ghost">カメラを閉じる</button>
+        </div>
       </div>
       <p id="login-msg" class="msg"></p>
     </div>
