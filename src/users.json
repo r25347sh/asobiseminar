@@ -1,6 +1,5 @@
 {
   "NbrnT": {
-    "password": "jL5!KsOnKS2!",
     "name": "樊澤熙",
     "semi_id": "fashion",
     "semi_name": "遊びの探究ゼミ・ファッション",
@@ -16,10 +15,10 @@
     "permissions": [
       "pages/members/r22289hh.html",
       "pages/groups/fashion.html"
-    ]
+    ],
+    "pass_hash": "0a6df32a4cc9eb9a424b4bc157c67abb31ebacc3c5fc8f9189529ddab2aec995"
   },
   "P3fAb": {
-    "password": "gI9#CYzMDQmr",
     "name": "福島駿",
     "semi_id": "skate",
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
@@ -35,10 +34,10 @@
     "permissions": [
       "pages/members/r22321fs.html",
       "pages/groups/skate.html"
-    ]
+    ],
+    "pass_hash": "c45b66b1bd50244a50401f59eee35b7e24eefdc8a36dd89151e853a97bba23b3"
   },
   "nFbmO": {
-    "password": "FMBCgQwYBJBv",
     "name": "川端也大",
     "semi_id": "skate",
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
@@ -54,10 +53,10 @@
     "permissions": [
       "pages/members/r22497kk.html",
       "pages/groups/skate.html"
-    ]
+    ],
+    "pass_hash": "0848705cb63f6b01a6ea7fbbe327597414f488a7ceda33606cffedcc200beef1"
   },
   "HnKYa": {
-    "password": "7$8PLjCwXu%f",
     "name": "草深りお",
     "semi_id": "fashion",
     "semi_name": "遊びの探究ゼミ・ファッション",
@@ -73,10 +72,10 @@
     "permissions": [
       "pages/members/r22570kr.html",
       "pages/groups/fashion.html"
-    ]
+    ],
+    "pass_hash": "9c4172ec190bbab797a8047fd02a40e7aa828dba5646cabd72545081b68de9c3"
   },
   "XRvj7": {
-    "password": "5FFVNXbCuD1X",
     "name": "小林和輝",
     "semi_id": "arch",
     "semi_name": "遊びの探究ゼミ・建築",
@@ -92,10 +91,10 @@
     "permissions": [
       "pages/members/r22661kk.html",
       "pages/groups/arch.html"
-    ]
+    ],
+    "pass_hash": "4039d011e74da307f5a60c27d60ceb95c4bbc3ecfdf9a14f72df1f2542594a64"
   },
   "uff0L": {
-    "password": "4lsgva0SfwTc",
     "name": "奥村京太",
     "semi_id": "skate",
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
@@ -111,10 +110,10 @@
     "permissions": [
       "pages/members/r25173ok.html",
       "pages/groups/skate.html"
-    ]
+    ],
+    "pass_hash": "7b34a9c3d89ec82609ac5887bfec0b73504be55d4e75edf12118535f9309d33b"
   },
   "YTH8x": {
-    "password": "Ipd#cWeFZe1H",
     "name": "齊藤絢太",
     "semi_id": "arch",
     "semi_name": "遊びの探究ゼミ・建築",
@@ -130,10 +129,10 @@
     "permissions": [
       "pages/members/r25321sa.html",
       "pages/groups/arch.html"
-    ]
+    ],
+    "pass_hash": "866c83e20b3823ebfaa571a09562f8b8e7fbad8f2ff52a6876fb14a738e8835f"
   },
   "IZM1J": {
-    "password": "NgYqQ95mDwDX",
     "name": "佐藤ちほ",
     "semi_id": "fashion",
     "semi_name": "遊びの探究ゼミ・ファッション",
@@ -149,10 +148,10 @@
     "permissions": [
       "pages/members/r25339sc.html",
       "pages/groups/fashion.html"
-    ]
+    ],
+    "pass_hash": "0656ced4bc01392544e2a43db8c6355cec682fc66e218914118506d05eda0fa6"
   },
   "Rcore": {
-    "password": "QlOcL2m!fkD1",
     "name": "神季美花",
     "semi_id": "fashion",
     "semi_name": "遊びの探究ゼミ・ファッション",
@@ -168,10 +167,10 @@
     "permissions": [
       "pages/members/r25404jk.html",
       "pages/groups/fashion.html"
-    ]
+    ],
+    "pass_hash": "9af2673792502342e01b0ebc5ffd8f5ad5395778c1820ee6f9b1bed3db59ef12"
   },
   "ogrNw": {
-    "password": "%4!MRq84W4nY",
     "name": "野田彩夏",
     "semi_id": "arch",
     "semi_name": "遊びの探究ゼミ・建築",
@@ -187,10 +186,10 @@
     "permissions": [
       "pages/members/r25660na.html",
       "pages/groups/arch.html"
-    ]
+    ],
+    "pass_hash": "7cc76a625d268d7f2d4bd37fc3320f3945190cbcaf9d4ebf04707d09ad9942ae"
   },
   "wmq6O": {
-    "password": "XE21qDXeMUx2",
     "name": "柳原康希",
     "semi_id": "skate",
     "semi_name": "遊びの探究ゼミ・すけぼぉ",
@@ -206,10 +205,10 @@
     "permissions": [
       "pages/members/r25917yk.html",
       "pages/groups/skate.html"
-    ]
+    ],
+    "pass_hash": "f734ec10debac4a6e1e6e6a7b02c1d44c1cc02e4f9ce1932745d69b98251fe6c"
   },
   "matsumaru": {
-    "password": "Asobi#2026$Play!",
     "name": "松丸先生",
     "semi_id": "matsumaru",
     "semi_name": "遊びの探究ゼミ・全体管理",
@@ -240,10 +239,10 @@
       "pages/groups/skate.html",
       "pages/groups/fashion.html",
       "pages/groups/arch.html"
-    ]
+    ],
+    "pass_hash": "7ac2090cd53afc458ac7d1d064dc78b1354c56b33773e419bcb2b05078c81bae"
   },
   "r25347sh": {
-    "password": "kes-2592",
     "name": "r25347sh",
     "semi_id": "admin",
     "semi_name": "サイト管理者",
@@ -276,6 +275,7 @@
       "pages/groups/skate.html",
       "pages/groups/fashion.html",
       "pages/groups/arch.html"
-    ]
+    ],
+    "pass_hash": "17ff4149075c142ecaceb72434edceb4f049d35feba5ba124cf005bcfa0ca8a6"
   }
 }
