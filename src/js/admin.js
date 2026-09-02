@@ -662,10 +662,28 @@
     });
     Object.keys(state.pageStyles || {}).forEach(function (id) {
       var rules = state.pageStyles[id];
-      var body = Object.keys(rules).map(function (k) {
-        return '  ' + camelToKebab(k) + ': ' + rules[k] + ';';
-      }).join('\n');
-      if (body) parts.push('[data-cms-id="' + id + '"] {\n' + body + '\n}');
+      if (!rules) return;
+      var isBody = (id === 'cms-body');
+      var lines = Object.keys(rules).map(function (k) {
+        var val = rules[k];
+        if (val === '' || val == null) return '';
+        var prop = camelToKebab(k);
+        return '  ' + prop + ': ' + val + (isBody ? ' !important' : '') + ';';
+      }).filter(Boolean).join('\n');
+      if (!lines) return;
+      if (isBody) {
+        parts.push('html, body {');
+        parts.push(lines);
+        parts.push('}');
+        parts.push('body[data-cms-id="cms-body"] {');
+        parts.push(lines);
+        parts.push('}');
+      } else {
+        parts.push('[data-cms-id="' + id + '"] {');
+        parts.push(lines);
+        parts.push('}');
+      }
+      parts.push('');
     });
     return parts.join('\n') + '\n';
   }
@@ -835,35 +853,76 @@
     status('やり直しました（Ctrl+Y）');
   }
 
+
   function applyBodyBackground() {
     var d = doc();
     if (!d || !d.body) { status('プレビューがありません'); return; }
     pushUndoSnapshot('body-bg');
     var mode = ($('body-bg-mode') && $('body-bg-mode').value) || 'solid';
     var styles = {};
-    if (mode === 'solid') {
-      var c = ($('body-bg-color') && $('body-bg-color').value) || '#fffdf8';
-      styles.background = c;
-      styles.backgroundImage = 'none';
-    } else if (mode === 'keep-site') {
+    var custom = ($('body-bg-custom') && $('body-bg-custom').value.trim()) || '';
+    var imgUrl = ($('body-bg-image') && $('body-bg-image').value.trim()) || '';
+    var c1 = ($('body-bg-color') && $('body-bg-color').value) || '#fffdf8';
+    var c2 = ($('body-bg-color2') && $('body-bg-color2').value) || '#e8f5e9';
+    var angle = ($('body-bg-angle') && $('body-bg-angle').value) || '135';
+    var size = ($('body-bg-size') && $('body-bg-size').value) || 'cover';
+    var attach = ($('body-bg-attach') && $('body-bg-attach').value) || 'scroll';
+
+    if (mode === 'keep-site') {
       styles.background = '';
       styles.backgroundImage = '';
       styles.backgroundColor = '';
+      styles.backgroundSize = '';
+      styles.backgroundAttachment = '';
+      styles.backgroundRepeat = '';
+      styles.backgroundPosition = '';
+    } else if (mode === 'solid') {
+      styles.background = c1;
+      styles.backgroundImage = 'none';
+      styles.backgroundColor = c1;
+    } else if (mode === 'linear') {
+      styles.background = 'linear-gradient(' + angle + 'deg, ' + c1 + ', ' + c2 + ')';
+      styles.backgroundColor = c1;
+    } else if (mode === 'radial') {
+      styles.background = 'radial-gradient(circle at 30% 20%, ' + c1 + ', ' + c2 + ' 70%)';
+      styles.backgroundColor = c2;
+    } else if (mode === 'image' && imgUrl) {
+      styles.backgroundImage = 'url("' + imgUrl.replace(/"/g, '') + '")';
+      styles.backgroundSize = size;
+      styles.backgroundRepeat = 'no-repeat';
+      styles.backgroundPosition = 'center center';
+      styles.backgroundAttachment = attach;
+      styles.backgroundColor = c1;
+    } else if (mode === 'custom' && custom) {
+      styles.background = custom;
     } else {
-      /* gradient presets */
       var presets = {
         warm: 'radial-gradient(circle at 12% 18%,rgba(255,209,102,.35),transparent 42%),radial-gradient(circle at 88% 12%,rgba(76,201,240,.28),transparent 40%),radial-gradient(circle at 70% 80%,rgba(46,196,182,.22),transparent 45%),#fffdf8',
         cool: 'radial-gradient(circle at 20% 20%,rgba(76,201,240,.35),transparent 45%),radial-gradient(circle at 80% 70%,rgba(124,58,237,.2),transparent 40%),#f4f7ff',
         sunset: 'radial-gradient(circle at 15% 25%,rgba(255,107,107,.3),transparent 42%),radial-gradient(circle at 85% 15%,rgba(255,209,102,.35),transparent 40%),#fff8f2',
-        night: 'radial-gradient(circle at 30% 20%,rgba(124,58,237,.45),transparent 40%),radial-gradient(circle at 80% 80%,rgba(46,196,182,.25),transparent 45%),#1a1428'
+        night: 'radial-gradient(circle at 30% 20%,rgba(124,58,237,.45),transparent 40%),radial-gradient(circle at 80% 80%,rgba(46,196,182,.25),transparent 45%),#1a1428',
+        forest: 'radial-gradient(circle at 20% 15%,rgba(46,125,50,.35),transparent 45%),radial-gradient(circle at 80% 70%,rgba(27,94,32,.4),transparent 50%),#0b1f14',
+        sakura: 'radial-gradient(circle at 25% 20%,rgba(244,143,177,.4),transparent 45%),radial-gradient(circle at 75% 75%,rgba(248,187,208,.3),transparent 40%),#fff5f8'
       };
       styles.background = presets[mode] || presets.warm;
       styles.backgroundColor = '';
     }
-    ensureCmsId(d.body);
+
+    /* body 専用IDで確実に記録 */
+    d.body.setAttribute('data-cms-id', 'cms-body');
     recordStyle(d.body, styles);
-    /* body は pageStyles に記録（子要素の背景とは分離） */
-    status('ページ全体の背景を更新しました（body）');
+    /* 即時反映を強化 */
+    Object.keys(styles).forEach(function (k) {
+      try { d.body.style[k] = styles[k] || ''; } catch (e) {}
+    });
+    if (d.documentElement) {
+      try {
+        d.documentElement.style.background = styles.background || styles.backgroundColor || '';
+        d.documentElement.style.backgroundImage = styles.backgroundImage || '';
+      } catch (e2) {}
+    }
+    refreshPageStyleTag();
+    status('ページ全体の背景を適用しました（保存で確定）');
   }
 
   function showHover(el) {
@@ -1388,7 +1447,22 @@
       oIcon.setAttribute('href', curIcon.getAttribute('href') || '');
     } else if (oIcon) oIcon.remove();
     var oBody = origDoc.body || origDoc.querySelector('body');
-    if (oBody) oBody.innerHTML = bodyClone.innerHTML;
+    if (oBody) {
+      oBody.innerHTML = bodyClone.innerHTML;
+      /* body の背景・cms-id を保存 */
+      var bStyle = d.body.getAttribute('style') || '';
+      if (bStyle) oBody.setAttribute('style', bStyle);
+      else oBody.removeAttribute('style');
+      var cmsId = d.body.getAttribute('data-cms-id');
+      if (cmsId) oBody.setAttribute('data-cms-id', cmsId);
+      /* pageStyles の cms-body を style にも反映 */
+      if (state.pageStyles && state.pageStyles['cms-body']) {
+        var rs = state.pageStyles['cms-body'];
+        Object.keys(rs).forEach(function (k) {
+          try { oBody.style[k] = rs[k] || ''; } catch (e) {}
+        });
+      }
+    }
 
     /* data-lock 保護: 元HTMLのロック要素を強制復元 */
     try {
@@ -1837,6 +1911,12 @@
     if ($('btn-save')) $('btn-save').onclick = save;
     if ($('btn-apply-style')) $('btn-apply-style').onclick = applyStyle;
     if ($('btn-body-bg')) $('btn-body-bg').onclick = applyBodyBackground;
+    if ($('body-bg-angle')) {
+      $('body-bg-angle').oninput = function () {
+        var v = $('body-bg-angle-v');
+        if (v) v.textContent = $('body-bg-angle').value;
+      };
+    }
     if ($('btn-undo')) $('btn-undo').onclick = undoEdit;
     if ($('btn-redo')) $('btn-redo').onclick = redoEdit;
     if ($('btn-duplicate')) $('btn-duplicate').onclick = duplicateSelected;
