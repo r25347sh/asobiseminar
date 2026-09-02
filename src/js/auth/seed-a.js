@@ -1,0 +1,8 @@
+/*! Asobi Auth seed A — do not edit */
+(function (g) {
+  g.__ASOBI_SEED_A__ = [
+    0xA5, 0x3C, 0x91, 0xE2, 0x17, 0x6B, 0xD4, 0x88,
+    0x2F, 0xC0, 0x5A, 0xB7, 0x0E, 0xF3, 0x49, 0x6D
+  ];
+  g.__ASOBI_TAG_A__ = 'asobi.lab.seed.alpha.v1';
+})(typeof globalThis !== 'undefined' ? globalThis : window);
