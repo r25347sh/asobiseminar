@@ -190,40 +190,28 @@
   }
 
   function recordLoginLog(userId) {
-    var linePrefix = '[' + userId + ']';
-    return getClientIp().then(function (ip) {
-      var line = linePrefix + ' | [' + (ip || 'N/A') + '] | [' + formatNow() + ']';
-      var logPath = 'src/login-log.json';
-      return getFile(logPath, BACKUP_API).then(function (f) {
-        var arr = [];
-        try { arr = JSON.parse(decode(f.content)); } catch (e) { arr = []; }
-        if (!Array.isArray(arr)) arr = [];
-        arr.unshift({
-          line: line,
-          id: userId,
-          ip: ip || 'N/A',
-          datetime: formatNow(),
-          ts: Date.now()
-        });
-        /* 直近 500 件まで */
-        if (arr.length > 500) arr = arr.slice(0, 500);
-        var body = JSON.stringify(arr, null, 2);
-        return putFile(logPath, body, 'login: ' + userId, f.sha, BACKUP_API);
-      }).catch(function () {
-        var arr = [{
-          line: linePrefix + ' | [N/A] | [' + formatNow() + ']',
-          id: userId,
-          ip: 'N/A',
-          datetime: formatNow(),
-          ts: Date.now()
-        }];
-        /* IP 再取得済みの line を使う */
-        return getClientIp().then(function (ip2) {
-          var line = linePrefix + ' | [' + (ip2 || 'N/A') + '] | [' + formatNow() + ']';
-          arr[0] = { line: line, id: userId, ip: ip2 || 'N/A', datetime: formatNow(), ts: Date.now() };
-          return putFile(logPath, JSON.stringify(arr, null, 2), 'login: ' + userId, null, BACKUP_API);
-        });
+    var line = '[' + userId + '] | [' + formatNow() + ']';
+    var logPath = 'src/login-log.json';
+    return getFile(logPath, BACKUP_API).then(function (f) {
+      var arr = [];
+      try { arr = JSON.parse(decode(f.content)); } catch (e) { arr = []; }
+      if (!Array.isArray(arr)) arr = [];
+      arr.unshift({
+        line: line,
+        id: userId,
+        datetime: formatNow(),
+        ts: Date.now()
       });
+      if (arr.length > 500) arr = arr.slice(0, 500);
+      return putFile(logPath, JSON.stringify(arr, null, 2), 'login: ' + userId, f.sha, BACKUP_API);
+    }).catch(function () {
+      var arr = [{
+        line: line,
+        id: userId,
+        datetime: formatNow(),
+        ts: Date.now()
+      }];
+      return putFile(logPath, JSON.stringify(arr, null, 2), 'login: ' + userId, null, BACKUP_API);
     }).catch(function (err) {
       console.warn('login log failed', err);
     });
