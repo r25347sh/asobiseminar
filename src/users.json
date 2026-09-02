@@ -242,11 +242,11 @@
     "pass_hash": "7ac2090cd53afc458ac7d1d064dc78b1354c56b33773e419bcb2b05078c81bae"
   },
   "r25347sh": {
-    "name": "r25347sh",
-    "semi_id": "admin",
-    "semi_name": "サイト管理者",
-    "group": "all",
-    "class": "admin",
+    "name": "佐藤晴",
+    "semi_id": "solo",
+    "semi_name": "遊びの探究ゼミ・個人探求（Web）",
+    "group": "solo",
+    "class": "5G",
     "role": "admin",
     "isAdmin": true,
     "advanced": true,
@@ -256,10 +256,14 @@
     "canBackupRestore": true,
     "permissions": [
       "index.html",
+      "map.html",
       "admin.html",
       "pages/Matsumaru_T.html",
       "pages/about_This_Site.html",
       "pages/about_asobi.html",
+      "pages/groups/skate.html",
+      "pages/groups/arch.html",
+      "pages/groups/fashion.html",
       "pages/members/r22289hh.html",
       "pages/members/r22321fs.html",
       "pages/members/r22497kk.html",
@@ -268,13 +272,12 @@
       "pages/members/r25173ok.html",
       "pages/members/r25321sa.html",
       "pages/members/r25339sc.html",
+      "pages/members/r25347sh.html",
       "pages/members/r25404jk.html",
       "pages/members/r25660na.html",
-      "pages/members/r25917yk.html",
-      "pages/groups/skate.html",
-      "pages/groups/fashion.html",
-      "pages/groups/arch.html"
+      "pages/members/r25917yk.html"
     ],
-    "pass_hash": "17ff4149075c142ecaceb72434edceb4f049d35feba5ba124cf005bcfa0ca8a6"
+    "pass_hash": "17ff4149075c142ecaceb72434edceb4f049d35feba5ba124cf005bcfa0ca8a6",
+    "fullAccess": true
   }
 }
