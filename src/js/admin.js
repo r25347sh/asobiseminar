@@ -17,7 +17,10 @@
     isHtml: true, originalHtml: null, fileSha: null,
     drag: null, resize: null, draftTimer: null,
     pageStyles: {},
-    pageKeyframes: {}
+    pageKeyframes: {},
+    undoStack: [],
+    redoStack: [],
+    undoLock: false
   };
 
   var BLOCKS = [
@@ -711,12 +714,14 @@
   function applyDesignSet(set) {
     if (!state.selected || !set) return;
     if (isLocked(state.selected)) { status('ロック要素には適用できません'); return; }
+    pushUndoSnapshot('design');
     recordStyle(state.selected, set.styles);
     status('デザインセット「' + set.label + '」を適用');
   }
   function applyAnimSet(set) {
     if (!state.selected || !set) return;
     if (isLocked(state.selected)) { status('ロック要素には適用できません'); return; }
+    pushUndoSnapshot('anim');
     if (set.keyframes) state.pageKeyframes[set.id] = set.keyframes;
     recordStyle(state.selected, { animation: set.animation });
     status('アニメーション「' + set.label + '」を適用');
@@ -764,6 +769,102 @@
       recordStyle(el, styles);
     });
     status((all ? '全体' : '選択要素') + 'を自動配置しました');
+  }
+
+
+  function clonePageStyles() {
+    return JSON.parse(JSON.stringify({ styles: state.pageStyles || {}, kf: state.pageKeyframes || {} }));
+  }
+
+  function pushUndoSnapshot(label) {
+    if (state.undoLock) return;
+    var d = doc();
+    if (!d || !d.body) return;
+    state.undoStack.push({
+      label: label || 'edit',
+      html: d.body.innerHTML,
+      styles: clonePageStyles(),
+      ts: Date.now()
+    });
+    if (state.undoStack.length > 50) state.undoStack.shift();
+    state.redoStack = [];
+  }
+
+  function restoreSnapshot(snap) {
+    var d = doc();
+    if (!d || !d.body || !snap) return;
+    state.undoLock = true;
+    try {
+      clearSelection();
+      d.body.innerHTML = snap.html;
+      state.pageStyles = (snap.styles && snap.styles.styles) ? snap.styles.styles : {};
+      state.pageKeyframes = (snap.styles && snap.styles.kf) ? snap.styles.kf : {};
+      refreshPageStyleTag();
+      setupFrameEvents();
+    } finally {
+      state.undoLock = false;
+    }
+  }
+
+  function undoEdit() {
+    if (!state.undoStack.length) { status('戻す履歴がありません'); return; }
+    var d = doc();
+    if (!d || !d.body) return;
+    state.redoStack.push({
+      label: 'redo-point',
+      html: d.body.innerHTML,
+      styles: clonePageStyles(),
+      ts: Date.now()
+    });
+    var snap = state.undoStack.pop();
+    restoreSnapshot(snap);
+    status('元に戻しました（Ctrl+Z）');
+  }
+
+  function redoEdit() {
+    if (!state.redoStack.length) { status('やり直し履歴がありません'); return; }
+    var d = doc();
+    if (!d || !d.body) return;
+    state.undoStack.push({
+      label: 'undo-point',
+      html: d.body.innerHTML,
+      styles: clonePageStyles(),
+      ts: Date.now()
+    });
+    var snap = state.redoStack.pop();
+    restoreSnapshot(snap);
+    status('やり直しました（Ctrl+Y）');
+  }
+
+  function applyBodyBackground() {
+    var d = doc();
+    if (!d || !d.body) { status('プレビューがありません'); return; }
+    pushUndoSnapshot('body-bg');
+    var mode = ($('body-bg-mode') && $('body-bg-mode').value) || 'solid';
+    var styles = {};
+    if (mode === 'solid') {
+      var c = ($('body-bg-color') && $('body-bg-color').value) || '#fffdf8';
+      styles.background = c;
+      styles.backgroundImage = 'none';
+    } else if (mode === 'keep-site') {
+      styles.background = '';
+      styles.backgroundImage = '';
+      styles.backgroundColor = '';
+    } else {
+      /* gradient presets */
+      var presets = {
+        warm: 'radial-gradient(circle at 12% 18%,rgba(255,209,102,.35),transparent 42%),radial-gradient(circle at 88% 12%,rgba(76,201,240,.28),transparent 40%),radial-gradient(circle at 70% 80%,rgba(46,196,182,.22),transparent 45%),#fffdf8',
+        cool: 'radial-gradient(circle at 20% 20%,rgba(76,201,240,.35),transparent 45%),radial-gradient(circle at 80% 70%,rgba(124,58,237,.2),transparent 40%),#f4f7ff',
+        sunset: 'radial-gradient(circle at 15% 25%,rgba(255,107,107,.3),transparent 42%),radial-gradient(circle at 85% 15%,rgba(255,209,102,.35),transparent 40%),#fff8f2',
+        night: 'radial-gradient(circle at 30% 20%,rgba(124,58,237,.45),transparent 40%),radial-gradient(circle at 80% 80%,rgba(46,196,182,.25),transparent 45%),#1a1428'
+      };
+      styles.background = presets[mode] || presets.warm;
+      styles.backgroundColor = '';
+    }
+    ensureCmsId(d.body);
+    recordStyle(d.body, styles);
+    /* body は pageStyles に記録（子要素の背景とは分離） */
+    status('ページ全体の背景を更新しました（body）');
   }
 
   function showHover(el) {
@@ -838,6 +939,10 @@
     el.classList.add('cms-sel');
     el.setAttribute('contenteditable', 'true');
     state.selected = el;
+    if (!el.__cmsUndoBound) {
+      el.__cmsUndoBound = true;
+      el.addEventListener('focus', function () { pushUndoSnapshot('text-before'); });
+    }
     attachHandles(el);
     showRtToolbar();
     fillSideText(el);
@@ -930,7 +1035,20 @@
     if (!d) return;
 
     d.addEventListener('keydown', function (e) {
-      if ((e.ctrlKey || e.metaKey) && String(e.key).toLowerCase() === 'a') {
+      var key = String(e.key).toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        undoEdit();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && (key === 'y' || (key === 'z' && e.shiftKey))) {
+        e.preventDefault();
+        e.stopPropagation();
+        redoEdit();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && key === 'a') {
         if (state.selected && state.selected.getAttribute('contenteditable') === 'true') {
           e.preventDefault();
           e.stopPropagation();
@@ -1085,6 +1203,8 @@
   }
 
   function insertBlock(html) {
+    pushUndoSnapshot('insert');
+
     var d = doc();
     if (!d) { status('プレビューがありません'); return; }
     var wrap = d.createElement('div');
@@ -1178,6 +1298,8 @@
     state.fileSha = null;
     state.pageStyles = {};
     state.pageKeyframes = {};
+    state.undoStack = [];
+    state.redoStack = [];
     show('view-editor');
     if ($('ed-path')) $('ed-path').textContent = path;
     if ($('ed-title')) $('ed-title').textContent = '読み込み中…';
@@ -1475,7 +1597,9 @@
     var el = state.selected;
     if (!el) { status('先に要素を選択'); return; }
     if (isLocked(el)) { status('ロック要素は変更できません'); return; }
+    pushUndoSnapshot('style');
     var styles = {};
+    /* 要素自身の背景（body全体背景とは別） */
     if ($('p-bg') && $('p-bg').value) styles.backgroundColor = $('p-bg').value;
     if ($('p-size')) styles.fontSize = $('p-size').value + 'px';
     if ($('p-weight') && $('p-weight').value) styles.fontWeight = $('p-weight').value;
@@ -1715,6 +1839,9 @@
     };
     if ($('btn-save')) $('btn-save').onclick = save;
     if ($('btn-apply-style')) $('btn-apply-style').onclick = applyStyle;
+    if ($('btn-body-bg')) $('btn-body-bg').onclick = applyBodyBackground;
+    if ($('btn-undo')) $('btn-undo').onclick = undoEdit;
+    if ($('btn-redo')) $('btn-redo').onclick = redoEdit;
     if ($('btn-duplicate')) $('btn-duplicate').onclick = duplicateSelected;
     if ($('side-text')) {
       $('side-text').addEventListener('input', applySideText);
@@ -1745,6 +1872,7 @@
       $('btn-delete-el').onclick = function () {
         if (!state.selected) return;
         if (!confirm('削除しますか？')) return;
+        pushUndoSnapshot('delete');
         state.selected.remove();
         state.selected = null;
         hideRtToolbar();
@@ -1836,6 +1964,16 @@
         }).join('\n');
       };
     }
+    
+    document.addEventListener('keydown', function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      var key = String(e.key).toLowerCase();
+      var tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea') return;
+      if (key === 'z' && !e.shiftKey) { e.preventDefault(); undoEdit(); }
+      else if (key === 'y' || (key === 'z' && e.shiftKey)) { e.preventDefault(); redoEdit(); }
+    });
+
     if ($('btn-open-backup')) {
       $('btn-open-backup').onclick = function () {
         window.open('https://r25347sh.github.io/asobiseminar_backup/', '_blank');
