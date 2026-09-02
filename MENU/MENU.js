@@ -62,7 +62,8 @@
         label: 'メンバー', icon: '🧑‍🤝‍🧑', items: [
           { label: '奥村京太', icon: '🛹', url: root + 'pages/members/r25173ok.html' },
           { label: '柳原康希', icon: '🛹', url: root + 'pages/members/r25917yk.html' },
-          { label: '川端也大', icon: '🛹', url: root + 'pages/members/r22497kk.html' },
+          { label: '福島駿', icon: '🛹', url: root + 'pages/members/r22321fs.html' },
+          { label: '川端也大', icon: '🌐', url: root + 'pages/members/r22497kk.html' },
           { label: '齊藤絢太', icon: '🏗️', url: root + 'pages/members/r25321sa.html' },
           { label: '野田彩夏', icon: '🏗️', url: root + 'pages/members/r25660na.html' },
           { label: '小林和輝', icon: '🏗️', url: root + 'pages/members/r22661kk.html' },
@@ -70,7 +71,6 @@
           { label: '神季美花', icon: '👗', url: root + 'pages/members/r25404jk.html' },
           { label: '樊澤熙', icon: '👗', url: root + 'pages/members/r22289hh.html' },
           { label: '佐藤ちほ', icon: '👗', url: root + 'pages/members/r25339sc.html' },
-          { label: '福島駿', icon: '🌟', url: root + 'pages/members/r22321fs.html' },
           { label: '佐藤晴', icon: '💻', url: root + 'pages/members/r25347sh.html' }
         ]
       },
