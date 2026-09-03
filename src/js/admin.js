@@ -71,10 +71,21 @@
   }
 
   function loadUsers() {
-    return getFile('src/users.json').then(function (f) {
-      USERS = JSON.parse(decode(f.content));
-      return USERS;
-    });
+    return fetch('https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/main/src/users.json', { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('users.json ' + r.status);
+        return r.text();
+      })
+      .then(function (t) {
+        USERS = JSON.parse(t);
+        return USERS;
+      })
+      .catch(function (e) {
+        return getFile('src/users.json').then(function (f) {
+          USERS = JSON.parse(decode(f.content));
+          return USERS;
+        });
+      });
   }
 
   function getSession() {
@@ -148,7 +159,12 @@
         b.querySelector('.t').textContent = it.title;
         b.querySelector('.p').textContent = it.path;
         b.onclick = function () {
-          status('CMSは現在ロック中です。Tokenを有効に戻すまで保存できません。');
+          status('エディターを開いています…（フル版復元中のため制限あり）');
+          state.path = it.path;
+          show('view-editor');
+          if ($('ed-title')) $('ed-title').textContent = it.title;
+          if ($('ed-path')) $('ed-path').textContent = it.path;
+          if ($('status')) $('status').textContent = 'Tokenロック中のため保存不可。フル版の完全復元を進行中です。';
         };
         grid.appendChild(b);
       });
