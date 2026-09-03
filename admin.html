@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="ja">
-<head>
+<html lang="ja"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Asobi Lab. CMS</title>
   <link rel="stylesheet" href="src/css/pages/admin.css">
-</head>
+<link rel="stylesheet" href="MENU/MENU.css"><link rel="stylesheet" href="src/css/pages/admin.css" data-cms-page-css="1"></head>
 <body class="cms-app">
-  <div id="view-login" class="view view-login">
+  <div id="view-login" class="view view-login hidden">
     <div class="login-panel">
       <div class="login-brand">🎮 Asobi Lab. <span>CMS</span></div>
       <h1>メンバーログイン</h1>
@@ -29,11 +28,11 @@
     </div>
   </div>
 
-  <div id="view-dash" class="view view-dash hidden">
+  <div id="view-dash" class="view view-dash">
     <header class="app-bar">
       <a class="brand" href="index.html">🎮 Asobi Lab.</a>
       <div class="app-bar-right">
-        <span id="dash-user" class="user-pill"></span>
+        <span id="dash-user" class="user-pill">佐藤晴 · 遊びの探究ゼミ・個人探求（Web）</span>
         <button type="button" id="btn-logout" class="btn ghost">ログアウト</button>
       </div>
     </header>
@@ -46,19 +45,19 @@
         <button type="button" class="tab active" data-tab="pages" id="tab-pages">📄 ページ</button>
         <button type="button" class="tab" data-tab="files" id="tab-files">📁 ファイル</button>
         <button type="button" class="tab" data-tab="history" id="tab-history">📜 履歴</button>
-        <button type="button" class="tab hidden" data-tab="admin" id="tab-admin">⚙️ 管理</button>
+        <button type="button" class="tab" data-tab="admin" id="tab-admin">⚙️ 管理</button>
       </nav>
       <section id="panel-pages" class="dash-panel">
         <div class="panel-help">要素にホバー → 右上の ✏️ を押して編集。<strong>data-lock="true"</strong> のみ編集不可。</div>
-        <div id="page-grid" class="page-grid"></div>
-        <p id="dash-status" class="muted center"></p>
+        <div id="page-grid" class="page-grid"><button type="button" class="page-card"><span class="t">ホーム | Asobi Lab.</span><span class="p mono">index.html</span></button><button type="button" class="page-card"><span class="t">MAP | Asobi Lab.</span><span class="p mono">map.html</span></button><button type="button" class="page-card"><span class="t">Asobi Lab. CMS</span><span class="p mono">admin.html</span></button><button type="button" class="page-card"><span class="t">松丸先生 | Asobi Lab.</span><span class="p mono">pages/Matsumaru_T.html</span></button><button type="button" class="page-card"><span class="t">このサイトについて | Asobi Lab.</span><span class="p mono">pages/about_This_Site.html</span></button><button type="button" class="page-card"><span class="t">Asobi Lab.とは | Asobi Lab.</span><span class="p mono">pages/about_asobi.html</span></button><button type="button" class="page-card"><span class="t">スケボーと俺等の青春 | Asobi Lab.</span><span class="p mono">pages/groups/skate.html</span></button><button type="button" class="page-card"><span class="t">脆い割り箸ビルを探求で強くする | Asobi Lab.</span><span class="p mono">pages/groups/arch.html</span></button><button type="button" class="page-card"><span class="t">ファッションについて | Asobi Lab.</span><span class="p mono">pages/groups/fashion.html</span></button><button type="button" class="page-card"><span class="t">樊澤熙 | Asobi Lab.</span><span class="p mono">pages/members/r22289hh.html</span></button><button type="button" class="page-card"><span class="t">福島駿 | Asobi Lab.</span><span class="p mono">pages/members/r22321fs.html</span></button><button type="button" class="page-card"><span class="t">川端也大 | Asobi Lab.</span><span class="p mono">pages/members/r22497kk.html</span></button><button type="button" class="page-card"><span class="t">草深りお | Asobi Lab.</span><span class="p mono">pages/members/r22570kr.html</span></button><button type="button" class="page-card"><span class="t">小林和輝 | Asobi Lab.</span><span class="p mono">pages/members/r22661kk.html</span></button><button type="button" class="page-card"><span class="t">奥村京太 | Asobi Lab.</span><span class="p mono">pages/members/r25173ok.html</span></button><button type="button" class="page-card"><span class="t">齊藤絢太 | Asobi Lab.</span><span class="p mono">pages/members/r25321sa.html</span></button><button type="button" class="page-card"><span class="t">佐藤ちほ | Asobi Lab.</span><span class="p mono">pages/members/r25339sc.html</span></button><button type="button" class="page-card"><span class="t">佐藤晴 | Asobi Lab.</span><span class="p mono">pages/members/r25347sh.html</span></button><button type="button" class="page-card"><span class="t">神季美花 | Asobi Lab.</span><span class="p mono">pages/members/r25404jk.html</span></button><button type="button" class="page-card"><span class="t">野田彩夏 | Asobi Lab.</span><span class="p mono">pages/members/r25660na.html</span></button><button type="button" class="page-card"><span class="t">柳原康希 | Asobi Lab.</span><span class="p mono">pages/members/r25917yk.html</span></button></div>
+        <p id="dash-status" class="muted center">21 ページ</p>
       </section>
       <section id="panel-files" class="dash-panel hidden">
-        <div class="panel-help">専用フォルダ（<code id="files-path">users/…</code>）</div>
+        <div class="panel-help">専用フォルダ（<code id="files-path">users/r25347sh/</code>）</div>
         <div class="files-toolbar">
           <button type="button" id="btn-new-file" class="btn primary">＋ 新規</button>
           <button type="button" id="btn-upload" class="btn ghost">📤 アップロード</button>
-          <input type="file" id="file-input" class="hidden" multiple>
+          <input type="file" id="file-input" class="hidden" multiple="">
           <button type="button" id="btn-refresh-files" class="btn ghost">🔄</button>
         </div>
         <div id="files-list" class="files-list"></div>
@@ -94,7 +93,7 @@
         <button type="button" class="btn ghost mode-btn" data-mode="meta">メタ</button>
         <button type="button" class="btn ghost mode-btn" data-mode="code">コード</button>
       </div>
-      <input id="commit-msg" class="commit" placeholder="コミットメッセージ（必須）" required>
+      <input id="commit-msg" class="commit" placeholder="コミットメッセージ（必須）" required="">
       <button type="button" id="btn-save" class="btn primary">保存</button>
     </header>
 
@@ -338,5 +337,6 @@
   <script src="src/js/auth/mix.js"></script>
   <script src="src/js/auth/vault.js"></script>
   <script src="src/js/admin.js"></script>
-</body>
-</html>
+
+
+<script src="MENU/MENU.js"></script></body></html>
