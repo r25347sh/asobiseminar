@@ -185,6 +185,7 @@
     };
     setSession(state.user);
     if (msg) msg.textContent = viaQr ? 'QRログイン成功…' : '';
+    stopQrScanner();
     openDash();
     return true;
   }
@@ -198,6 +199,114 @@
     }).catch(function (e) {
       if (msg) msg.textContent = 'users.json 読込失敗: ' + e.message;
     });
+  }
+
+  var qrScanner = null;
+  var qrScanLock = false;
+  var qrFacingMode = 'environment';
+
+  function loadHtml5Qrcode(cb) {
+    if (window.Html5Qrcode) { cb(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
+    s.onload = function () { cb(); };
+    s.onerror = function () {
+      var msg = $('login-msg');
+      if (msg) msg.textContent = 'QR読取ライブラリの読み込みに失敗しました';
+    };
+    document.head.appendChild(s);
+  }
+
+  function qrFacingLabel() {
+    return qrFacingMode === 'user' ? 'インカメ（前面）' : 'アウカメ（背面）';
+  }
+
+  function stopQrScannerOnly() {
+    if (!qrScanner) return Promise.resolve();
+    var s = qrScanner;
+    qrScanner = null;
+    return s.stop().then(function () {
+      try { s.clear(); } catch (e1) {}
+    }).catch(function () {
+      try { s.clear(); } catch (e2) {}
+    });
+  }
+
+  function startQrScanner(keepPanel) {
+    var panel = $('qr-panel');
+    var msg = $('login-msg');
+    if (panel) panel.classList.remove('hidden');
+    if (msg) msg.textContent = 'カメラを起動しています…（' + qrFacingLabel() + '）';
+    qrScanLock = false;
+    loadHtml5Qrcode(function () {
+      if (!window.Html5Qrcode) return;
+      stopQrScannerOnly().then(function () {
+        qrScanner = new Html5Qrcode('qr-reader');
+        var config = { fps: 8, qrbox: { width: 240, height: 240 } };
+        var cameraConfig = { facingMode: qrFacingMode };
+        qrScanner.start(
+          cameraConfig,
+          config,
+          function onSuccess(decoded) {
+            if (qrScanLock) return;
+            var cred = parseQrCredential(decoded);
+            if (!cred) {
+              if (msg) msg.textContent = '形式が違います。{id,pass} のQRをかざしてください';
+              return;
+            }
+            qrScanLock = true;
+            if (msg) msg.textContent = '読み取りました。ログイン中…';
+            var ok = completeLogin(cred.id, cred.pw, true);
+            if (!ok) qrScanLock = false;
+          },
+          function onFail() {}
+        ).then(function () {
+          if (msg) msg.textContent = 'QRを枠内に — いま: ' + qrFacingLabel();
+          var flip = $('btn-qr-flip');
+          if (flip) flip.textContent = qrFacingMode === 'user' ? '🔄 アウカメに切替' : '🔄 インカメに切替';
+        }).catch(function (err) {
+          var other = qrFacingMode === 'environment' ? 'user' : 'environment';
+          if (!startQrScanner._retried) {
+            startQrScanner._retried = true;
+            qrFacingMode = other;
+            if (msg) msg.textContent = 'カメラ切替して再試行…';
+            startQrScanner(true);
+            return;
+          }
+          startQrScanner._retried = false;
+          if (msg) msg.textContent = 'カメラを起動できません: ' + (err && err.message ? err.message : String(err));
+          stopQrScanner();
+        });
+      });
+    });
+  }
+
+  function flipQrCamera() {
+    qrFacingMode = qrFacingMode === 'environment' ? 'user' : 'environment';
+    startQrScanner._retried = false;
+    startQrScanner(true);
+  }
+
+  function stopQrScanner() {
+    var panel = $('qr-panel');
+    if (panel) panel.classList.add('hidden');
+    stopQrScannerOnly();
+  }
+
+  function parseQrCredential(text) {
+    var s = String(text || '').trim();
+    if (!s) return null;
+    var m = s.match(/^\{([^,\{\}]+),([^\{\}]*)\}$/);
+    if (m) return { id: m[1].trim(), pw: m[2] };
+    m = s.match(/^([^,:\{\}\s]+)[,:](.+)$/);
+    if (m) return { id: m[1].trim(), pw: m[2].trim() };
+    try {
+      var j = JSON.parse(s);
+      if (j && (j.id || j.uid) && (j.pass != null || j.password != null)) {
+        return { id: String(j.id || j.uid).trim(), pw: String(j.pass != null ? j.pass : j.password) };
+      }
+    } catch (e) {}
+    return null;
   }
 
   function boot() {
@@ -216,6 +325,9 @@
     });
 
     if ($('btn-login')) $('btn-login').onclick = login;
+    if ($('btn-qr-login')) $('btn-qr-login').onclick = function () { startQrScanner._retried = false; startQrScanner(); };
+    if ($('btn-qr-flip')) $('btn-qr-flip').onclick = flipQrCamera;
+    if ($('btn-qr-stop')) $('btn-qr-stop').onclick = stopQrScanner;
     if ($('btn-logout')) $('btn-logout').onclick = function () {
       clearSession(); state.user = null; show('view-login');
     };
