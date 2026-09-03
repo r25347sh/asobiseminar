@@ -4,7 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Asobi Lab. CMS</title>
   <link rel="stylesheet" href="src/css/pages/admin.css">
-<link rel="stylesheet" href="MENU/MENU.css"><link rel="stylesheet" href="src/css/pages/admin.css" data-cms-page-css="1"></head>
+  <link rel="stylesheet" href="MENU/MENU.css">
+</head>
 <body class="cms-app">
   <div id="view-login" class="view view-login hidden">
     <div class="login-panel">
@@ -49,8 +50,8 @@
       </nav>
       <section id="panel-pages" class="dash-panel">
         <div class="panel-help">ページを開いて<strong>本文ブロック</strong>をクリックして編集。<strong>メンバー</strong>は本文を Googleドキュメント風に編集（改行・太字・リスト）＋画像/音楽/動画の挿入のみ。構造・CSS・ブロック追加は不可。管理者は高度編集可能。<strong>data-lock="true"</strong> は編集不可。</div>
-        <div id="page-grid" class="page-grid"><button type="button" class="page-card"><span class="t">ホーム | Asobi Lab.</span><span class="p mono">index.html</span></button><button type="button" class="page-card"><span class="t">MAP | Asobi Lab.</span><span class="p mono">map.html</span></button><button type="button" class="page-card"><span class="t">Asobi Lab. CMS</span><span class="p mono">admin.html</span></button><button type="button" class="page-card"><span class="t">松丸先生 | Asobi Lab.</span><span class="p mono">pages/Matsumaru_T.html</span></button><button type="button" class="page-card"><span class="t">このサイトについて | Asobi Lab.</span><span class="p mono">pages/about_This_Site.html</span></button><button type="button" class="page-card"><span class="t">Asobi Lab.とは | Asobi Lab.</span><span class="p mono">pages/about_asobi.html</span></button><button type="button" class="page-card"><span class="t">スケボーと俺等の青春 | Asobi Lab.</span><span class="p mono">pages/groups/skate.html</span></button><button type="button" class="page-card"><span class="t">脆い割り箸ビルを探求で強くする | Asobi Lab.</span><span class="p mono">pages/groups/arch.html</span></button><button type="button" class="page-card"><span class="t">ファッションについて | Asobi Lab.</span><span class="p mono">pages/groups/fashion.html</span></button><button type="button" class="page-card"><span class="t">樊澤熙 | Asobi Lab.</span><span class="p mono">pages/members/r22289hh.html</span></button><button type="button" class="page-card"><span class="t">福島駿 | Asobi Lab.</span><span class="p mono">pages/members/r22321fs.html</span></button><button type="button" class="page-card"><span class="t">川端也大 | Asobi Lab.</span><span class="p mono">pages/members/r22497kk.html</span></button><button type="button" class="page-card"><span class="t">草深りお | Asobi Lab.</span><span class="p mono">pages/members/r22570kr.html</span></button><button type="button" class="page-card"><span class="t">小林和輝 | Asobi Lab.</span><span class="p mono">pages/members/r22661kk.html</span></button><button type="button" class="page-card"><span class="t">奥村京太 | Asobi Lab.</span><span class="p mono">pages/members/r25173ok.html</span></button><button type="button" class="page-card"><span class="t">齊藤絢太 | Asobi Lab.</span><span class="p mono">pages/members/r25321sa.html</span></button><button type="button" class="page-card"><span class="t">佐藤ちほ | Asobi Lab.</span><span class="p mono">pages/members/r25339sc.html</span></button><button type="button" class="page-card"><span class="t">佐藤晴 | Asobi Lab.</span><span class="p mono">pages/members/r25347sh.html</span></button><button type="button" class="page-card"><span class="t">神季美花 | Asobi Lab.</span><span class="p mono">pages/members/r25404jk.html</span></button><button type="button" class="page-card"><span class="t">野田彩夏 | Asobi Lab.</span><span class="p mono">pages/members/r25660na.html</span></button><button type="button" class="page-card"><span class="t">柳原康希 | Asobi Lab.</span><span class="p mono">pages/members/r25917yk.html</span></button></div>
-        <p id="dash-status" class="muted center">21 ページ</p>
+        <div id="page-grid" class="page-grid"></div>
+        <p id="dash-status" class="muted center">読み込み中…</p>
       </section>
       <section id="panel-files" class="dash-panel hidden">
         <div class="panel-help">専用フォルダ（<code id="files-path">users/r25347sh/</code>）</div>
@@ -251,14 +252,9 @@
           <section class="rail-panel">
             <p class="muted" style="font-size:.78rem;margin-bottom:.4rem">操作</p>
             <ul class="tips">
-              <li>クリック … 直接編集</li>
-              <li>Ctrl+A … 要素内の文字だけ全選択</li>
-              <li>文字色・マーカー … 上部バー</li>
-              <li>Esc … 編集終了</li>
-              <li>data-lock … 編集不可（🔒）</li>
-              <li>Ctrl/Cmd+Z … 元に戻す</li>
-              <li>Ctrl/Cmd+Y … やり直し</li>
-              <li>Ctrl/Cmd+D … 複製</li>
+              <li>クリックで選択・編集</li>
+              <li>Ctrl+Z / Ctrl+Y で戻す・進む</li>
+              <li>data-lock="true" は触れません</li>
             </ul>
           </section>
         </div>
@@ -267,20 +263,18 @@
       <aside class="rail hidden" id="rail-meta">
         <div class="rail-panels">
           <section class="rail-panel">
-            <h3 class="rail-h">ページ情報</h3>
+            <h3 class="rail-h">メタ情報</h3>
             <label>タイトル<input type="text" id="meta-title"></label>
             <label>説明<textarea id="meta-desc" rows="3"></textarea></label>
-            <label>キーワード<input type="text" id="meta-keywords"></label>
-            <label>ファビコン<input type="text" id="meta-favicon"></label>
+            <label>キーワード<input type="text" id="meta-keywords" placeholder="カンマ区切り"></label>
             <div class="favicon-row">
-              <img id="favicon-preview" class="favicon-preview" alt="" width="32" height="32">
-              <button type="button" id="btn-favicon-upload" class="btn ghost">📤</button>
-              <input type="file" id="favicon-input" class="hidden" accept="image/*">
+              <img id="favicon-preview" class="favicon-preview" alt="">
+              <label style="flex:1">favicon URL<input type="text" id="meta-favicon" placeholder="src/img/..."></label>
             </div>
-            <label class="check-label">
-              <input type="checkbox" id="meta-use-menu-icon"> MENUアイコンに使う
-            </label>
-            <button type="button" id="btn-apply-meta" class="btn primary block">適用</button>
+            <label class="check-label"><input type="checkbox" id="meta-use-menu-icon"> MENUアイコンにも反映</label>
+            <button type="button" id="btn-apply-meta" class="btn primary block">メタを適用</button>
+            <button type="button" id="btn-favicon-upload" class="btn ghost block">faviconアップロード</button>
+            <input type="file" id="favicon-input" class="hidden" accept="image/*">
           </section>
         </div>
       </aside>
@@ -288,16 +282,16 @@
       <aside class="rail hidden" id="rail-code">
         <div class="rail-panels">
           <section class="rail-panel">
-            <p class="muted">HTML 直接編集</p>
+            <h3 class="rail-h">ソースコード</h3>
             <textarea id="code-area" rows="22" class="code-area" spellcheck="false"></textarea>
           </section>
         </div>
       </aside>
 
       <div class="stage-wrap">
-        <div id="stage" class="stage">
+        <div class="stage" id="stage">
           <iframe id="frame" title="preview" sandbox="allow-same-origin allow-scripts"></iframe>
-          <div id="code-stage" class="code-stage hidden">
+          <div class="code-stage hidden" id="code-stage">
             <textarea id="code-main" class="code-main" spellcheck="false"></textarea>
           </div>
         </div>
@@ -309,13 +303,13 @@
   <div id="modal-new" class="modal hidden">
     <div class="modal-panel">
       <h2>新規ファイル</h2>
-      <label>ファイル名<input id="new-filename" placeholder="note.txt"></label>
+      <label>ファイル名<input type="text" id="new-filename" placeholder="example.txt"></label>
       <label>初期内容<textarea id="new-content" rows="5"></textarea></label>
+      <p id="new-msg" class="msg"></p>
       <div class="modal-actions">
         <button type="button" id="btn-new-cancel" class="btn ghost">キャンセル</button>
         <button type="button" id="btn-new-create" class="btn primary">作成</button>
       </div>
-      <p id="new-msg" class="msg"></p>
     </div>
   </div>
 
@@ -337,6 +331,5 @@
   <script src="src/js/auth/mix.js"></script>
   <script src="src/js/auth/vault.js"></script>
   <script src="src/js/admin.js"></script>
-
-
-<script src="MENU/MENU.js"></script></body></html>
+  <script src="MENU/MENU.js"></script>
+</body></html>
