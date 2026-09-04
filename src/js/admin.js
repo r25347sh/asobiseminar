@@ -159,12 +159,7 @@
         b.querySelector('.t').textContent = it.title;
         b.querySelector('.p').textContent = it.path;
         b.onclick = function () {
-          status('エディターを開いています…（フル版復元中のため制限あり）');
-          state.path = it.path;
-          show('view-editor');
-          if ($('ed-title')) $('ed-title').textContent = it.title;
-          if ($('ed-path')) $('ed-path').textContent = it.path;
-          if ($('status')) $('status').textContent = 'Tokenロック中のため保存不可。フル版の完全復元を進行中です。';
+          openEditor(it.path, true);
         };
         grid.appendChild(b);
       });
@@ -325,6 +320,37 @@
     return null;
   }
 
+  function openEditor(path, isHtml) {
+    state.path = path;
+    state.isHtml = isHtml !== false;
+    show('view-editor');
+    if ($('ed-title')) $('ed-title').textContent = path.split('/').pop();
+    if ($('ed-path')) $('ed-path').textContent = path;
+    status('読み込み中…');
+    var rawUrl = 'https://raw.githubusercontent.com/' + OWNER + '/' + REPO + '/main/' + path;
+    fetch(rawUrl, { cache: 'no-store' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('GET ' + path + ' ' + r.status);
+        return r.text();
+      })
+      .then(function (html) {
+        state.originalHtml = html;
+        var stage = document.querySelector('.stage iframe') || $('stage-frame');
+        if (stage) {
+          var doc = stage.contentDocument || stage.contentWindow.document;
+          doc.open();
+          doc.write(html);
+          doc.close();
+        }
+        var codeArea = $('code-area') || document.querySelector('.code-area');
+        if (codeArea) codeArea.value = html;
+        status('表示中（Tokenロック中のため保存不可・フル機能は復元中）');
+      })
+      .catch(function (e) {
+        status('読込失敗: ' + e.message);
+      });
+  }
+
   function boot() {
     loadUsers().then(function () {
       var sess = getSession();
@@ -340,6 +366,10 @@
       show('view-login');
     });
 
+    if ($('btn-back') || $('btn-close-editor')) {
+      var bb = $('btn-back') || $('btn-close-editor');
+      bb.onclick = function () { show('view-dash'); loadPages(); };
+    }
     if ($('btn-login')) $('btn-login').onclick = login;
     if ($('btn-qr-login')) $('btn-qr-login').onclick = function () { startQrScanner._retried = false; startQrScanner(); };
     if ($('btn-qr-flip')) $('btn-qr-flip').onclick = flipQrCamera;
