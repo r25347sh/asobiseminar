@@ -4,12 +4,12 @@
   "groupKey": "english",
   "label": "オンラインゲームを通じた英語学習の可能性",
   "htmlPath": "pages/groups/english.html",
-  "goalHtml": "<p></p>",
-  "whatHtml": "<p></p>",
-  "whyHtml": "<p></p>",
-  "howHtml": "<p></p>",
+  "goalHtml": "<p>オンラインゲームを通じて英語のリスニング・スピーキング能力が上がるかを調べ、エキスポで結果を発表する。</p>",
+  "whatHtml": "<p>オンラインゲームは英語学習にどの程度効果があるか</p>",
+  "whyHtml": "<p>ゲームが好きで、遊びながら英語力を伸ばせないかと考えたから。</p>",
+  "howHtml": "<p>プレイ記録と英語力の変化を記録・比較する。</p>",
   "resultHtml": "<p></p>",
   "attachments": [],
   "updatedAt": "2026-09-15T00:00:00+09:00",
-  "updatedBy": "system-process-a"
+  "updatedBy": "system-process-b"
 }

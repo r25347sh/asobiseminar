@@ -4,12 +4,12 @@
   "groupKey": "site",
   "label": "サイト作成",
   "htmlPath": "pages/about_This_Site.html",
-  "goalHtml": "<p>Asobi Lab. 公式サイトを開発・運営し、メンバーが使いやすい形に整える。</p>",
-  "whatHtml": "<p></p>",
-  "whyHtml": "<p></p>",
-  "howHtml": "<p></p>",
-  "resultHtml": "<p>メンバー・グループのページは、ログイン後の CMS から編集できます。</p>",
+  "goalHtml": "<p>Asobi Lab. のWebサイトを開発・運営し、メンバーが使いやすい形に整える。</p>",
+  "whatHtml": "<p>ゼミ公式サイトに必要な情報設計と編集の仕組み</p>",
+  "whyHtml": "<p>メンバーが自分の探求を発信できる場所が必要だから。</p>",
+  "howHtml": "<p>HTML/CSS/JS とフォーム型CMSで継続的に改善する。</p>",
+  "resultHtml": "<p>メンバー・グループのページは、ログイン後の CMS から編集できます。各メンバーには専用の個人ファイルスペース（users/自分のID/）があります。</p>",
   "attachments": [],
   "updatedAt": "2026-09-15T00:00:00+09:00",
-  "updatedBy": "system-process-a"
+  "updatedBy": "system-process-b"
 }
