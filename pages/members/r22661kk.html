@@ -7,33 +7,43 @@
 <meta name="description" content="小林和輝（5A）— 脆い割り箸ビルを探求で強くする">
 <link rel="icon" href="../../src/img/favicons/r22661kk.png" type="image/png">
 <link rel="stylesheet" href="../../src/css/common.css">
+<link rel="stylesheet" href="../../src/css/cms-slots.css">
 <link rel="stylesheet" href="../../MENU/MENU.css">
 </head>
 <body>
 <header class="site-header" data-lock="true">
   <a class="site-logo" href="../../index.html" data-lock="true">🎮 Asobi Lab.</a>
 </header>
-<main class="main page-member">
+<main class="main page-member" data-cms-page="member" data-cms-id="r22661kk">
   <h1 class="page-title" data-lock="true">小林和輝</h1>
-  <p class="page-sub" data-lock="true">脆い割り箸ビルを探求で強くする · 5A</p>
-  <section class="goal-banner">
-    <h2 class="goal-label">目標</h2>
-    <p class="goal-text">探求を形にする。図画工作の幅を超えて建築学を学ぶ。</p>
-  </section>
-  <section class="info-card">
-    <h2>プロフィール</h2>
+  <p class="page-sub" data-lock="true"><span data-cms-slot="groupLabel">脆い割り箸ビルを探求で強くする</span> · <span data-cms-slot="class">5A</span></p>
+  <section class="cms-block cms-profile info-card">
+    <h2 data-lock="true">自己概要</h2>
     <ul class="info-list">
-      <li><span>クラス</span><strong>5A</strong></li>
-      <li><span>所属</span><strong>脆い割り箸ビルを探求で強くする</strong></li>
-      <li><span>好きな色</span><strong>漆黒</strong></li>
-      <li><span>趣味・遊び</span><strong>撮り鉄</strong></li>
+      <li><span>クラス</span><strong data-cms-slot="class">5A</strong></li>
+      <li><span>所属グループ</span><strong data-cms-slot="groupLabel">脆い割り箸ビルを探求で強くする</strong></li>
+      <li><span>好きな色</span><strong data-cms-slot="favoriteColor">—</strong></li>
     </ul>
   </section>
-  <section class="article_by_teacher content-block" id="article-r22661kk">
-    <h2>探求メモ</h2>
-    <p><strong>ハマったきっかけ：</strong>友達の影響。</p>
-    <p><strong>メモ：</strong>割り箸を使った建築学の学習。</p>
-    <p>このセクションは本人が CMS から自由に編集できます。</p>
+  <section class="cms-block cms-play info-card">
+    <h2 data-lock="true">私の遊び</h2>
+    <p class="cms-inline-field"><span class="field-label" data-lock="true">趣味・遊び</span>
+      <strong data-cms-slot="hobbies">撮り鉄</strong></p>
+    <div class="field-block">
+      <h3 data-lock="true">その趣味にハマったきっかけ</h3>
+      <div class="cms-rich" data-cms-slot="hobbyTrigger"><p></p></div>
+    </div>
+  </section>
+  <section class="cms-block cms-reflect cms-grad-frame">
+    <h2 data-lock="true">探求を通して</h2>
+    <div class="field-block">
+      <h3 data-lock="true">探究活動を通した感想・成長した点</h3>
+      <div class="cms-rich" data-cms-slot="growth"><p></p></div>
+    </div>
+    <div class="field-block">
+      <h3 data-lock="true">私からのメッセージ</h3>
+      <div class="cms-rich" data-cms-slot="message"><p></p></div>
+    </div>
   </section>
   <p class="cta-wrap"><a class="btn-play" href="../groups/arch.html">グループページへ →</a></p>
 </main>
