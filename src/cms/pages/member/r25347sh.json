@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "type": "member",
+  "memberId": "r25347sh",
+  "displayName": "佐藤晴",
+  "class": "5G",
+  "groupKey": "site",
+  "favoriteColor": "サイトカラー",
+  "favoriteColorHex": null,
+  "hobbies": "Webページ開発",
+  "hobbyTriggerHtml": "<p>遊びの探求ゼミの紹介サイトづくりを通して、Webの仕組みと表現を探求している。</p>",
+  "growthHtml": "<p></p>",
+  "messageHtml": "<p>グループには所属せず、一人で探求しています。</p>",
+  "htmlPath": "pages/members/r25347sh.html",
+  "updatedAt": "2026-09-15T00:00:00+09:00",
+  "updatedBy": "system-process-a"
+}

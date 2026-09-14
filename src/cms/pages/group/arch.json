@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "type": "group",
+  "groupKey": "arch",
+  "label": "脆い割り箸ビルを探求で強くする",
+  "htmlPath": "pages/groups/arch.html",
+  "goalHtml": "<p>割り箸で遊ぶ「遊び」の範疇から知識を深め、「能力」にできるようにする。</p>",
+  "whatHtml": "<p>強い割り箸建築と、周りにあるビルの工夫について触れる</p>",
+  "whyHtml": "<p>物理選択をしていて、この探求から将来に少しでもつなげたいから。</p>",
+  "howHtml": "<p>実際に作り、得たもの・足りなかったものを見直して次につなげる。</p>",
+  "resultHtml": "<p></p>",
+  "attachments": [],
+  "updatedAt": "2026-09-15T00:00:00+09:00",
+  "updatedBy": "system-process-a"
+}
