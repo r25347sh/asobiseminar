@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "type": "member",
+  "memberId": "r25339sc",
+  "displayName": "佐藤ちほ",
+  "class": "5F",
+  "groupKey": "fashion",
+  "favoriteColor": "",
+  "favoriteColorHex": null,
+  "hobbies": "妖怪ウォッチ、アイドル、マック",
+  "hobbyTriggerHtml": "<p>へこんだときに元気が出る。</p>",
+  "growthHtml": "<p></p>",
+  "messageHtml": "<p></p>",
+  "htmlPath": "pages/members/r25339sc.html",
+  "updatedAt": "2026-09-15T00:00:00+09:00",
+  "updatedBy": "system-process-b"
+}

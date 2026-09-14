@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "type": "member",
+  "memberId": "r25404jk",
+  "displayName": "神季美花",
+  "class": "5F",
+  "groupKey": "fashion",
+  "favoriteColor": "",
+  "favoriteColorHex": null,
+  "hobbies": "アニメ、バスケ",
+  "hobbyTriggerHtml": "<p>父親の影響。</p>",
+  "growthHtml": "<p></p>",
+  "messageHtml": "<p></p>",
+  "htmlPath": "pages/members/r25404jk.html",
+  "updatedAt": "2026-09-15T00:00:00+09:00",
+  "updatedBy": "system-process-b"
+}

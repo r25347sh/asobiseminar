@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "type": "member",
+  "memberId": "r25917yk",
+  "displayName": "柳原康希",
+  "class": "5F",
+  "groupKey": "skate",
+  "favoriteColor": "",
+  "favoriteColorHex": null,
+  "hobbies": "ベース、音楽",
+  "hobbyTriggerHtml": "<p>自分のお気に入りのバンドができたこと、あるベーシストへの憧れ。</p>",
+  "growthHtml": "<p></p>",
+  "messageHtml": "<p></p>",
+  "htmlPath": "pages/members/r25917yk.html",
+  "updatedAt": "2026-09-15T00:00:00+09:00",
+  "updatedBy": "system-process-b"
+}

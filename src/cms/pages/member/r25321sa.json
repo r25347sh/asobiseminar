@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "type": "member",
+  "memberId": "r25321sa",
+  "displayName": "齊藤絢太",
+  "class": "5C",
+  "groupKey": "arch",
+  "favoriteColor": "あか",
+  "favoriteColorHex": null,
+  "hobbies": "格闘技を見ること",
+  "hobbyTriggerHtml": "<p>友達が好きだったから見始めた。</p>",
+  "growthHtml": "<p></p>",
+  "messageHtml": "<p></p>",
+  "htmlPath": "pages/members/r25321sa.html",
+  "updatedAt": "2026-09-15T00:00:00+09:00",
+  "updatedBy": "system-process-b"
+}
