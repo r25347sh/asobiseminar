@@ -1,0 +1,76 @@
+
+/* === CMS Process B: slots & decoration === */
+.cms-block{margin:0 0 1.35rem}
+.cms-block h2{font-family:var(--font-display);font-size:1.2rem;margin:0 0 .75rem}
+.cms-block h3{font-size:1rem;margin:0 0 .45rem;color:rgba(43,33,64,.75)}
+.field-label{display:inline-block;min-width:5.5rem;color:rgba(43,33,64,.55);font-size:.85rem;font-weight:600;margin-right:.5rem}
+.cms-inline-field{margin:0 0 .85rem;line-height:1.6}
+.field-block{margin:0 0 1rem}
+.field-block:last-child{margin-bottom:0}
+.cms-rich{line-height:1.75}
+.cms-rich p{margin:0 0 .6rem}
+.cms-rich p:last-child{margin-bottom:0}
+
+.cms-grad-frame{
+  position:relative;
+  border-radius:18px;
+  padding:1.35rem 1.3rem 1.25rem;
+  background:#fff;
+  isolation:isolate;
+  box-shadow:0 10px 28px rgba(43,33,64,.07);
+}
+.cms-grad-frame::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:2px;
+  background:linear-gradient(120deg,#2ec4b6,#ff6b6b,#ffd166,#7b68ee,#2ec4b6);
+  background-size:300% 300%;
+  animation:cmsGradMove 8s linear infinite;
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  pointer-events:none;
+  z-index:0;
+}
+.cms-grad-frame > *{position:relative;z-index:1}
+@keyframes cmsGradMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.cms-2w1h-title{
+  font-family:var(--font-display);
+  font-size:1.45rem;
+  margin:0 0 1rem;
+  letter-spacing:.04em;
+}
+.deco-2,.deco-1{
+  display:inline-block;
+  font-weight:800;
+  background:linear-gradient(135deg,#2ec4b6,#7b68ee);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  transform:translateY(-1px);
+}
+.deco-1{
+  background:linear-gradient(135deg,#ff6b6b,#ffd166);
+  -webkit-background-clip:text;
+  background-clip:text;
+}
+.wh-label{margin:0 0 .55rem;font-size:.78rem;color:rgba(43,33,64,.55);font-weight:600}
+
+.cms-files{margin-top:1rem}
+.cms-files:empty{display:none}
+.cms-file-list{list-style:none;display:grid;gap:.5rem;padding:0;margin:0}
+.cms-file-list a{color:var(--ink);font-weight:600;text-decoration:underline}
+.cms-file-inline{margin:.75rem 0;max-width:100%}
+.cms-file-inline img,.cms-file-inline video{max-width:100%;border-radius:12px}
+.cms-file-inline audio{width:100%}
+.cms-file-inline object{width:100%;min-height:320px;border:1px solid rgba(43,33,64,.1);border-radius:12px}
+
+.cta-wrap{margin:1.5rem 0 0;text-align:center}
