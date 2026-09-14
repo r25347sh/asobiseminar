@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "description": "所属グループ表示名 ↔ groupKey ↔ 公開HTMLパス対応表（プロセスA確定）",
+  "groups": [
+    {
+      "key": "english",
+      "label": "オンラインゲームを通じた英語学習の可能性",
+      "htmlPath": "pages/groups/english.html",
+      "createHtml": true,
+      "editorType": "group",
+      "folderId": "english",
+      "notes": "solo系テーマ。グループHTMLを新規作成する。"
+    },
+    {
+      "key": "fashion",
+      "label": "ファッションについて",
+      "htmlPath": "pages/groups/fashion.html",
+      "createHtml": false,
+      "editorType": "group",
+      "folderId": "fashion",
+      "notes": "既存グループページを新テンプレへ移行。"
+    },
+    {
+      "key": "skate",
+      "label": "スケボーの技術向上とそのための思考",
+      "htmlPath": "pages/groups/skate.html",
+      "createHtml": false,
+      "editorType": "group",
+      "folderId": "skate",
+      "notes": "既存タイトルは表示名を仕様ラベルに合わせて更新可。"
+    },
+    {
+      "key": "arch",
+      "label": "脆い割り箸ビルを探求で強くする",
+      "htmlPath": "pages/groups/arch.html",
+      "createHtml": false,
+      "editorType": "group",
+      "folderId": "arch",
+      "notes": "既存グループページを新テンプレへ移行。"
+    },
+    {
+      "key": "site",
+      "label": "サイト作成",
+      "htmlPath": "pages/about_This_Site.html",
+      "createHtml": false,
+      "editorType": "group",
+      "folderId": "site",
+      "notes": "グループHTMLは新設しない。about_This_Site.html に集約。"
+    }
+  ],
+  "memberClassOptions": ["5A", "5B", "5C", "5D", "5E", "5F", "5G", "5H"]
+}

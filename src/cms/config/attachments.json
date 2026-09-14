@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "allowedExtensions": [
+    "pdf", "jpeg", "jpg", "png", "gif", "mp3", "mp4", "bmp", "doc", "ico",
+    "mov", "mpg", "mpeg", "txt", "wav", "wri", "xls", "zip", "Z"
+  ],
+  "maxFileSizeBytes": 25000000,
+  "storage": {
+    "member": "users/{userId}/",
+    "group": "users/_groups/{groupKey}/"
+  },
+  "displayModes": ["link", "inline"],
+  "inlineByExtension": {
+    "jpeg": "img", "jpg": "img", "png": "img", "gif": "img", "bmp": "img", "ico": "img",
+    "mp3": "audio", "wav": "audio",
+    "mp4": "video", "mov": "video", "mpg": "video", "mpeg": "video",
+    "pdf": "object",
+    "txt": "pre"
+  },
+  "forceLinkExtensions": ["doc", "xls", "zip", "Z", "wri"],
+  "rules": [
+    "アップロード先は storage ルールに従う",
+    "JSON の attachments[] に path / name / mode / ext を記録する",
+    "mode=link はダウンロードリンクとして HTML に出力",
+    "mode=inline は inlineByExtension に従い埋め込み。対象外は link にフォールバック",
+    "forceLinkExtensions は常に link"
+  ]
+}

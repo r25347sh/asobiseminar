@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "sessionKey": "asobilab_cms_user",
+  "storage": ["localStorage", "sessionStorage"],
+  "pages": {
+    "login": "login.html",
+    "select": "select.html",
+    "editor": "editor.html"
+  },
+  "flow": [
+    "未ログインで select/editor に来たら login.html へリダイレクト（?next= 付き）",
+    "login 成功後は next または select.html へ",
+    "select で type と id を選び editor.html へ",
+    "editor は permissions を検査。不可なら select へ戻す",
+    "logout は session 削除後 login へ"
+  ],
+  "queryParams": {
+    "editor": {
+      "type": "member | group",
+      "id": "memberId または groupKey"
+    }
+  }
+}
