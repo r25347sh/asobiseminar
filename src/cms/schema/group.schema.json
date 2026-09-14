@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://r25347sh.github.io/asobiseminar/src/cms/schema/group.schema.json",
+  "title": "AsobiLab Group Page CMS Data",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "type", "groupKey", "label", "htmlPath", "updatedAt"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "type": { "type": "string", "const": "group" },
+    "groupKey": {
+      "type": "string",
+      "enum": ["english", "fashion", "skate", "arch", "site"]
+    },
+    "label": { "type": "string", "minLength": 1 },
+    "htmlPath": {
+      "type": "string",
+      "description": "通常は pages/groups/{key}.html。site のみ pages/about_This_Site.html"
+    },
+    "goalHtml": {
+      "type": "string",
+      "description": "グループ目標（サニタイズ済みHTML断片）"
+    },
+    "whatHtml": { "type": "string", "description": "What（サニタイズ済みHTML）" },
+    "whyHtml": { "type": "string", "description": "Why（サニタイズ済みHTML）" },
+    "howHtml": { "type": "string", "description": "How（サニタイズ済みHTML）" },
+    "resultHtml": {
+      "type": "string",
+      "description": "探求結果本文（サニタイズ済みHTML）"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "path", "ext", "mode"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "ext": { "type": "string" },
+          "mode": { "type": "string", "enum": ["link", "inline"] },
+          "size": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "updatedAt": { "type": "string" },
+    "updatedBy": { "type": "string" }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://r25347sh.github.io/asobiseminar/src/cms/schema/member.schema.json",
+  "title": "AsobiLab Member Page CMS Data",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "type", "memberId", "displayName", "class", "groupKey", "updatedAt"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "type": { "type": "string", "const": "member" },
+    "memberId": {
+      "type": "string",
+      "description": "pages/members/{memberId}.html および users/{memberId}/ と一致",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "displayName": { "type": "string", "minLength": 1 },
+    "class": {
+      "type": "string",
+      "enum": ["5A", "5B", "5C", "5D", "5E", "5F", "5G", "5H"]
+    },
+    "groupKey": {
+      "type": "string",
+      "enum": ["english", "fashion", "skate", "arch", "site"],
+      "description": "src/cms/config/groups.json の key"
+    },
+    "favoriteColor": {
+      "type": "string",
+      "description": "短文または #RRGGBB",
+      "maxLength": 80
+    },
+    "favoriteColorHex": {
+      "type": ["string", "null"],
+      "description": "カラーピッカー値。未設定は null"
+    },
+    "hobbies": {
+      "type": "string",
+      "description": "趣味・遊び。複数は半角カンマまたは半角スラッシュ区切り",
+      "maxLength": 500
+    },
+    "hobbyTriggerHtml": {
+      "type": "string",
+      "description": "ハマったきっかけ（サニタイズ済みHTML断片）"
+    },
+    "growthHtml": {
+      "type": "string",
+      "description": "探究活動を通した感想・成長した点（サニタイズ済みHTML断片）"
+    },
+    "messageHtml": {
+      "type": "string",
+      "description": "私からのメッセージ（サニタイズ済みHTML断片）"
+    },
+    "htmlPath": {
+      "type": "string",
+      "description": "公開HTMLパス",
+      "pattern": "^pages/members/.+\\.html$"
+    },
+    "updatedAt": { "type": "string" },
+    "updatedBy": { "type": "string" }
+  }
+}
