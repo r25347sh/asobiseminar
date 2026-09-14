@@ -4,38 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>佐藤晴 | Asobi Lab.</title>
-<meta name="description" content="佐藤晴（5G）— 個人探求">
+<meta name="description" content="佐藤晴（5G）— サイト作成">
 <link rel="icon" href="../../src/img/favicons/r25347sh.png" type="image/png">
 <link rel="stylesheet" href="../../src/css/common.css">
+<link rel="stylesheet" href="../../src/css/cms-slots.css">
 <link rel="stylesheet" href="../../MENU/MENU.css">
 </head>
 <body>
 <header class="site-header" data-lock="true">
   <a class="site-logo" href="../../index.html" data-lock="true">🎮 Asobi Lab.</a>
 </header>
-<main class="main page-member">
+<main class="main page-member" data-cms-page="member" data-cms-id="r25347sh">
   <h1 class="page-title" data-lock="true">佐藤晴</h1>
-  <p class="page-sub" data-lock="true">個人探求 · 5G</p>
-  <section class="goal-banner">
-    <h2 class="goal-label">目標</h2>
-    <p class="goal-text">Asobi Lab. のWebサイトを開発・運営し、メンバーが使いやすい形に整える。</p>
-  </section>
-  <section class="info-card">
-    <h2>プロフィール</h2>
+  <p class="page-sub" data-lock="true"><span data-cms-slot="groupLabel">サイト作成</span> · <span data-cms-slot="class">5G</span></p>
+  <section class="cms-block cms-profile info-card">
+    <h2 data-lock="true">自己概要</h2>
     <ul class="info-list">
-      <li><span>クラス</span><strong>5G</strong></li>
-      <li><span>所属</span><strong>個人探求</strong></li>
-      <li><span>好きな色</span><strong>サイトカラー</strong></li>
-      <li><span>趣味・遊び</span><strong>Webページ開発</strong></li>
+      <li><span>クラス</span><strong data-cms-slot="class">5G</strong></li>
+      <li><span>所属グループ</span><strong data-cms-slot="groupLabel">サイト作成</strong></li>
+      <li><span>好きな色</span><strong data-cms-slot="favoriteColor">サイトカラー</strong></li>
     </ul>
   </section>
-  <section class="article_by_teacher content-block" id="article-r25347sh">
-    <h2>探求メモ</h2>
-    <p><strong>ハマったきっかけ：</strong>遊びの探求ゼミの紹介サイトづくりを通して、Webの仕組みと表現を探求している。</p>
-    <p><strong>メモ：</strong>グループではなく一人でWebページ開発。</p>
-    <p>このセクションは本人が CMS から自由に編集できます。</p>
+  <section class="cms-block cms-play info-card">
+    <h2 data-lock="true">私の遊び</h2>
+    <p class="cms-inline-field"><span class="field-label" data-lock="true">趣味・遊び</span>
+      <strong data-cms-slot="hobbies">Webページ開発</strong></p>
+    <div class="field-block">
+      <h3 data-lock="true">その趣味にハマったきっかけ</h3>
+      <div class="cms-rich" data-cms-slot="hobbyTrigger"><p>遊びの探求ゼミの紹介サイトづくりを通して、Webの仕組みと表現を探求している。</p></div>
+    </div>
   </section>
-  <p class="page-sub center">グループには所属せず、一人で探求しています。</p>
+  <section class="cms-block cms-reflect cms-grad-frame">
+    <h2 data-lock="true">探求を通して</h2>
+    <div class="field-block">
+      <h3 data-lock="true">探究活動を通した感想・成長した点</h3>
+      <div class="cms-rich" data-cms-slot="growth"><p></p></div>
+    </div>
+    <div class="field-block">
+      <h3 data-lock="true">私からのメッセージ</h3>
+      <div class="cms-rich" data-cms-slot="message"><p></p></div>
+    </div>
+  </section>
+  <p class="cta-wrap"><a class="btn-play" href="../about_This_Site.html">このサイトについて →</a></p>
 </main>
 <footer class="site-footer" data-lock="true">© 2026 Asobi Lab. · 遊びの探求ゼミ</footer>
 <script src="../../MENU/MENU.js"></script>
