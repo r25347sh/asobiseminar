@@ -7,33 +7,43 @@
 <meta name="description" content="佐藤ちほ（5F）— ファッションについて">
 <link rel="icon" href="../../src/img/favicons/r25339sc.png" type="image/png">
 <link rel="stylesheet" href="../../src/css/common.css">
+<link rel="stylesheet" href="../../src/css/cms-slots.css">
 <link rel="stylesheet" href="../../MENU/MENU.css">
 </head>
 <body>
 <header class="site-header" data-lock="true">
   <a class="site-logo" href="../../index.html" data-lock="true">🎮 Asobi Lab.</a>
 </header>
-<main class="main page-member">
+<main class="main page-member" data-cms-page="member" data-cms-id="r25339sc">
   <h1 class="page-title" data-lock="true">佐藤ちほ</h1>
-  <p class="page-sub" data-lock="true">ファッションについて · 5F</p>
-  <section class="goal-banner">
-    <h2 class="goal-label">目標</h2>
-    <p class="goal-text">何がおしゃれと感じるのか、おしゃれに必要なものを人に説明できるようにする。</p>
-  </section>
-  <section class="info-card">
-    <h2>プロフィール</h2>
+  <p class="page-sub" data-lock="true"><span data-cms-slot="groupLabel">ファッションについて</span> · <span data-cms-slot="class">5F</span></p>
+  <section class="cms-block cms-profile info-card">
+    <h2 data-lock="true">自己概要</h2>
     <ul class="info-list">
-      <li><span>クラス</span><strong>5F</strong></li>
-      <li><span>所属</span><strong>ファッションについて</strong></li>
-      <li><span>好きな色</span><strong>#ff6347</strong></li>
-      <li><span>趣味・遊び</span><strong>妖怪ウォッチ、アイドル、マック</strong></li>
+      <li><span>クラス</span><strong data-cms-slot="class">5F</strong></li>
+      <li><span>所属グループ</span><strong data-cms-slot="groupLabel">ファッションについて</strong></li>
+      <li><span>好きな色</span><strong data-cms-slot="favoriteColor">—</strong></li>
     </ul>
   </section>
-  <section class="article_by_teacher content-block" id="article-r25339sc">
-    <h2>探求メモ</h2>
-    <p><strong>ハマったきっかけ：</strong>へこんだときに元気が出る。</p>
-    <p><strong>メモ：</strong>ファッションと「おしゃれ」の感覚を探る。</p>
-    <p>このセクションは本人が CMS から自由に編集できます。</p>
+  <section class="cms-block cms-play info-card">
+    <h2 data-lock="true">私の遊び</h2>
+    <p class="cms-inline-field"><span class="field-label" data-lock="true">趣味・遊び</span>
+      <strong data-cms-slot="hobbies">妖怪ウォッチ、アイドル、マック</strong></p>
+    <div class="field-block">
+      <h3 data-lock="true">その趣味にハマったきっかけ</h3>
+      <div class="cms-rich" data-cms-slot="hobbyTrigger"><p>へこんだときに元気が出る。</p></div>
+    </div>
+  </section>
+  <section class="cms-block cms-reflect cms-grad-frame">
+    <h2 data-lock="true">探求を通して</h2>
+    <div class="field-block">
+      <h3 data-lock="true">探究活動を通した感想・成長した点</h3>
+      <div class="cms-rich" data-cms-slot="growth"><p></p></div>
+    </div>
+    <div class="field-block">
+      <h3 data-lock="true">私からのメッセージ</h3>
+      <div class="cms-rich" data-cms-slot="message"><p></p></div>
+    </div>
   </section>
   <p class="cta-wrap"><a class="btn-play" href="../groups/fashion.html">グループページへ →</a></p>
 </main>

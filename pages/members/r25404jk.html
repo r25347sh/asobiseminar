@@ -1,43 +1,53 @@
 <!DOCTYPE html>
-<html lang="ja"><head>
+<html lang="ja">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>神季美花 | Asobi Lab.</title>
 <meta name="description" content="神季美花（5F）— ファッションについて">
 <link rel="icon" href="../../src/img/favicons/r25404jk.png" type="image/png">
 <link rel="stylesheet" href="../../src/css/common.css">
+<link rel="stylesheet" href="../../src/css/cms-slots.css">
 <link rel="stylesheet" href="../../MENU/MENU.css">
-<link rel="stylesheet" href="../../src/css/pages/pages-members-r25404jk.css" data-cms-page-css="1"></head>
+</head>
 <body>
 <header class="site-header" data-lock="true">
   <a class="site-logo" href="../../index.html" data-lock="true">🎮 Asobi Lab.</a>
 </header>
-<main class="main page-member">
+<main class="main page-member" data-cms-page="member" data-cms-id="r25404jk">
   <h1 class="page-title" data-lock="true">神季美花</h1>
-  <p class="page-sub" data-lock="true">ファッションについて · 5F</p>
-  <section class="goal-banner">
-    <h2 class="goal-label">目標</h2>
-    <p class="goal-text">みんなで協力してグループ活動を進める。</p>
-  </section>
-  <section class="info-card">
-    <h2>プロフィール</h2>
+  <p class="page-sub" data-lock="true"><span data-cms-slot="groupLabel">ファッションについて</span> · <span data-cms-slot="class">5F</span></p>
+  <section class="cms-block cms-profile info-card">
+    <h2 data-lock="true">自己概要</h2>
     <ul class="info-list">
-      <li><span>クラス</span><strong>5F</strong></li>
-      <li><span>所属</span><strong>ファッションについて</strong></li>
-      <li><span>好きな色</span><strong>黒</strong></li>
-      <li><span>趣味・遊び</span><strong>アニメ、バスケ</strong></li>
+      <li><span>クラス</span><strong data-cms-slot="class">5F</strong></li>
+      <li><span>所属グループ</span><strong data-cms-slot="groupLabel">ファッションについて</strong></li>
+      <li><span>好きな色</span><strong data-cms-slot="favoriteColor">—</strong></li>
     </ul>
   </section>
-  <section class="article_by_teacher content-block" id="article-r25404jk" style="min-height: 2.5em;">
-    <h2>探求メモ</h2>
-    <p><strong>ハマったきっかけ：</strong>父親の影響。</p>
-    <p><strong>メモ：</strong>ファッションへの関心。</p>
-    <p>このセクションは本人が CMS から自由に編集できます。</p>
+  <section class="cms-block cms-play info-card">
+    <h2 data-lock="true">私の遊び</h2>
+    <p class="cms-inline-field"><span class="field-label" data-lock="true">趣味・遊び</span>
+      <strong data-cms-slot="hobbies">アニメ、バスケ</strong></p>
+    <div class="field-block">
+      <h3 data-lock="true">その趣味にハマったきっかけ</h3>
+      <div class="cms-rich" data-cms-slot="hobbyTrigger"><p>父親の影響。</p></div>
+    </div>
+  </section>
+  <section class="cms-block cms-reflect cms-grad-frame">
+    <h2 data-lock="true">探求を通して</h2>
+    <div class="field-block">
+      <h3 data-lock="true">探究活動を通した感想・成長した点</h3>
+      <div class="cms-rich" data-cms-slot="growth"><p></p></div>
+    </div>
+    <div class="field-block">
+      <h3 data-lock="true">私からのメッセージ</h3>
+      <div class="cms-rich" data-cms-slot="message"><p></p></div>
+    </div>
   </section>
   <p class="cta-wrap"><a class="btn-play" href="../groups/fashion.html">グループページへ →</a></p>
 </main>
 <footer class="site-footer" data-lock="true">© 2026 Asobi Lab. · 遊びの探求ゼミ</footer>
-
-
-
-<script src="../../MENU/MENU.js"></script></body></html>
+<script src="../../MENU/MENU.js"></script>
+</body>
+</html>
