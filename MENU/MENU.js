@@ -476,7 +476,32 @@
     pieDisabled = false;
   }
 
+  
+  function applyPageThemeToMenu() {
+    try {
+      var body = document.body;
+      if (!body) return;
+      var acc = body.getAttribute('data-theme-color') ||
+        getComputedStyle(body).getPropertyValue('--member-accent').trim();
+      var sec = body.getAttribute('data-theme-secondary') ||
+        getComputedStyle(body).getPropertyValue('--member-secondary').trim();
+      var ter = body.getAttribute('data-theme-tertiary') ||
+        getComputedStyle(body).getPropertyValue('--member-tertiary').trim();
+      if (!acc) {
+        document.documentElement.classList.remove('menu-themed');
+        return;
+      }
+      document.documentElement.classList.add('menu-themed');
+      document.documentElement.style.setProperty('--menu-accent', acc);
+      if (sec) document.documentElement.style.setProperty('--menu-secondary', sec);
+      if (ter) document.documentElement.style.setProperty('--menu-tertiary', ter);
+      // soft
+      document.documentElement.style.setProperty('--menu-accent-soft', acc + '33');
+    } catch (e) {}
+  }
+
   function boot() {
+    applyPageThemeToMenu();
     createMenuDOM();
     initEvents();
     mountAuthHeader();
