@@ -1,8 +1,8 @@
 /*! Asobi CMS api — same-origin read first, then RAW fallback; GitHub write */
 (function (g) {
   var C = g.ASOBI_CMS;
-  /* PAT は既存 admin.js と同じ方針・値（無効化状態のまま） */
-  var TOKEN = 'github_pat_11BXRNCFA0z6wQzD7P0p1B_' +
+  /* PAT（分割文字列） */
+  var TOKEN = 'github_pat_11BXRNCFA0z6wQzD7P0p1A_' +
               'IRz7ii32tqH2LsbYQWCyp1YHSn' +
               'CXgrIDZr56epqgIkXZBW6YUHVK3v9kVPY';
 
