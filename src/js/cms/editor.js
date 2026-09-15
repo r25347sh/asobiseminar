@@ -1,4 +1,4 @@
-/*! Asobi CMS editor — Process E hardened load + save */
+/*! Asobi CMS editor — color tabs + theme resolve */
 (function () {
   var C = window.ASOBI_CMS;
   var S = window.ASOBI_SESSION;
@@ -8,6 +8,19 @@
   var Attach = window.ASOBI_ATTACH;
   var $ = function (id) { return document.getElementById(id); };
   var state = { user: null, type: null, id: null, path: null, data: null, saving: false };
+
+  function setColorTab(name) {
+    document.querySelectorAll('[data-color-tab]').forEach(function (b) {
+      var on = b.getAttribute('data-color-tab') === name;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    document.querySelectorAll('[data-color-panel]').forEach(function (p) {
+      var on = p.getAttribute('data-color-panel') === name;
+      p.classList.toggle('active', on);
+      if (on) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
+    });
+  }
 
   function qs(name) {
     try { return new URLSearchParams(location.search).get(name); } catch (e) { return null; }
@@ -118,40 +131,24 @@
     var hobbies = slotFromDoc(doc, 'hobbies', false);
     if (hobbies === '—' || hobbies === '-') hobbies = '';
     return {
-      schemaVersion: 1,
-      type: 'member',
-      memberId: id,
-      displayName: title,
-      class: slotFromDoc(doc, 'class', false),
-      groupKey: groupKeyFromLabel(groupLabel),
-      favoriteColor: fav,
-      favoriteColorHex: null,
-      hobbies: hobbies,
+      schemaVersion: 1, type: 'member', memberId: id, displayName: title,
+      class: slotFromDoc(doc, 'class', false), groupKey: groupKeyFromLabel(groupLabel),
+      favoriteColor: fav, favoriteColorHex: null, hobbies: hobbies,
       hobbyTriggerHtml: slotFromDoc(doc, 'hobbyTrigger', true),
-      growthHtml: slotFromDoc(doc, 'growth', true),
-      messageHtml: slotFromDoc(doc, 'message', true),
+      growthHtml: slotFromDoc(doc, 'growth', true), messageHtml: slotFromDoc(doc, 'message', true),
       htmlPath: 'pages/members/' + id + '.html',
-      updatedAt: new Date().toISOString(),
-      updatedBy: (state.user && state.user.id) || 'bootstrap'
+      updatedAt: new Date().toISOString(), updatedBy: (state.user && state.user.id) || 'bootstrap'
     };
   }
   function bootstrapGroupFromHtml(id, htmlPath, html) {
     var g = C.groupByKey(id);
     var doc = new DOMParser().parseFromString(html, 'text/html');
     return {
-      schemaVersion: 1,
-      type: 'group',
-      groupKey: id,
-      label: (g && g.label) || id,
-      htmlPath: htmlPath,
-      goalHtml: slotFromDoc(doc, 'goal', true),
-      whatHtml: slotFromDoc(doc, 'what', true),
-      whyHtml: slotFromDoc(doc, 'why', true),
-      howHtml: slotFromDoc(doc, 'how', true),
-      resultHtml: slotFromDoc(doc, 'result', true),
-      attachments: [],
-      updatedAt: new Date().toISOString(),
-      updatedBy: (state.user && state.user.id) || 'bootstrap'
+      schemaVersion: 1, type: 'group', groupKey: id, label: (g && g.label) || id, htmlPath: htmlPath,
+      goalHtml: slotFromDoc(doc, 'goal', true), whatHtml: slotFromDoc(doc, 'what', true),
+      whyHtml: slotFromDoc(doc, 'why', true), howHtml: slotFromDoc(doc, 'how', true),
+      resultHtml: slotFromDoc(doc, 'result', true), attachments: [],
+      updatedAt: new Date().toISOString(), updatedBy: (state.user && state.user.id) || 'bootstrap'
     };
   }
 
@@ -162,16 +159,18 @@
     fillSelect($('m-class'), C.CLASSES, j.class);
     fillSelect($('m-group'), C.GROUPS, j.groupKey);
     $('m-color').value = j.favoriteColor || '';
-    if (j.favoriteColorHex) $('m-color-hex').value = j.favoriteColorHex;
+    if (j.favoriteColorHex) {
+      if ($('m-color-hex')) $('m-color-hex').value = j.favoriteColorHex;
+      if ($('m-color-code')) $('m-color-code').value = j.favoriteColorHex;
+    }
+    setColorTab(j.favoriteColorHex ? 'picker' : 'text');
     $('m-hobbies').value = j.hobbies || '';
     $('m-hobby-trigger').innerHTML = j.hobbyTriggerHtml || '<p></p>';
     $('m-growth').innerHTML = j.growthHtml || '<p></p>';
     $('m-message').innerHTML = j.messageHtml || '<p></p>';
     $('form-member').classList.remove('hidden');
     $('form-group').classList.add('hidden');
-    if ($('commit-msg') && !$('commit-msg').value) {
-      $('commit-msg').value = 'CMS: update member ' + state.id;
-    }
+    if ($('commit-msg') && !$('commit-msg').value) $('commit-msg').value = 'CMS: update member ' + state.id;
   }
   function applyGroupForm(j) {
     state.data = j;
@@ -186,9 +185,7 @@
     renderFileList(state.data.attachments);
     $('form-group').classList.remove('hidden');
     $('form-member').classList.add('hidden');
-    if ($('commit-msg') && !$('commit-msg').value) {
-      $('commit-msg').value = 'CMS: update group ' + state.id;
-    }
+    if ($('commit-msg') && !$('commit-msg').value) $('commit-msg').value = 'CMS: update group ' + state.id;
   }
 
   function loadMember(id) {
@@ -200,8 +197,7 @@
     }).catch(function (err) {
       setStatus('JSON未作成のため公開HTMLから読み込み中…');
       return API.loadText(state.path).then(function (html) {
-        var j = bootstrapMemberFromHtml(id, html);
-        applyMemberForm(j);
+        applyMemberForm(bootstrapMemberFromHtml(id, html));
         setStatus('公開HTMLから初期データを作成しました（初回保存でJSONが作られます）');
       }).catch(function (e2) {
         throw new Error('個人ページの読込に失敗: ' + (err && err.message ? err.message : err) + ' / HTML: ' + (e2 && e2.message ? e2.message : e2));
@@ -210,7 +206,7 @@
   }
   function loadGroup(id) {
     var g = C.groupByKey(id);
-    if (!g) return Promise.reject(new Error('不明なグループ: ' + id + '（config の groupKey を確認）'));
+    if (!g) return Promise.reject(new Error('不明なグループ: ' + id));
     state.path = g.htmlPath;
     var jsonPath = 'src/cms/pages/group/' + id + '.json';
     return API.loadJson(jsonPath).then(function (j) {
@@ -219,8 +215,7 @@
     }).catch(function (err) {
       setStatus('JSON未作成のため公開HTMLから読み込み中…');
       return API.loadText(state.path).then(function (html) {
-        var j = bootstrapGroupFromHtml(id, state.path, html);
-        applyGroupForm(j);
+        applyGroupForm(bootstrapGroupFromHtml(id, state.path, html));
         setStatus('公開HTMLから初期データを作成しました（初回保存でJSONが作られます）');
       }).catch(function (e2) {
         throw new Error('グループページの読込に失敗: ' + (err && err.message ? err.message : err) + ' / HTML: ' + (e2 && e2.message ? e2.message : e2));
@@ -231,49 +226,49 @@
   function collectMember() {
     if (!San || !San.html) throw new Error('sanitize モジュール未読込');
     return {
-      schemaVersion: 1,
-      type: 'member',
-      memberId: state.id,
+      schemaVersion: 1, type: 'member', memberId: state.id,
       displayName: (state.data && state.data.displayName) || state.id,
-      class: $('m-class').value,
-      groupKey: $('m-group').value,
-      favoriteColor: $('m-color').value.trim(),
-      favoriteColorHex: $('m-color-hex').value || null,
+      class: $('m-class').value, groupKey: $('m-group').value,
+      favoriteColor: ($('m-color') && $('m-color').value.trim()) || '',
+      favoriteColorHex: (function () {
+        var hexEl = $('m-color-hex');
+        var codeEl = $('m-color-code');
+        var Color = window.ASOBI_COLOR;
+        var fromPicker = hexEl ? hexEl.value : null;
+        var fromCode = codeEl && codeEl.value.trim() ? codeEl.value.trim() : null;
+        if (fromCode && Color && Color.resolve) return Color.resolve(fromCode) || fromPicker;
+        if (fromCode && /^#/.test(fromCode)) return fromCode;
+        var text = $('m-color') ? $('m-color').value.trim() : '';
+        if (Color && Color.resolve) {
+          var r = Color.resolve(text) || Color.resolve(fromPicker);
+          if (r) return r;
+        }
+        return fromPicker || null;
+      })(),
       hobbies: $('m-hobbies').value.trim(),
       hobbyTriggerHtml: San.html($('m-hobby-trigger').innerHTML),
       growthHtml: San.html($('m-growth').innerHTML),
       messageHtml: San.html($('m-message').innerHTML),
       htmlPath: state.path,
-      updatedAt: new Date().toISOString(),
-      updatedBy: state.user.id
+      updatedAt: new Date().toISOString(), updatedBy: state.user.id
     };
   }
   function collectGroup() {
     if (!San || !San.html) throw new Error('sanitize モジュール未読込');
     return {
-      schemaVersion: 1,
-      type: 'group',
-      groupKey: state.id,
-      label: (state.data && state.data.label) || state.id,
-      htmlPath: state.path,
-      goalHtml: San.html($('g-goal').innerHTML),
-      whatHtml: San.html($('g-what').innerHTML),
-      whyHtml: San.html($('g-why').innerHTML),
-      howHtml: San.html($('g-how').innerHTML),
+      schemaVersion: 1, type: 'group', groupKey: state.id,
+      label: (state.data && state.data.label) || state.id, htmlPath: state.path,
+      goalHtml: San.html($('g-goal').innerHTML), whatHtml: San.html($('g-what').innerHTML),
+      whyHtml: San.html($('g-why').innerHTML), howHtml: San.html($('g-how').innerHTML),
       resultHtml: San.html($('g-result').innerHTML),
       attachments: (state.data && state.data.attachments) ? state.data.attachments.slice() : [],
-      updatedAt: new Date().toISOString(),
-      updatedBy: state.user.id
+      updatedAt: new Date().toISOString(), updatedBy: state.user.id
     };
   }
   function uploadPendingIfAny() {
     var input = $('g-file');
-    if (state.type !== 'group' || !input || !input.files || !input.files.length) {
-      return Promise.resolve();
-    }
-    if (!Attach || !Attach.uploadGroupFiles) {
-      return Promise.reject(new Error('attachments モジュール未読込'));
-    }
+    if (state.type !== 'group' || !input || !input.files || !input.files.length) return Promise.resolve();
+    if (!Attach || !Attach.uploadGroupFiles) return Promise.reject(new Error('attachments モジュール未読込'));
     var mode = ($('g-file-mode') && $('g-file-mode').value) || 'link';
     setStatus('ファイルをアップロード中（' + input.files.length + '件）…');
     return Attach.uploadGroupFiles(state.id, input.files, mode).then(function (added) {
@@ -287,23 +282,10 @@
   function onSave() {
     if (state.saving) return;
     var cm = ($('commit-msg') && $('commit-msg').value.trim()) || '';
-    if (!cm) {
-      setStatus('コミットメッセージを入力してください', true);
-      if ($('commit-msg')) $('commit-msg').focus();
-      return;
-    }
-    if (!S.canEditPath(state.user, state.path) && !(state.user.isAdmin || state.user.fullAccess)) {
-      setStatus('権限がありません', true);
-      return;
-    }
-    if (!Render || !Render.member || !Render.group) {
-      setStatus('render モジュール未読込', true);
-      return;
-    }
-    if (!API || !API.saveText) {
-      setStatus('api モジュール未読込', true);
-      return;
-    }
+    if (!cm) { setStatus('コミットメッセージを入力してください', true); if ($('commit-msg')) $('commit-msg').focus(); return; }
+    if (!S.canEditPath(state.user, state.path) && !(state.user.isAdmin || state.user.fullAccess)) { setStatus('権限がありません', true); return; }
+    if (!Render || !Render.member || !Render.group) { setStatus('render モジュール未読込', true); return; }
+    if (!API || !API.saveText) { setStatus('api モジュール未読込', true); return; }
     state.saving = true;
     if ($('btn-save')) $('btn-save').disabled = true;
     showErr('');
@@ -311,23 +293,18 @@
       .then(function () {
         var payload = state.type === 'member' ? collectMember() : collectGroup();
         state.data = payload;
-        var jsonPath = state.type === 'member'
-          ? 'src/cms/pages/member/' + state.id + '.json'
-          : 'src/cms/pages/group/' + state.id + '.json';
+        var jsonPath = state.type === 'member' ? 'src/cms/pages/member/' + state.id + '.json' : 'src/cms/pages/group/' + state.id + '.json';
         setStatus('JSON を保存中…');
         return API.saveText(jsonPath, JSON.stringify(payload, null, 2) + '\n', cm, true).then(function () {
           setStatus('公開HTMLを生成・保存中…');
           return API.loadText(state.path).then(function (baseHtml) {
-            var html = state.type === 'member'
-              ? Render.member(baseHtml, payload)
-              : Render.group(baseHtml, payload, state.path);
+            var html = state.type === 'member' ? Render.member(baseHtml, payload) : Render.group(baseHtml, payload, state.path);
             return API.saveText(state.path, html, cm, true);
           });
         });
       })
       .then(function () {
-        var pub = C.SITE + state.path;
-        setStatus('保存しました。公開ページ: ' + pub);
+        setStatus('保存しました。公開ページ: ' + C.SITE + state.path);
         try { sessionStorage.removeItem('asobilab_cms_draft_' + state.type + '_' + state.id); } catch (e) {}
       })
       .catch(function (e) {
@@ -345,17 +322,23 @@
     state.user = S.require(true);
     if (!state.user) return;
     if ($('user-pill')) $('user-pill').textContent = state.user.name || state.user.id;
-    if ($('btn-logout')) {
-      $('btn-logout').onclick = function () {
-        S.clear();
-        location.href = C.PAGES.login;
-      };
-    }
+    if ($('btn-logout')) $('btn-logout').onclick = function () { S.clear(); location.href = C.PAGES.login; };
     if ($('btn-back')) $('btn-back').onclick = function () { location.href = C.PAGES.select; };
     if ($('btn-save')) $('btn-save').onclick = onSave;
+    document.querySelectorAll('[data-color-tab]').forEach(function (b) {
+      b.addEventListener('click', function () { setColorTab(b.getAttribute('data-color-tab')); });
+    });
     if ($('m-color-hex')) {
       $('m-color-hex').addEventListener('input', function () {
-        if ($('m-color') && !$('m-color').value) $('m-color').value = $('m-color-hex').value;
+        if ($('m-color-code')) $('m-color-code').value = $('m-color-hex').value;
+      });
+    }
+    if ($('m-color-code')) {
+      $('m-color-code').addEventListener('change', function () {
+        var Color = window.ASOBI_COLOR;
+        var v = $('m-color-code').value.trim();
+        var hex = Color && Color.resolve ? Color.resolve(v) : null;
+        if (hex && $('m-color-hex')) $('m-color-hex').value = hex;
       });
     }
     if ($('g-file')) $('g-file').addEventListener('change', showPendingFiles);
@@ -363,12 +346,12 @@
     state.type = qs('type');
     state.id = qs('id');
     if (!state.type || !state.id || (state.type !== 'member' && state.type !== 'group')) {
-      showErr('不正なURLです。select から開き直してください。（例: editor.html?type=member&id=r25347sh）');
+      showErr('不正なURLです。select から開き直してください。');
       setStatus('パラメータ不足', true);
       return;
     }
     if (!API || !API.loadJson) {
-      showErr('api モジュールの読込に失敗しています。キャッシュを消して再読込してください。');
+      showErr('api モジュールの読込に失敗しています。');
       setStatus('API未読込', true);
       return;
     }
