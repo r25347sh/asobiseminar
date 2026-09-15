@@ -110,135 +110,78 @@ body.has-member-theme .cms-grad-frame::before{
 }
 .btn-play:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(46,196,182,.35)}
 
-/* ========== Member theme (multi-color + contrast-safe) ========== */
+/* ========== Theme accents (restrained — 視認性優先・部分のみ) ========== */
 body.has-member-theme {
-  --accent: var(--member-accent, #2ec4b6);
-  /* 本文は常に濃色を維持（視認性優先） */
-  color: #1a1520;
+  /* 背景はごく薄い1枚だけ。本文色は触らない */
   background:
-    radial-gradient(900px 480px at 8% -8%, var(--member-accent-soft), transparent 55%),
-    radial-gradient(700px 400px at 100% 0%, var(--member-secondary-soft, var(--member-accent-softer)), transparent 50%),
-    radial-gradient(560px 300px at 70% 100%, var(--member-tertiary-soft, var(--member-accent-softer)), transparent 48%),
+    radial-gradient(720px 380px at 12% -5%, var(--member-accent-soft, transparent), transparent 60%),
     #fffaf3;
-}
-body.has-member-theme .site-header {
-  border-bottom: 1px solid var(--member-accent-medium);
-  background: linear-gradient(180deg, #ffffff 40%, color-mix(in srgb, var(--member-accent) 5%, #fff));
-}
-body.has-member-theme .site-logo span {
-  color: var(--member-accent-dark, var(--member-accent));
+  color: #1a1520;
 }
 body.has-member-theme .page-title {
-  background: var(--member-title-gradient,
-    linear-gradient(115deg, var(--member-accent), var(--member-secondary, #7b68ee) 70%));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  /* fallback if clip unsupported */
-}
-@supports not (background-clip: text) {
-  body.has-member-theme .page-title { color: var(--member-accent-dark, #1a1520); background: none; }
-}
-body.has-member-theme .page-sub {
-  color: #3d3550; /* 固定で読みやすく */
-}
-body.has-member-theme .page-sub::before {
-  content: "";
-  display: inline-block;
-  width: .55rem; height: .55rem;
-  border-radius: 50%;
-  background: var(--member-accent);
-  margin-right: .45rem;
-  vertical-align: middle;
-  box-shadow: 0 0 0 3px var(--member-accent-soft);
-}
-body.has-member-theme .cms-block.info-card,
-body.has-member-theme .cms-block.cms-play,
-body.has-member-theme .cms-block.cms-profile {
-  border-color: var(--member-accent-medium);
-  box-shadow:
-    0 12px 32px var(--member-accent-softer),
-    0 0 0 1px var(--member-accent-soft);
-  background: linear-gradient(165deg, #ffffff 55%, var(--member-accent-softer));
-  color: #1a1520;
-}
-body.has-member-theme .cms-block h2 {
-  color: #1a1520; /* 見出し本文は濃色 */
-  border-bottom: 2px solid var(--member-accent-soft);
-  padding-bottom: .4rem;
-  margin-bottom: .95rem;
-}
-body.has-member-theme .cms-block h2::before {
-  content: "";
-  display: inline-block;
-  width: .35rem; height: 1.05em;
-  border-radius: 4px;
-  background: linear-gradient(180deg, var(--member-accent), var(--member-secondary, var(--member-accent-light)));
-  margin-right: .5rem;
-  vertical-align: -0.15em;
-}
-body.has-member-theme .info-list li {
-  border-bottom-color: var(--member-accent-soft);
-  color: #1a1520;
-}
-body.has-member-theme .info-list strong {
-  color: #2b2140;
-}
-body.has-member-theme .field-label {
-  color: #5a5268;
-}
-body.has-member-theme .cms-rich {
-  color: #1a1520;
-}
-body.has-member-theme .cms-rich a {
-  color: var(--member-accent-dark, #0f766e);
-  text-decoration-color: var(--member-accent-medium);
-}
-body.has-member-theme .cms-grad-frame {
-  box-shadow: 0 14px 36px var(--member-accent-soft);
+  /* タイトルはデフォルト色のまま。アクセントは下線のみ */
+  box-shadow: inset 0 -3px 0 var(--member-accent-soft, transparent);
+  padding-bottom: .15rem;
 }
 body.has-member-theme .cms-grad-frame::before {
-  background: linear-gradient(120deg,
-    var(--member-accent),
-    var(--member-secondary, #ff6b6b),
-    var(--member-tertiary, #ffd166),
-    var(--member-accent));
-  background-size: 300% 300%;
+  /* 既存グラデ枠がある場合のみ、アクセントを少し混ぜる */
+  opacity: 0.85;
 }
 body.has-member-theme .btn-play {
-  background: linear-gradient(135deg, var(--member-accent), var(--member-secondary, var(--member-accent-dark)));
-  border: none;
+  /* CTA だけアクセント（文字は必ずコントラスト確保） */
+  background: var(--member-accent, #2ec4b6);
   color: var(--member-on-accent, #fff);
-  box-shadow: 0 10px 24px var(--member-accent-medium);
-  font-weight: 700;
+  border: none;
 }
 body.has-member-theme .btn-play:hover {
-  box-shadow: 0 14px 32px var(--member-accent-strong);
   filter: brightness(1.05);
 }
-body.has-member-theme .site-footer {
-  border-top: 2px solid var(--member-accent-soft);
-  color: #5a5268;
-}
-/* 好きな色スウォッチ（複数） */
+/* 好きな色スウォッチのみ色表示 */
 .color-swatch {
   display: inline-flex;
   align-items: center;
-  gap: .45rem;
+  gap: .4rem;
 }
 .color-swatch::before {
   content: "";
-  width: .95rem; height: .95rem;
+  width: .85rem; height: .85rem;
   border-radius: 50%;
   background: var(--swatch, currentColor);
   border: 1px solid rgba(0,0,0,.12);
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--member-accent-soft);
+  box-shadow: 0 0 0 2px #fff;
   flex-shrink: 0;
 }
 .color-swatch-multi::before {
-  background:
-    linear-gradient(135deg,
-      var(--swatch) 0 33%,
-      var(--swatch-2, var(--swatch)) 33% 66%,
-      var(--swatch-3, var(--swatch-2, var(--swatch))) 66% 100%);
+  background: linear-gradient(135deg,
+    var(--swatch) 0 33%,
+    var(--swatch-2, var(--swatch)) 33% 66%,
+    var(--swatch-3, var(--swatch-2, var(--swatch))) 66% 100%);
+}
+
+/* ========== Teacher page ========== */
+.page-teacher .cms-block { margin-bottom: 1.25rem; }
+.career-table {
+  width: 100%; border-collapse: collapse; font-size: .95rem;
+}
+.career-table th, .career-table td {
+  border: 1px solid rgba(43,33,64,.12);
+  padding: .55rem .7rem;
+  text-align: left;
+  vertical-align: top;
+}
+.career-table th {
+  background: rgba(43,33,64,.04);
+  font-weight: 700;
+  width: 28%;
+  color: #2b2140;
+}
+.hobby-chips {
+  display: flex; flex-wrap: wrap; gap: .4rem; list-style: none; padding: 0; margin: .4rem 0 0;
+}
+.hobby-chips li {
+  padding: .3rem .65rem;
+  border-radius: 999px;
+  background: rgba(43,33,64,.06);
+  border: 1px solid rgba(43,33,64,.1);
+  font-size: .88rem;
 }
