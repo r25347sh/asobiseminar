@@ -44,7 +44,7 @@
       semi_name: u.semi_name || '',
       role: u.role || 'member',
       isAdmin: !!u.isAdmin,
-      fullAccess: !!u.fullAccess,
+      fullAccess: !!(u.fullAccess || u.isAdmin),
       permissions: (u.permissions || []).slice(),
       canUpload: u.canUpload !== false,
       canDelete: !!u.canDelete
