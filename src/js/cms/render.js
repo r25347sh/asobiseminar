@@ -88,7 +88,7 @@
     setSlot(doc, 'result', San.html(data.resultHtml));
     var filesHtml = renderAttachments(data.attachments || []);
     if (htmlPath === 'pages/about_This_Site.html') {
-      filesHtml = filesHtml.replace(/href="\.\.\/\.\.\//g, 'href="../').replace(/src="\.\.\/\.\.\//g, 'src="../');
+      filesHtml = filesHtml.split('../../').join('../');
     }
     setSlot(doc, 'files', filesHtml);
     return serialize(doc);
