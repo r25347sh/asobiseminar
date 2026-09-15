@@ -110,32 +110,39 @@ body.has-member-theme .cms-grad-frame::before{
 }
 .btn-play:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(46,196,182,.35)}
 
-/* ========== Member theme — 基調カラーをふんだんに ========== */
-body.has-member-theme{
+/* ========== Member theme (multi-color + contrast-safe) ========== */
+body.has-member-theme {
   --accent: var(--member-accent, #2ec4b6);
+  /* 本文は常に濃色を維持（視認性優先） */
+  color: #1a1520;
   background:
-    radial-gradient(900px 480px at 8% -8%, var(--member-accent-soft, rgba(46,196,182,.14)), transparent 55%),
-    radial-gradient(700px 400px at 100% 0%, var(--member-accent-softer, rgba(46,196,182,.08)), transparent 50%),
-    radial-gradient(600px 320px at 50% 100%, var(--member-accent-softer, rgba(46,196,182,.06)), transparent 45%),
-    var(--bg, #fffaf3);
+    radial-gradient(900px 480px at 8% -8%, var(--member-accent-soft), transparent 55%),
+    radial-gradient(700px 400px at 100% 0%, var(--member-secondary-soft, var(--member-accent-softer)), transparent 50%),
+    radial-gradient(560px 300px at 70% 100%, var(--member-tertiary-soft, var(--member-accent-softer)), transparent 48%),
+    #fffaf3;
 }
-body.has-member-theme .site-header{
-  border-bottom-color: var(--member-accent-medium, rgba(46,196,182,.25));
-  background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--member-accent) 6%, #fff));
+body.has-member-theme .site-header {
+  border-bottom: 1px solid var(--member-accent-medium);
+  background: linear-gradient(180deg, #ffffff 40%, color-mix(in srgb, var(--member-accent) 5%, #fff));
 }
-body.has-member-theme .site-logo span{
-  color: var(--member-accent);
+body.has-member-theme .site-logo span {
+  color: var(--member-accent-dark, var(--member-accent));
 }
-body.has-member-theme .page-title{
-  background: linear-gradient(115deg, var(--member-accent), var(--member-accent-dark, #7b68ee) 72%);
+body.has-member-theme .page-title {
+  background: var(--member-title-gradient,
+    linear-gradient(115deg, var(--member-accent), var(--member-secondary, #7b68ee) 70%));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  /* fallback if clip unsupported */
 }
-body.has-member-theme .page-sub{
-  color: color-mix(in srgb, var(--member-accent) 55%, #2b2140);
+@supports not (background-clip: text) {
+  body.has-member-theme .page-title { color: var(--member-accent-dark, #1a1520); background: none; }
 }
-body.has-member-theme .page-sub::before{
+body.has-member-theme .page-sub {
+  color: #3d3550; /* 固定で読みやすく */
+}
+body.has-member-theme .page-sub::before {
   content: "";
   display: inline-block;
   width: .55rem; height: .55rem;
@@ -147,79 +154,91 @@ body.has-member-theme .page-sub::before{
 }
 body.has-member-theme .cms-block.info-card,
 body.has-member-theme .cms-block.cms-play,
-body.has-member-theme .cms-block.cms-profile{
-  border-color: var(--member-accent-medium, rgba(46,196,182,.28));
+body.has-member-theme .cms-block.cms-profile {
+  border-color: var(--member-accent-medium);
   box-shadow:
-    0 12px 32px var(--member-accent-softer, rgba(46,196,182,.08)),
-    0 0 0 1px var(--member-accent-soft, rgba(46,196,182,.12));
-  background:
-    linear-gradient(165deg, #fff 60%, var(--member-accent-softer, transparent));
+    0 12px 32px var(--member-accent-softer),
+    0 0 0 1px var(--member-accent-soft);
+  background: linear-gradient(165deg, #ffffff 55%, var(--member-accent-softer));
+  color: #1a1520;
 }
-body.has-member-theme .cms-block h2{
-  color: color-mix(in srgb, var(--member-accent) 65%, #2b2140);
+body.has-member-theme .cms-block h2 {
+  color: #1a1520; /* 見出し本文は濃色 */
   border-bottom: 2px solid var(--member-accent-soft);
   padding-bottom: .4rem;
   margin-bottom: .95rem;
 }
-body.has-member-theme .cms-block h2::before{
+body.has-member-theme .cms-block h2::before {
   content: "";
   display: inline-block;
   width: .35rem; height: 1.05em;
   border-radius: 4px;
-  background: linear-gradient(180deg, var(--member-accent), var(--member-accent-light, #7b68ee));
+  background: linear-gradient(180deg, var(--member-accent), var(--member-secondary, var(--member-accent-light)));
   margin-right: .5rem;
   vertical-align: -0.15em;
 }
-body.has-member-theme .info-list li{
+body.has-member-theme .info-list li {
   border-bottom-color: var(--member-accent-soft);
+  color: #1a1520;
 }
-body.has-member-theme .info-list strong{
-  color: color-mix(in srgb, var(--member-accent) 40%, #2b2140);
+body.has-member-theme .info-list strong {
+  color: #2b2140;
 }
-body.has-member-theme .field-label{
-  color: color-mix(in srgb, var(--member-accent) 50%, rgba(43,33,64,.55));
+body.has-member-theme .field-label {
+  color: #5a5268;
 }
-body.has-member-theme .cms-rich a{
-  color: var(--member-accent-dark, var(--member-accent));
+body.has-member-theme .cms-rich {
+  color: #1a1520;
+}
+body.has-member-theme .cms-rich a {
+  color: var(--member-accent-dark, #0f766e);
   text-decoration-color: var(--member-accent-medium);
 }
-body.has-member-theme .cms-grad-frame{
+body.has-member-theme .cms-grad-frame {
   box-shadow: 0 14px 36px var(--member-accent-soft);
 }
-body.has-member-theme .cms-grad-frame::before{
+body.has-member-theme .cms-grad-frame::before {
   background: linear-gradient(120deg,
     var(--member-accent),
-    #ff6b6b,
-    var(--member-accent-light, #ffd166),
-    #7b68ee,
+    var(--member-secondary, #ff6b6b),
+    var(--member-tertiary, #ffd166),
     var(--member-accent));
   background-size: 300% 300%;
 }
-body.has-member-theme .btn-play{
-  background: linear-gradient(135deg, var(--member-accent), var(--member-accent-dark, #7b68ee));
+body.has-member-theme .btn-play {
+  background: linear-gradient(135deg, var(--member-accent), var(--member-secondary, var(--member-accent-dark)));
   border: none;
-  color: #fff;
-  box-shadow: 0 10px 24px var(--member-accent-medium, rgba(46,196,182,.3));
+  color: var(--member-on-accent, #fff);
+  box-shadow: 0 10px 24px var(--member-accent-medium);
+  font-weight: 700;
 }
-body.has-member-theme .btn-play:hover{
-  box-shadow: 0 14px 32px var(--member-accent-strong, rgba(46,196,182,.4));
+body.has-member-theme .btn-play:hover {
+  box-shadow: 0 14px 32px var(--member-accent-strong);
+  filter: brightness(1.05);
 }
-body.has-member-theme .site-footer{
+body.has-member-theme .site-footer {
   border-top: 2px solid var(--member-accent-soft);
-  color: color-mix(in srgb, var(--member-accent) 30%, rgba(43,33,64,.55));
+  color: #5a5268;
 }
-.color-swatch{
+/* 好きな色スウォッチ（複数） */
+.color-swatch {
   display: inline-flex;
   align-items: center;
   gap: .45rem;
 }
-.color-swatch::before{
+.color-swatch::before {
   content: "";
   width: .95rem; height: .95rem;
   border-radius: 50%;
   background: var(--swatch, currentColor);
-  border: 1px solid rgba(0,0,0,.1);
-  box-shadow:
-    0 0 0 2px #fff,
-    0 0 0 4px var(--member-accent-soft, rgba(0,0,0,.08));
+  border: 1px solid rgba(0,0,0,.12);
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--member-accent-soft);
+  flex-shrink: 0;
+}
+.color-swatch-multi::before {
+  background:
+    linear-gradient(135deg,
+      var(--swatch) 0 33%,
+      var(--swatch-2, var(--swatch)) 33% 66%,
+      var(--swatch-3, var(--swatch-2, var(--swatch))) 66% 100%);
 }
