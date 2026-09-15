@@ -215,60 +215,10 @@
   50% { box-shadow: 0 12px 40px rgba(255, 107, 107, 0.7), 0 0 0 12px rgba(255, 107, 107, 0.1); }
 }
 
-/* —— Page theme → MENU —— */
-html.menu-themed {
-  --rm-accent: var(--menu-accent, #2ec4b6);
-  --rm-secondary: var(--menu-secondary, var(--menu-accent, #7b68ee));
-  --rm-tertiary: var(--menu-tertiary, #ff6b6b);
-}
+/* —— Page theme → MENU (subtle) —— */
 html.menu-themed .rm-core {
-  background: linear-gradient(145deg, var(--rm-accent), var(--rm-secondary));
-  color: #fff;
-  box-shadow: 0 8px 24px color-mix(in srgb, var(--rm-accent) 35%, transparent);
-  border: none;
-}
-html.menu-themed .rm-core:hover,
-html.menu-themed .rm-core:focus-visible {
-  filter: brightness(1.06);
-}
-html.menu-themed #radial-menu.open .rm-core {
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--rm-accent) 25%, transparent),
-              0 10px 28px color-mix(in srgb, var(--rm-accent) 40%, transparent);
-}
-html.menu-themed .rm-item {
-  border-color: color-mix(in srgb, var(--rm-accent) 28%, transparent);
-}
-html.menu-themed .rm-item:hover,
-html.menu-themed .rm-item:focus-visible {
-  border-color: var(--rm-accent);
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--rm-accent) 25%, transparent);
-  color: #1a1520;
-}
-html.menu-themed .rm-item.has-children {
-  background: linear-gradient(160deg, #fff, color-mix(in srgb, var(--rm-accent) 8%, #fff));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--menu-accent, #2ec4b6) 22%, transparent);
 }
 html.menu-themed .ham-fab {
-  background: linear-gradient(145deg, var(--rm-accent), var(--rm-secondary));
-  color: #fff;
-  border: none;
-  box-shadow: 0 6px 18px color-mix(in srgb, var(--rm-accent) 30%, transparent);
-}
-html.menu-themed .ham-panel {
-  border-top: 3px solid var(--rm-accent);
-}
-html.menu-themed .ham-group-btn {
-  color: #1a1520;
-  border-left: 3px solid var(--rm-accent);
-}
-html.menu-themed .ham-link:hover,
-html.menu-themed .ham-sub a:hover {
-  color: var(--rm-accent);
-}
-html.menu-themed .auth-btn.auth-cms,
-html.menu-themed .auth-btn {
-  border-color: color-mix(in srgb, var(--rm-accent) 40%, transparent);
-}
-html.menu-themed .auth-btn.auth-cms {
-  background: color-mix(in srgb, var(--rm-accent) 12%, #fff);
-  color: #1a1520;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--menu-accent, #2ec4b6) 20%, transparent);
 }
