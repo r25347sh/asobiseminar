@@ -1,4 +1,4 @@
-/*! Asobi CMS api — read + GitHub write (Process D) */
+/*! Asobi CMS api — same-origin read first, then RAW fallback; GitHub write */
 (function (g) {
   var C = g.ASOBI_CMS;
   /* PAT は既存 admin.js と同じ方針・値（無効化状態のまま） */
@@ -43,28 +43,67 @@
     return text || ('HTTP ' + statusCode);
   }
 
+  function readUrlCandidates(path) {
+    path = String(path || '').replace(/^\//, '');
+    var bust = 't=' + Date.now();
+    var list = [];
+    list.push(path + (path.indexOf('?') >= 0 ? '&' : '?') + bust);
+    if (C.SITE) {
+      list.push(C.SITE.replace(/\/?$/, '/') + path + '?' + bust);
+    }
+    if (C.RAW) {
+      list.push(C.RAW.replace(/\/?$/, '/') + path + '?' + bust);
+    }
+    var seen = {};
+    var out = [];
+    list.forEach(function (u) {
+      if (!seen[u]) { seen[u] = 1; out.push(u); }
+    });
+    return out;
+  }
+
+  function fetchFirstOk(urls, asJson) {
+    var lastErr = null;
+    var i = 0;
+    function next() {
+      if (i >= urls.length) {
+        return Promise.reject(lastErr || new Error('Failed to fetch'));
+      }
+      var url = urls[i++];
+      return fetch(url, { cache: 'no-store', credentials: 'omit', mode: 'cors' })
+        .then(function (r) {
+          if (!r.ok) {
+            lastErr = new Error('GET ' + url.split('?')[0] + ' ' + r.status);
+            return next();
+          }
+          return asJson ? r.json() : r.text();
+        })
+        .catch(function (e) {
+          lastErr = e && e.message ? e : new Error(String(e));
+          return next();
+        });
+    }
+    return next();
+  }
+
   function loadUsers() {
-    return fetch(C.USERS_URL, { cache: 'no-store' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('users.json ' + r.status);
-        return r.json();
+    return fetchFirstOk(readUrlCandidates('src/users.json'), true)
+      .catch(function () {
+        return fetch(String(C.USERS_URL) + (String(C.USERS_URL).indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now(), {
+          cache: 'no-store', mode: 'cors'
+        }).then(function (r) {
+          if (!r.ok) throw new Error('users.json ' + r.status);
+          return r.json();
+        });
       });
   }
 
   function loadJson(path) {
-    return fetch(C.RAW + path + '?t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('GET ' + path + ' ' + r.status);
-        return r.json();
-      });
+    return fetchFirstOk(readUrlCandidates(path), true);
   }
 
   function loadText(path) {
-    return fetch(C.RAW + path + '?t=' + Date.now(), { cache: 'no-store' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('GET ' + path + ' ' + r.status);
-        return r.text();
-      });
+    return fetchFirstOk(readUrlCandidates(path), false);
   }
 
   function getFile(path, apiBase) {
@@ -151,6 +190,7 @@
     saveBinary: saveBinary,
     listDir: listDir,
     encodeText: encodeText,
-    encodeBinary: encodeBinary
+    encodeBinary: encodeBinary,
+    readUrlCandidates: readUrlCandidates
   };
 })(typeof window !== 'undefined' ? window : this);

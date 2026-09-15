@@ -18,7 +18,7 @@
     RAW: 'https://raw.githubusercontent.com/r25347sh/asobiseminar/main/',
     API: 'https://api.github.com/repos/r25347sh/asobiseminar/contents',
     BACKUP_API: 'https://api.github.com/repos/r25347sh/asobiseminar_backup/contents',
-    USERS_URL: 'https://raw.githubusercontent.com/r25347sh/asobiseminar/main/src/users.json',
+    USERS_URL: 'src/users.json',
     PAGES: { login: 'login.html', select: 'select.html', editor: 'editor.html' },
     GROUPS: GROUPS,
     CLASSES: CLASSES,
