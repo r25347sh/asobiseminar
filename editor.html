@@ -144,6 +144,69 @@
           </div>
         </fieldset>
       </form>
+      
+      <form id="form-teacher" class="cms-form hidden" data-type="teacher">
+        <fieldset class="form-block">
+          <legend>自己概要</legend>
+          <label class="field"><span>名前</span>
+            <input id="t-name" type="text" placeholder="例: 松丸先生">
+          </label>
+          <div class="field">
+            <span class="field-caption">趣味</span>
+            <p class="muted tiny">行を追加して自由に登録できます。</p>
+            <div id="t-hobbies" class="dynamic-list"></div>
+            <button type="button" id="t-hobby-add" class="btn ghost small">＋ 趣味を追加</button>
+          </div>
+          <div class="field color-mode" data-color-scope="teacher">
+            <span class="field-caption">好きな色</span>
+            <div class="mode-picks" role="radiogroup" aria-label="好きな色の指定方法">
+              <label class="mode-pick">
+                <input type="radio" name="t-color-mode" value="text" id="t-color-mode-text" checked>
+                <span>短文で指定</span>
+              </label>
+              <label class="mode-pick">
+                <input type="radio" name="t-color-mode" value="code" id="t-color-mode-code">
+                <span>カラーコードで指定</span>
+              </label>
+            </div>
+            <div class="mode-panel active" data-t-color-panel="text">
+              <input id="t-color" type="text" placeholder="例: 水色, ピンク（複数可）">
+            </div>
+            <div class="mode-panel" data-t-color-panel="code" hidden>
+              <div class="field-row">
+                <label class="field grow"><span>カラーコード</span>
+                  <input id="t-color-code" type="text" placeholder="#22d3ee, #ff6b6b">
+                </label>
+                <label class="field color-field"><span>ピッカー</span>
+                  <input id="t-color-hex" type="color" value="#2ec4b6">
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <span class="field-caption">経歴・役職</span>
+            <p class="muted tiny">表形式。行の追加・削除ができます。</p>
+            <table class="editor-career-table">
+              <thead><tr><th>役職・時期</th><th>内容</th><th></th></tr></thead>
+              <tbody id="t-career"></tbody>
+            </table>
+            <button type="button" id="t-career-add" class="btn ghost small">＋ 行を追加</button>
+          </div>
+        </fieldset>
+        <fieldset class="form-block">
+          <legend>遊び</legend>
+          <label class="field"><span>私にとっての「遊び」とは</span>
+            <div class="rt-toolbar" data-for="t-play"></div>
+            <div id="t-play" class="rt-area" contenteditable="true"></div>
+          </label>
+        </fieldset>
+        <fieldset class="form-block accent">
+          <legend>メッセージ</legend>
+          <div class="rt-toolbar" data-for="t-message"></div>
+          <div id="t-message" class="rt-area" contenteditable="true"></div>
+        </fieldset>
+      </form>
+
       <p id="form-error" class="msg err hidden"></p>
     </section>
   </main>
