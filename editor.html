@@ -37,9 +37,9 @@
       <div class="side-card tip">
         <h3>ヒント</h3>
         <ul>
-          <li>太字・斜体・下線・マーカー・サイズ・色（名前/HEX/RGB/CMYK）が使えます</li>
-          <li>グループの探求結果にはファイル添付ができます</li>
-          <li>氏名・メンバー一覧はロックされています</li>
+          <li>太字・斜体・下線・マーカー・サイズ・色が使えます</li>
+          <li>好きな色は「短文」または「カラー」タブで指定</li>
+          <li>CSSで使える色は個人ページの基調色になります</li>
         </ul>
       </div>
     </aside>
@@ -50,9 +50,23 @@
           <legend>自己概要</legend>
           <label class="field"><span>クラス</span><select id="m-class"></select></label>
           <label class="field"><span>所属グループ</span><select id="m-group"></select></label>
-          <div class="field-row">
-            <label class="field grow"><span>好きな色（短文）</span><input id="m-color" type="text" placeholder="例: 水色 / サイトカラー"></label>
-            <label class="field color-field"><span>ピッカー</span><input id="m-color-hex" type="color" value="#2ec4b6"></label>
+          <div class="field color-tabbed">
+            <span class="field-caption">好きな色</span>
+            <div class="tab-bar" role="tablist">
+              <button type="button" class="tab-btn active" data-color-tab="text" role="tab" aria-selected="true">短文</button>
+              <button type="button" class="tab-btn" data-color-tab="picker" role="tab" aria-selected="false">カラー</button>
+            </div>
+            <div class="tab-panel active" data-color-panel="text" role="tabpanel">
+              <input id="m-color" type="text" placeholder="例: 水色 / 赤 / サイトカラー">
+              <p class="muted tiny">日本語名・英語名でもOK。CSSで使える色はページの基調色になります。</p>
+            </div>
+            <div class="tab-panel" data-color-panel="picker" role="tabpanel" hidden>
+              <div class="field-row">
+                <label class="field grow"><span>カラーコード</span><input id="m-color-code" type="text" placeholder="#22d3ee / rgb(34,211,238)"></label>
+                <label class="field color-field"><span>ピッカー</span><input id="m-color-hex" type="color" value="#2ec4b6"></label>
+              </div>
+              <p class="muted tiny">ここで選んだ色がページの基調カラーになります。</p>
+            </div>
           </div>
         </fieldset>
         <fieldset class="form-block">
@@ -123,6 +137,7 @@
   <script src="src/js/cms/config.js"></script>
   <script src="src/js/cms/session.js"></script>
   <script src="src/js/cms/api.js"></script>
+  <script src="src/js/cms/colors.js"></script>
   <script src="src/js/cms/sanitize.js"></script>
   <script src="src/js/cms/render.js"></script>
   <script src="src/js/cms/attachments.js"></script>
