@@ -58,13 +58,26 @@
     var hex = null;
     if (Color && Color.resolveFromMember) hex = Color.resolveFromMember(data);
     else if (data && data.favoriteColorHex) hex = data.favoriteColorHex;
+    else if (data && data.favoriteColor && Color && Color.resolve) hex = Color.resolve(data.favoriteColor);
     var body = doc.body;
     if (!body) return;
     if (hex) {
+      var tv = (Color && Color.themeVars) ? Color.themeVars(hex) : null;
       body.setAttribute('data-theme-color', hex);
-      body.style.setProperty('--member-accent', hex);
-      body.style.setProperty('--member-accent-soft', hex + '22');
       body.classList.add('has-member-theme');
+      body.style.setProperty('--member-accent', hex);
+      if (tv) {
+        body.style.setProperty('--member-accent-soft', tv.soft);
+        body.style.setProperty('--member-accent-softer', tv.softer);
+        body.style.setProperty('--member-accent-medium', tv.medium);
+        body.style.setProperty('--member-accent-strong', tv.strong);
+        body.style.setProperty('--member-accent-rgb', tv.rgb);
+        body.style.setProperty('--member-accent-light', tv.light);
+        body.style.setProperty('--member-accent-dark', tv.dark);
+      } else {
+        body.style.setProperty('--member-accent-soft', hex + '24');
+        body.style.setProperty('--member-accent-softer', hex + '12');
+      }
       var slot = doc.querySelector('[data-cms-slot="favoriteColor"]');
       if (slot) {
         slot.setAttribute('data-color', hex);
@@ -73,9 +86,10 @@
       }
     } else {
       body.removeAttribute('data-theme-color');
-      body.style.removeProperty('--member-accent');
-      body.style.removeProperty('--member-accent-soft');
       body.classList.remove('has-member-theme');
+      ['--member-accent','--member-accent-soft','--member-accent-softer','--member-accent-medium',
+       '--member-accent-strong','--member-accent-rgb','--member-accent-light','--member-accent-dark'
+      ].forEach(function (p) { body.style.removeProperty(p); });
     }
   }
 
