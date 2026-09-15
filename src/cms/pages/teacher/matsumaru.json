@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "type": "teacher",
+  "teacherId": "matsumaru",
+  "displayName": "松丸先生",
+  "favoriteColorMode": "text",
+  "favoriteColor": "",
+  "favoriteColorHex": null,
+  "favoriteColorHexes": [],
+  "hobbies": [],
+  "career": [],
+  "playMeaningHtml": "",
+  "messageHtml": "",
+  "htmlPath": "pages/Matsumaru_T.html",
+  "updatedAt": "2026-09-15T00:00:00.000Z",
+  "updatedBy": "system"
+}
