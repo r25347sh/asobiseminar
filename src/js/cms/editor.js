@@ -16,7 +16,7 @@
     var el = $('save-status');
     if (!el) return;
     el.textContent = t || '';
-    el.className = 'status-line' + (isErr ? ' err' : '');
+    el.className = 'status-line' + (isErr ? ' err' : (t && t.indexOf('保存しました') >= 0 ? ' ok' : ''));
   }
   function showErr(t) {
     var el = $('form-error');
@@ -44,7 +44,9 @@
         btn.addEventListener('click', function () {
           var area = $(targetId);
           if (area) area.focus();
-          try { document.execCommand(btn.getAttribute('data-cmd'), false, btn.getAttribute('data-val') || null); } catch (err) {}
+          try {
+            document.execCommand(btn.getAttribute('data-cmd'), false, btn.getAttribute('data-val') || null);
+          } catch (err) {}
         });
       });
     });
@@ -58,15 +60,31 @@
       li.innerHTML = '<span class="fname"></span> <span class="mono muted">[' + (a.mode || 'link') + ']</span> ';
       li.querySelector('.fname').textContent = a.name || a.path;
       var rm = document.createElement('button');
-      rm.type = 'button'; rm.className = 'btn ghost sm'; rm.textContent = '削除';
+      rm.type = 'button';
+      rm.className = 'btn ghost sm';
+      rm.textContent = '削除';
       rm.onclick = function () {
-        if (!state.data.attachments) return;
+        if (!state.data || !state.data.attachments) return;
         state.data.attachments.splice(idx, 1);
         renderFileList(state.data.attachments);
       };
       li.appendChild(rm);
       list.appendChild(li);
     });
+  }
+  function showPendingFiles() {
+    var input = $('g-file');
+    var box = $('g-pending');
+    if (!box) return;
+    if (!input || !input.files || !input.files.length) {
+      box.textContent = '';
+      box.classList.add('hidden');
+      return;
+    }
+    var names = [];
+    for (var i = 0; i < input.files.length; i++) names.push(input.files[i].name);
+    box.textContent = '保存時にアップロード: ' + names.join(', ');
+    box.classList.remove('hidden');
   }
   function loadMember(id) {
     state.path = 'pages/members/' + id + '.html';
@@ -84,6 +102,9 @@
       $('m-message').innerHTML = j.messageHtml || '<p></p>';
       $('form-member').classList.remove('hidden');
       $('form-group').classList.add('hidden');
+      if ($('commit-msg') && !$('commit-msg').value) {
+        $('commit-msg').value = 'CMS: update member ' + id;
+      }
       setStatus('個人ページを読み込みました');
     });
   }
@@ -104,14 +125,21 @@
       renderFileList(state.data.attachments);
       $('form-group').classList.remove('hidden');
       $('form-member').classList.add('hidden');
+      if ($('commit-msg') && !$('commit-msg').value) {
+        $('commit-msg').value = 'CMS: update group ' + id;
+      }
       setStatus('グループページを読み込みました');
     });
   }
   function collectMember() {
+    if (!San || !San.html) throw new Error('sanitize モジュール未読込');
     return {
-      schemaVersion: 1, type: 'member', memberId: state.id,
+      schemaVersion: 1,
+      type: 'member',
+      memberId: state.id,
       displayName: (state.data && state.data.displayName) || state.id,
-      class: $('m-class').value, groupKey: $('m-group').value,
+      class: $('m-class').value,
+      groupKey: $('m-group').value,
       favoriteColor: $('m-color').value.trim(),
       favoriteColorHex: $('m-color-hex').value || null,
       hobbies: $('m-hobbies').value.trim(),
@@ -124,8 +152,11 @@
     };
   }
   function collectGroup() {
+    if (!San || !San.html) throw new Error('sanitize モジュール未読込');
     return {
-      schemaVersion: 1, type: 'group', groupKey: state.id,
+      schemaVersion: 1,
+      type: 'group',
+      groupKey: state.id,
       label: (state.data && state.data.label) || state.id,
       htmlPath: state.path,
       goalHtml: San.html($('g-goal').innerHTML),
@@ -133,20 +164,27 @@
       whyHtml: San.html($('g-why').innerHTML),
       howHtml: San.html($('g-how').innerHTML),
       resultHtml: San.html($('g-result').innerHTML),
-      attachments: (state.data && state.data.attachments) || [],
+      attachments: (state.data && state.data.attachments) ? state.data.attachments.slice() : [],
       updatedAt: new Date().toISOString(),
       updatedBy: state.user.id
     };
   }
   function uploadPendingIfAny() {
     var input = $('g-file');
-    if (state.type !== 'group' || !input || !input.files || !input.files.length) return Promise.resolve();
+    if (state.type !== 'group' || !input || !input.files || !input.files.length) {
+      return Promise.resolve();
+    }
+    if (!Attach || !Attach.uploadGroupFiles) {
+      return Promise.reject(new Error('attachments モジュール未読込'));
+    }
     var mode = ($('g-file-mode') && $('g-file-mode').value) || 'link';
-    setStatus('ファイルをアップロード中…');
+    setStatus('ファイルをアップロード中（' + input.files.length + '件）…');
     return Attach.uploadGroupFiles(state.id, input.files, mode).then(function (added) {
+      if (!state.data) state.data = { attachments: [] };
       state.data.attachments = (state.data.attachments || []).concat(added);
       renderFileList(state.data.attachments);
       input.value = '';
+      showPendingFiles();
     });
   }
   function onSave() {
@@ -159,6 +197,14 @@
     }
     if (!S.canEditPath(state.user, state.path) && !(state.user.isAdmin || state.user.fullAccess)) {
       setStatus('権限がありません', true);
+      return;
+    }
+    if (!Render || !Render.member || !Render.group) {
+      setStatus('render モジュール未読込', true);
+      return;
+    }
+    if (!API || !API.saveText) {
+      setStatus('api モジュール未読込', true);
       return;
     }
     state.saving = true;
@@ -183,7 +229,8 @@
         });
       })
       .then(function () {
-        setStatus('保存しました。サイト反映まで数十秒かかることがあります。');
+        var pub = C.SITE + state.path;
+        setStatus('保存しました。公開ページ: ' + pub);
         try { sessionStorage.removeItem('asobilab_cms_draft_' + state.type + '_' + state.id); } catch (e) {}
       })
       .catch(function (e) {
@@ -200,13 +247,21 @@
     state.user = S.require(true);
     if (!state.user) return;
     if ($('user-pill')) $('user-pill').textContent = state.user.name || state.user.id;
-    if ($('btn-logout')) $('btn-logout').onclick = function () { S.clear(); location.href = C.PAGES.login; };
+    if ($('btn-logout')) {
+      $('btn-logout').onclick = function () {
+        S.clear();
+        location.href = C.PAGES.login;
+      };
+    }
     if ($('btn-back')) $('btn-back').onclick = function () { location.href = C.PAGES.select; };
     if ($('btn-save')) $('btn-save').onclick = onSave;
     if ($('m-color-hex')) {
       $('m-color-hex').addEventListener('input', function () {
         if ($('m-color') && !$('m-color').value) $('m-color').value = $('m-color-hex').value;
       });
+    }
+    if ($('g-file')) {
+      $('g-file').addEventListener('change', showPendingFiles);
     }
     bindRtToolbars();
     state.type = qs('type');
