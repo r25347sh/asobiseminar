@@ -24,29 +24,62 @@
     updateThemePreview();
   }
   function resolveCurrentColor() {
+    var list = resolveCurrentColors();
+    return list[0] || null;
+  }
+  function resolveCurrentColors() {
     var Color = window.ASOBI_COLOR;
     var mode = getColorMode();
     if (mode === 'code') {
       var code = $('m-color-code') && $('m-color-code').value.trim();
       var pick = $('m-color-hex') && $('m-color-hex').value;
-      if (code && Color && Color.resolve) return Color.resolve(code) || pick;
-      if (code && /^#/.test(code)) return code;
-      return pick || null;
+      if (code && Color && Color.resolveList) {
+        var r = Color.resolveList(code);
+        if (r.hexes.length) return r.hexes;
+      }
+      if (code) {
+        var parts = code.split(/[,\/|、]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+        var out = [];
+        parts.forEach(function (p) {
+          var h = Color && Color.resolve ? Color.resolve(p) : null;
+          if (h) out.push(h);
+          else if (/^#/.test(p)) out.push(p);
+        });
+        if (out.length) return out;
+      }
+      return pick ? [pick] : [];
     }
     var text = $('m-color') && $('m-color').value.trim();
-    if (text && Color && Color.resolve) return Color.resolve(text);
-    return null;
+    if (text && Color && Color.resolveList) {
+      var r2 = Color.resolveList(text);
+      return r2.hexes || [];
+    }
+    if (text && Color && Color.resolve) {
+      var one = Color.resolve(text);
+      return one ? [one] : [];
+    }
+    return [];
   }
   function updateThemePreview() {
     var box = $('theme-preview');
     var sw = $('theme-preview-swatch');
     var hx = $('theme-preview-hex');
     if (!box) return;
-    var hex = resolveCurrentColor();
-    if (hex) {
+    var list = resolveCurrentColors();
+    if (list.length) {
       box.removeAttribute('hidden');
-      if (sw) sw.style.background = hex;
-      if (hx) hx.textContent = hex;
+      if (sw) {
+        if (list.length === 1) {
+          sw.style.background = list[0];
+        } else {
+          sw.style.background = 'linear-gradient(135deg,' + list.map(function (c, i) {
+            var a = (i / list.length) * 100;
+            var b = ((i + 1) / list.length) * 100;
+            return c + ' ' + a + '% ' + b + '%';
+          }).join(',') + ')';
+        }
+      }
+      if (hx) hx.textContent = list.join(' · ');
     } else {
       box.setAttribute('hidden', '');
       if (hx) hx.textContent = '—';
@@ -272,6 +305,7 @@
         return ($('m-color') && $('m-color').value.trim()) || '';
       })(),
       favoriteColorHex: resolveCurrentColor(),
+      favoriteColorHexes: resolveCurrentColors(),
       hobbies: $('m-hobbies').value.trim(),
       hobbyTriggerHtml: San.html($('m-hobby-trigger').innerHTML),
       growthHtml: San.html($('m-growth').innerHTML),
