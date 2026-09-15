@@ -1,0 +1,92 @@
+/* Asobi Lab. Sitemap */
+.sitemap-page { max-width: 920px; }
+.sitemap-toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem;
+  margin: 0 0 1.25rem;
+}
+.sm-btn {
+  border: 1px solid rgba(43,33,64,.14);
+  background: #fff;
+  border-radius: 999px;
+  padding: .35rem .85rem;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #2b2140;
+}
+.sm-btn:hover { border-color: rgba(46,196,182,.45); background: rgba(46,196,182,.08); }
+.sm-status { font-size: .82rem; }
+
+.sitemap-tree {
+  background: #fff;
+  border: 1px solid rgba(43,33,64,.1);
+  border-radius: 16px;
+  padding: 1rem 1.1rem 1.2rem;
+  box-shadow: 0 10px 28px rgba(43,33,64,.05);
+}
+.sm-root, .sm-children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sm-children {
+  margin: .35rem 0 .2rem .85rem;
+  padding-left: .85rem;
+  border-left: 2px solid rgba(43,33,64,.08);
+}
+.sm-node { margin: .2rem 0; }
+
+.sm-summary, .sm-link {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+  padding: .45rem .55rem;
+  border-radius: 10px;
+  color: #1a1520;
+  text-decoration: none;
+}
+.sm-summary {
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+.sm-summary::-webkit-details-marker { display: none; }
+.sm-summary::before {
+  content: "▸";
+  font-size: .75rem;
+  color: rgba(43,33,64,.4);
+  transition: transform .15s;
+}
+details[open] > .sm-summary::before { transform: rotate(90deg); }
+.sm-summary:hover, .sm-link:hover {
+  background: rgba(46,196,182,.08);
+}
+.sm-link.is-current {
+  background: rgba(46,196,182,.12);
+  outline: 1px solid rgba(46,196,182,.35);
+}
+.sm-icon { font-size: 1.05rem; line-height: 1; }
+.sm-label { font-size: .95rem; }
+.sm-count {
+  margin-left: auto;
+  font-size: .75rem;
+  font-weight: 600;
+  color: rgba(43,33,64,.45);
+  background: rgba(43,33,64,.05);
+  border-radius: 999px;
+  padding: .1rem .45rem;
+}
+.sm-path {
+  flex-basis: 100%;
+  margin-left: 1.7rem;
+  font-size: .72rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(43,33,64,.42);
+}
+@media (min-width: 640px) {
+  .sm-path {
+    flex-basis: auto;
+    margin-left: .25rem;
+  }
+}
