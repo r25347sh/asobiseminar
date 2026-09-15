@@ -109,3 +109,117 @@ body.has-member-theme .cms-grad-frame::before{
   transition:transform .2s, box-shadow .2s;
 }
 .btn-play:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(46,196,182,.35)}
+
+/* ========== Member theme — 基調カラーをふんだんに ========== */
+body.has-member-theme{
+  --accent: var(--member-accent, #2ec4b6);
+  background:
+    radial-gradient(900px 480px at 8% -8%, var(--member-accent-soft, rgba(46,196,182,.14)), transparent 55%),
+    radial-gradient(700px 400px at 100% 0%, var(--member-accent-softer, rgba(46,196,182,.08)), transparent 50%),
+    radial-gradient(600px 320px at 50% 100%, var(--member-accent-softer, rgba(46,196,182,.06)), transparent 45%),
+    var(--bg, #fffaf3);
+}
+body.has-member-theme .site-header{
+  border-bottom-color: var(--member-accent-medium, rgba(46,196,182,.25));
+  background: linear-gradient(180deg, #fff, color-mix(in srgb, var(--member-accent) 6%, #fff));
+}
+body.has-member-theme .site-logo span{
+  color: var(--member-accent);
+}
+body.has-member-theme .page-title{
+  background: linear-gradient(115deg, var(--member-accent), var(--member-accent-dark, #7b68ee) 72%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+body.has-member-theme .page-sub{
+  color: color-mix(in srgb, var(--member-accent) 55%, #2b2140);
+}
+body.has-member-theme .page-sub::before{
+  content: "";
+  display: inline-block;
+  width: .55rem; height: .55rem;
+  border-radius: 50%;
+  background: var(--member-accent);
+  margin-right: .45rem;
+  vertical-align: middle;
+  box-shadow: 0 0 0 3px var(--member-accent-soft);
+}
+body.has-member-theme .cms-block.info-card,
+body.has-member-theme .cms-block.cms-play,
+body.has-member-theme .cms-block.cms-profile{
+  border-color: var(--member-accent-medium, rgba(46,196,182,.28));
+  box-shadow:
+    0 12px 32px var(--member-accent-softer, rgba(46,196,182,.08)),
+    0 0 0 1px var(--member-accent-soft, rgba(46,196,182,.12));
+  background:
+    linear-gradient(165deg, #fff 60%, var(--member-accent-softer, transparent));
+}
+body.has-member-theme .cms-block h2{
+  color: color-mix(in srgb, var(--member-accent) 65%, #2b2140);
+  border-bottom: 2px solid var(--member-accent-soft);
+  padding-bottom: .4rem;
+  margin-bottom: .95rem;
+}
+body.has-member-theme .cms-block h2::before{
+  content: "";
+  display: inline-block;
+  width: .35rem; height: 1.05em;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--member-accent), var(--member-accent-light, #7b68ee));
+  margin-right: .5rem;
+  vertical-align: -0.15em;
+}
+body.has-member-theme .info-list li{
+  border-bottom-color: var(--member-accent-soft);
+}
+body.has-member-theme .info-list strong{
+  color: color-mix(in srgb, var(--member-accent) 40%, #2b2140);
+}
+body.has-member-theme .field-label{
+  color: color-mix(in srgb, var(--member-accent) 50%, rgba(43,33,64,.55));
+}
+body.has-member-theme .cms-rich a{
+  color: var(--member-accent-dark, var(--member-accent));
+  text-decoration-color: var(--member-accent-medium);
+}
+body.has-member-theme .cms-grad-frame{
+  box-shadow: 0 14px 36px var(--member-accent-soft);
+}
+body.has-member-theme .cms-grad-frame::before{
+  background: linear-gradient(120deg,
+    var(--member-accent),
+    #ff6b6b,
+    var(--member-accent-light, #ffd166),
+    #7b68ee,
+    var(--member-accent));
+  background-size: 300% 300%;
+}
+body.has-member-theme .btn-play{
+  background: linear-gradient(135deg, var(--member-accent), var(--member-accent-dark, #7b68ee));
+  border: none;
+  color: #fff;
+  box-shadow: 0 10px 24px var(--member-accent-medium, rgba(46,196,182,.3));
+}
+body.has-member-theme .btn-play:hover{
+  box-shadow: 0 14px 32px var(--member-accent-strong, rgba(46,196,182,.4));
+}
+body.has-member-theme .site-footer{
+  border-top: 2px solid var(--member-accent-soft);
+  color: color-mix(in srgb, var(--member-accent) 30%, rgba(43,33,64,.55));
+}
+.color-swatch{
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+}
+.color-swatch::before{
+  content: "";
+  width: .95rem; height: .95rem;
+  border-radius: 50%;
+  background: var(--swatch, currentColor);
+  border: 1px solid rgba(0,0,0,.1);
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 4px var(--member-accent-soft, rgba(0,0,0,.08));
+}
