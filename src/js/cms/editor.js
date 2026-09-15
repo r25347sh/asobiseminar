@@ -9,17 +9,48 @@
   var $ = function (id) { return document.getElementById(id); };
   var state = { user: null, type: null, id: null, path: null, data: null, saving: false };
 
-  function setColorTab(name) {
-    document.querySelectorAll('[data-color-tab]').forEach(function (b) {
-      var on = b.getAttribute('data-color-tab') === name;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-selected', on ? 'true' : 'false');
-    });
+  function getColorMode() {
+    var r = document.querySelector('input[name="color-mode"]:checked');
+    return r ? r.value : 'text';
+  }
+  function setColorMode(name) {
+    var radio = document.querySelector('input[name="color-mode"][value="' + name + '"]');
+    if (radio) radio.checked = true;
     document.querySelectorAll('[data-color-panel]').forEach(function (p) {
       var on = p.getAttribute('data-color-panel') === name;
       p.classList.toggle('active', on);
       if (on) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
     });
+    updateThemePreview();
+  }
+  function resolveCurrentColor() {
+    var Color = window.ASOBI_COLOR;
+    var mode = getColorMode();
+    if (mode === 'code') {
+      var code = $('m-color-code') && $('m-color-code').value.trim();
+      var pick = $('m-color-hex') && $('m-color-hex').value;
+      if (code && Color && Color.resolve) return Color.resolve(code) || pick;
+      if (code && /^#/.test(code)) return code;
+      return pick || null;
+    }
+    var text = $('m-color') && $('m-color').value.trim();
+    if (text && Color && Color.resolve) return Color.resolve(text);
+    return null;
+  }
+  function updateThemePreview() {
+    var box = $('theme-preview');
+    var sw = $('theme-preview-swatch');
+    var hx = $('theme-preview-hex');
+    if (!box) return;
+    var hex = resolveCurrentColor();
+    if (hex) {
+      box.removeAttribute('hidden');
+      if (sw) sw.style.background = hex;
+      if (hx) hx.textContent = hex;
+    } else {
+      box.setAttribute('hidden', '');
+      if (hx) hx.textContent = '—';
+    }
   }
 
   function qs(name) {
@@ -163,7 +194,10 @@
       if ($('m-color-hex')) $('m-color-hex').value = j.favoriteColorHex;
       if ($('m-color-code')) $('m-color-code').value = j.favoriteColorHex;
     }
-    setColorTab(j.favoriteColorHex ? 'picker' : 'text');
+    var mode = j.favoriteColorMode || (j.favoriteColorHex && !j.favoriteColor ? 'code' : 'text');
+    if (mode === 'picker') mode = 'code';
+    setColorMode(mode);
+    updateThemePreview();
     $('m-hobbies').value = j.hobbies || '';
     $('m-hobby-trigger').innerHTML = j.hobbyTriggerHtml || '<p></p>';
     $('m-growth').innerHTML = j.growthHtml || '<p></p>';
@@ -229,22 +263,15 @@
       schemaVersion: 1, type: 'member', memberId: state.id,
       displayName: (state.data && state.data.displayName) || state.id,
       class: $('m-class').value, groupKey: $('m-group').value,
-      favoriteColor: ($('m-color') && $('m-color').value.trim()) || '',
-      favoriteColorHex: (function () {
-        var hexEl = $('m-color-hex');
-        var codeEl = $('m-color-code');
-        var Color = window.ASOBI_COLOR;
-        var fromPicker = hexEl ? hexEl.value : null;
-        var fromCode = codeEl && codeEl.value.trim() ? codeEl.value.trim() : null;
-        if (fromCode && Color && Color.resolve) return Color.resolve(fromCode) || fromPicker;
-        if (fromCode && /^#/.test(fromCode)) return fromCode;
-        var text = $('m-color') ? $('m-color').value.trim() : '';
-        if (Color && Color.resolve) {
-          var r = Color.resolve(text) || Color.resolve(fromPicker);
-          if (r) return r;
+      favoriteColorMode: getColorMode(),
+      favoriteColor: (function () {
+        if (getColorMode() === 'code') {
+          var hex = resolveCurrentColor();
+          return hex || (($('m-color-code') && $('m-color-code').value.trim()) || '');
         }
-        return fromPicker || null;
+        return ($('m-color') && $('m-color').value.trim()) || '';
       })(),
+      favoriteColorHex: resolveCurrentColor(),
       hobbies: $('m-hobbies').value.trim(),
       hobbyTriggerHtml: San.html($('m-hobby-trigger').innerHTML),
       growthHtml: San.html($('m-growth').innerHTML),
@@ -325,20 +352,26 @@
     if ($('btn-logout')) $('btn-logout').onclick = function () { S.clear(); location.href = C.PAGES.login; };
     if ($('btn-back')) $('btn-back').onclick = function () { location.href = C.PAGES.select; };
     if ($('btn-save')) $('btn-save').onclick = onSave;
-    document.querySelectorAll('[data-color-tab]').forEach(function (b) {
-      b.addEventListener('click', function () { setColorTab(b.getAttribute('data-color-tab')); });
+    document.querySelectorAll('input[name="color-mode"]').forEach(function (r) {
+      r.addEventListener('change', function () { setColorMode(r.value); });
     });
+    if ($('m-color')) {
+      $('m-color').addEventListener('input', updateThemePreview);
+      $('m-color').addEventListener('change', updateThemePreview);
+    }
     if ($('m-color-hex')) {
       $('m-color-hex').addEventListener('input', function () {
         if ($('m-color-code')) $('m-color-code').value = $('m-color-hex').value;
+        updateThemePreview();
       });
     }
     if ($('m-color-code')) {
-      $('m-color-code').addEventListener('change', function () {
+      $('m-color-code').addEventListener('input', function () {
         var Color = window.ASOBI_COLOR;
         var v = $('m-color-code').value.trim();
         var hex = Color && Color.resolve ? Color.resolve(v) : null;
         if (hex && $('m-color-hex')) $('m-color-hex').value = hex;
+        updateThemePreview();
       });
     }
     if ($('g-file')) $('g-file').addEventListener('change', showPendingFiles);
