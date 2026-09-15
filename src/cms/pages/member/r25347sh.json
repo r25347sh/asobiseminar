@@ -6,12 +6,12 @@
   "class": "5G",
   "groupKey": "site",
   "favoriteColor": "サイトカラー",
-  "favoriteColorHex": null,
-  "hobbies": "Webページ開発",
+  "favoriteColorHex": "#2ec4b6",
+  "hobbies": "Webページ開発・アプリケーション開発",
   "hobbyTriggerHtml": "<p>遊びの探求ゼミの紹介サイトづくりを通して、Webの仕組みと表現を探求している。</p>",
   "growthHtml": "<p></p>",
   "messageHtml": "<p></p>",
   "htmlPath": "pages/members/r25347sh.html",
-  "updatedAt": "2026-09-15T01:26:48+00:00",
-  "updatedBy": "system-process-e"
+  "updatedAt": "2026-09-15T02:26:58.697Z",
+  "updatedBy": "r25347sh"
 }
