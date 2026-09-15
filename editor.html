@@ -63,19 +63,19 @@
               </label>
             </div>
             <div class="mode-panel active" data-color-panel="text">
-              <input id="m-color" type="text" placeholder="例: 水色 / 赤 / サイトカラー / blue">
-              <p class="muted tiny">色の名前（日本語・英語）。解決できる色はページ全体の基調色になります。</p>
+              <input id="m-color" type="text" placeholder="例: 水色 / 水色, ピンク / 青と緑">
+              <p class="muted tiny">複数可（カンマ・「/」区切り）。例: 水色, ピンク。解決できる色が基調色（最大3色）になります。</p>
             </div>
             <div class="mode-panel" data-color-panel="code" hidden>
               <div class="field-row">
                 <label class="field grow"><span>カラーコード</span>
-                  <input id="m-color-code" type="text" placeholder="#22d3ee / rgb(34,211,238) / hsl(190,90%,50%)">
+                  <input id="m-color-code" type="text" placeholder="#22d3ee, #ff6b6b  （複数可）>
                 </label>
                 <label class="field color-field"><span>ピッカー</span>
                   <input id="m-color-hex" type="color" value="#2ec4b6">
                 </label>
               </div>
-              <p class="muted tiny">コードまたはピッカーで選んだ色が基調色になります（短文欄は使いません）。</p>
+              <p class="muted tiny">複数コードはカンマ区切り。ピッカーは1色目の補助です（短文欄は使いません）。</p>
             </div>
             <div class="theme-preview" id="theme-preview" hidden>
               <span class="theme-preview-swatch" id="theme-preview-swatch"></span>
