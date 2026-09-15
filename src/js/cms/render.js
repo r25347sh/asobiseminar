@@ -147,9 +147,42 @@
     return serialize(doc);
   }
 
+
+  function renderHobbiesList(hobbies) {
+    var list = hobbies || [];
+    if (!list.length) return '<li class="muted">—</li>';
+    return list.map(function (h) {
+      return '<li>' + San.text(h) + '</li>';
+    }).join('');
+  }
+  function renderCareerTable(rows) {
+    var list = rows || [];
+    if (!list.length) return '<tr><td colspan="2">—</td></tr>';
+    return list.map(function (row) {
+      return '<tr><th scope="row">' + San.text(row.title || '') + '</th><td>' + San.text(row.detail || '') + '</td></tr>';
+    }).join('');
+  }
+  function renderTeacherHtml(baseHtml, data) {
+    var doc = new DOMParser().parseFromString(baseHtml, 'text/html');
+    var name = data.displayName || '松丸先生';
+    setSlot(doc, 'displayName', name, true);
+    var title = doc.querySelector('h1.page-title');
+    if (title) title.textContent = name;
+    setSlot(doc, 'favoriteColor', data.favoriteColor || '—', true);
+    var hob = doc.querySelector('[data-cms-slot="hobbiesList"]');
+    if (hob) hob.innerHTML = renderHobbiesList(data.hobbies);
+    var car = doc.querySelector('[data-cms-slot="careerTable"]');
+    if (car) car.innerHTML = renderCareerTable(data.career);
+    setSlot(doc, 'playMeaning', San.html(data.playMeaningHtml));
+    setSlot(doc, 'message', San.html(data.messageHtml));
+    applyMemberTheme(doc, data);
+    return serialize(doc);
+  }
+
   g.ASOBI_RENDER = {
     member: renderMemberHtml,
     group: renderGroupHtml,
+    teacher: renderTeacherHtml,
     attachments: renderAttachments
   };
 })(typeof window !== 'undefined' ? window : this);
