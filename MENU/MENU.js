@@ -51,6 +51,7 @@
       { label: 'ホーム', icon: '🏠', url: root + 'index.html' },
       { label: 'Asobi Labとは', icon: '🎮', url: root + 'pages/about_asobi.html' },
       { label: 'サイトについて', icon: 'ℹ️', url: root + 'pages/about_This_Site.html' },
+      { label: 'サイトマップ', icon: '🗺️', url: root + 'sitemap.html' },
       {
         label: 'グループ', icon: '👥', items: [
           { label: 'オンラインゲーム×英語', icon: '🎮', url: root + 'pages/groups/english.html' },
@@ -509,4 +510,13 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
+
+  // 外部公開（sitemap など）
+  try {
+    window.ASOBI_MENU = {
+      buildMenuData: buildMenuData,
+      getUser: getUser,
+      root: root
+    };
+  } catch (e) {}
 })();
