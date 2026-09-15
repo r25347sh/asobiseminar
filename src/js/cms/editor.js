@@ -37,6 +37,10 @@
     if (value != null) el.value = value;
   }
   function bindRtToolbars() {
+    if (window.ASOBI_RT && window.ASOBI_RT.bindRtToolbars) {
+      window.ASOBI_RT.bindRtToolbars();
+      return;
+    }
     document.querySelectorAll('.rt-toolbar').forEach(function (tb) {
       var targetId = tb.getAttribute('data-for');
       tb.querySelectorAll('button[data-cmd]').forEach(function (btn) {
@@ -51,6 +55,7 @@
       });
     });
   }
+
   function renderFileList(attachments) {
     var list = $('g-file-list');
     if (!list) return;
