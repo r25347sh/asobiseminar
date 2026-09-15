@@ -43,14 +43,40 @@
           return;
         }
         if (ext === 'pdf') {
-          parts.push('<li class="cms-file-inline"><object data="' + href + '" type="application/pdf"></object><div><a href="' + href + '" target="_blank" rel="noopener">' + name + '</a></div></li>');
+          parts.push('<li class="cms-file-inline"><object data="' + href + '" type="application/pdf">' + name + '</object></li>');
           return;
         }
       }
-      parts.push('<li><a href="' + href + '" target="_blank" rel="noopener">' + name + '</a></li>');
+      parts.push('<li><a href="' + href + '" download>' + name + '</a></li>');
     });
     parts.push('</ul>');
     return parts.join('');
+  }
+
+  function applyMemberTheme(doc, data) {
+    var Color = g.ASOBI_COLOR;
+    var hex = null;
+    if (Color && Color.resolveFromMember) hex = Color.resolveFromMember(data);
+    else if (data && data.favoriteColorHex) hex = data.favoriteColorHex;
+    var body = doc.body;
+    if (!body) return;
+    if (hex) {
+      body.setAttribute('data-theme-color', hex);
+      body.style.setProperty('--member-accent', hex);
+      body.style.setProperty('--member-accent-soft', hex + '22');
+      body.classList.add('has-member-theme');
+      var slot = doc.querySelector('[data-cms-slot="favoriteColor"]');
+      if (slot) {
+        slot.setAttribute('data-color', hex);
+        slot.style.setProperty('--swatch', hex);
+        slot.classList.add('color-swatch');
+      }
+    } else {
+      body.removeAttribute('data-theme-color');
+      body.style.removeProperty('--member-accent');
+      body.style.removeProperty('--member-accent-soft');
+      body.classList.remove('has-member-theme');
+    }
   }
 
   function renderMemberHtml(baseHtml, data) {
@@ -63,6 +89,7 @@
     setSlot(doc, 'hobbyTrigger', San.html(data.hobbyTriggerHtml));
     setSlot(doc, 'growth', San.html(data.growthHtml));
     setSlot(doc, 'message', San.html(data.messageHtml));
+    applyMemberTheme(doc, data);
     var g = C.groupByKey(data.groupKey);
     if (g) {
       var cta = doc.querySelector('.cta-wrap a.btn-play');
@@ -86,18 +113,16 @@
     setSlot(doc, 'why', San.html(data.whyHtml));
     setSlot(doc, 'how', San.html(data.howHtml));
     setSlot(doc, 'result', San.html(data.resultHtml));
-    var filesHtml = renderAttachments(data.attachments || []);
-    if (htmlPath === 'pages/about_This_Site.html') {
-      filesHtml = filesHtml.split('../../').join('../');
+    var filesHost = doc.querySelector('[data-cms-slot="files"]') || doc.querySelector('.cms-files');
+    if (filesHost) {
+      filesHost.innerHTML = renderAttachments(data.attachments);
     }
-    setSlot(doc, 'files', filesHtml);
     return serialize(doc);
   }
 
   g.ASOBI_RENDER = {
     member: renderMemberHtml,
     group: renderGroupHtml,
-    attachments: renderAttachments,
-    groupLabel: groupLabel
+    attachments: renderAttachments
   };
 })(typeof window !== 'undefined' ? window : this);
