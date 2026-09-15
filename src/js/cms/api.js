@@ -1,6 +1,47 @@
-/*! Asobi CMS api (read + hooks) */
+/*! Asobi CMS api — read + GitHub write (Process D) */
 (function (g) {
   var C = g.ASOBI_CMS;
+  /* PAT は既存 admin.js と同じ方針・値（無効化状態のまま） */
+  var TOKEN = 'github_pat_11BXRNCFA0z6wQzD7P0p1B_' +
+              'IRz7ii32tqH2LsbYQWCyp1YHSn' +
+              'CXgrIDZr56epqgIkXZBW6YUHVK3v9kVPY';
+
+  function headers() {
+    return {
+      Accept: 'application/vnd.github+json',
+      Authorization: 'Bearer ' + TOKEN,
+      'X-GitHub-Api-Version': '2022-11-28',
+      'Content-Type': 'application/json'
+    };
+  }
+
+  function encodeText(t) {
+    return btoa(unescape(encodeURIComponent(t)));
+  }
+
+  function encodeBinary(arrayBuffer) {
+    var bytes = new Uint8Array(arrayBuffer);
+    var binary = '';
+    var chunk = 0x8000;
+    for (var i = 0; i < bytes.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(binary);
+  }
+
+  function friendlyErr(text, statusCode) {
+    if (statusCode === 403 || (text && text.indexOf('Resource not accessible') >= 0)) {
+      return '403: Tokenに書き込み権限がありません。';
+    }
+    if (statusCode === 401) return '401: Tokenが無効です（CMSは現在ロック中）。';
+    if (statusCode === 409) return '409: 競合しました。再読込してから保存してください。';
+    if (statusCode === 404) return '404: ファイルが見つかりません。';
+    try {
+      var j = JSON.parse(text);
+      if (j && j.message) return statusCode + ': ' + j.message;
+    } catch (e) {}
+    return text || ('HTTP ' + statusCode);
+  }
 
   function loadUsers() {
     return fetch(C.USERS_URL, { cache: 'no-store' })
@@ -11,8 +52,7 @@
   }
 
   function loadJson(path) {
-    var url = C.RAW + path + '?t=' + Date.now();
-    return fetch(url, { cache: 'no-store' })
+    return fetch(C.RAW + path + '?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) {
         if (!r.ok) throw new Error('GET ' + path + ' ' + r.status);
         return r.json();
@@ -20,17 +60,97 @@
   }
 
   function loadText(path) {
-    var url = C.RAW + path + '?t=' + Date.now();
-    return fetch(url, { cache: 'no-store' })
+    return fetch(C.RAW + path + '?t=' + Date.now(), { cache: 'no-store' })
       .then(function (r) {
         if (!r.ok) throw new Error('GET ' + path + ' ' + r.status);
         return r.text();
       });
   }
 
+  function getFile(path, apiBase) {
+    var base = apiBase || C.API;
+    function doFetch(withAuth) {
+      var h = withAuth
+        ? headers()
+        : { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+      return fetch(base + '/' + path + '?ref=main', { headers: h })
+        .then(function (r) {
+          if (r.status === 401 && withAuth) return doFetch(false);
+          if (r.status === 404) return null;
+          if (!r.ok) {
+            return r.text().then(function (t) {
+              throw new Error(friendlyErr(t, r.status));
+            });
+          }
+          return r.json();
+        });
+    }
+    return doFetch(true);
+  }
+
+  function putFile(path, content, message, sha, apiBase, isBinaryBase64) {
+    var base = apiBase || C.API;
+    var body = {
+      message: message || 'CMS update',
+      content: isBinaryBase64 ? content : encodeText(content),
+      branch: 'main'
+    };
+    if (sha) body.sha = sha;
+    return fetch(base + '/' + path, {
+      method: 'PUT',
+      headers: headers(),
+      body: JSON.stringify(body)
+    }).then(function (r) {
+      if (!r.ok) {
+        return r.text().then(function (t) {
+          throw new Error(friendlyErr(t, r.status));
+        });
+      }
+      return r.json();
+    });
+  }
+
+  function saveText(path, content, message, alsoBackup) {
+    return getFile(path).then(function (meta) {
+      var sha = meta && meta.sha ? meta.sha : null;
+      return putFile(path, content, message, sha);
+    }).then(function (res) {
+      if (!alsoBackup) return res;
+      return getFile(path, C.BACKUP_API).then(function (bmeta) {
+        var bsha = bmeta && bmeta.sha ? bmeta.sha : null;
+        return putFile(path, content, message, bsha, C.BACKUP_API).then(function () {
+          return res;
+        }).catch(function () { return res; });
+      }).catch(function () { return res; });
+    });
+  }
+
+  function saveBinary(path, arrayBuffer, message) {
+    var b64 = encodeBinary(arrayBuffer);
+    return getFile(path).then(function (meta) {
+      var sha = meta && meta.sha ? meta.sha : null;
+      return putFile(path, b64, message, sha, C.API, true);
+    });
+  }
+
+  function listDir(path) {
+    return getFile(path).then(function (meta) {
+      if (!meta) return [];
+      if (Array.isArray(meta)) return meta;
+      return [];
+    }).catch(function () { return []; });
+  }
+
   g.ASOBI_API = {
     loadUsers: loadUsers,
     loadJson: loadJson,
-    loadText: loadText
+    loadText: loadText,
+    getFile: getFile,
+    putFile: putFile,
+    saveText: saveText,
+    saveBinary: saveBinary,
+    listDir: listDir,
+    encodeText: encodeText,
+    encodeBinary: encodeBinary
   };
 })(typeof window !== 'undefined' ? window : this);
