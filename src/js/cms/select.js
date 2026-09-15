@@ -21,6 +21,9 @@
     if (g) return { kind: 'group', title: g.label, id: g.key, type: 'group' };
     var m = path.match(/^pages\/members\/([^/]+)\.html$/);
     if (m) return { kind: 'member', title: m[1], id: m[1], type: 'member' };
+    if (/Matsumaru_T\.html$/i.test(path) || /matsumaru/i.test(path)) {
+      return { kind: 'teacher', title: '松丸先生', id: 'matsumaru', type: 'teacher' };
+    }
     return { kind: 'other', title: path.split('/').pop(), id: path, type: 'other' };
   }
 
