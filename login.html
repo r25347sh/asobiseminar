@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ログイン | Asobi Lab. CMS</title>
+  <link rel="stylesheet" href="src/css/pages/cms-common.css">
+  <link rel="stylesheet" href="src/css/pages/cms-login.css">
+</head>
+<body class="cms-app cms-login-page">
+  <div class="bg-orbs" aria-hidden="true">
+    <span class="orb orb-a"></span>
+    <span class="orb orb-b"></span>
+    <span class="orb orb-c"></span>
+  </div>
+
+  <main class="login-wrap">
+    <section class="login-card" id="login-card">
+      <div class="login-brand">
+        <span class="brand-mark" aria-hidden="true">🎮</span>
+        <div>
+          <p class="brand-kicker">Asobi Lab.</p>
+          <h1>CMS ログイン</h1>
+        </div>
+      </div>
+      <p class="login-lead">遊びの探究ゼミ 専用ワークスペース</p>
+
+      <form id="login-form" autocomplete="on">
+        <label class="field">
+          <span>ユーザーID</span>
+          <input id="uid" name="username" autocomplete="username" placeholder="案内されたメンバーID" required>
+        </label>
+        <label class="field">
+          <span>パスワード</span>
+          <input id="pw" name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit" id="btn-login" class="btn primary block">ログイン</button>
+      </form>
+
+      <div class="login-or"><span>または</span></div>
+      <button type="button" id="btn-qr-login" class="btn ghost block">📷 QRコードでログイン</button>
+      <p class="hint">QRの内容は <code>{id,pass}</code> 形式です</p>
+
+      <div id="qr-panel" class="qr-panel hidden">
+        <div id="qr-reader" class="qr-reader"></div>
+        <div class="qr-actions">
+          <button type="button" id="btn-qr-flip" class="btn ghost">🔄 カメラ切替</button>
+          <button type="button" id="btn-qr-stop" class="btn ghost">閉じる</button>
+        </div>
+      </div>
+
+      <p id="login-msg" class="msg" role="status"></p>
+      <p class="footer-note"><a href="index.html">← サイトに戻る</a></p>
+    </section>
+  </main>
+
+  <script src="src/js/auth/seed-a.js"></script>
+  <script src="src/js/auth/seed-b.js"></script>
+  <script src="src/js/auth/mix.js"></script>
+  <script src="src/js/auth/vault.js"></script>
+  <script src="src/js/cms/config.js"></script>
+  <script src="src/js/cms/session.js"></script>
+  <script src="src/js/cms/api.js"></script>
+  <script src="src/js/cms/login.js"></script>
+</body>
+</html>
