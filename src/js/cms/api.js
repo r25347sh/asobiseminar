@@ -1,4 +1,4 @@
-/*! Asobi CMS api — same-origin read first, then RAW fallback; GitHub write */
+/*! Asobi CMS api — same-origin read, write with 409 retry */
 (function (g) {
   var C = g.ASOBI_CMS;
   /* PAT（分割文字列） */
@@ -33,8 +33,8 @@
     if (statusCode === 403 || (text && text.indexOf('Resource not accessible') >= 0)) {
       return '403: Tokenに書き込み権限がありません。';
     }
-    if (statusCode === 401) return '401: Tokenが無効です（CMSは現在ロック中）。';
-    if (statusCode === 409) return '409: 競合しました。再読込してから保存してください。';
+    if (statusCode === 401) return '401: Tokenが無効です。';
+    if (statusCode === 409) return '409: 競合しました。最新状態を再取得して再試行します…';
     if (statusCode === 404) return '404: ファイルが見つかりません。';
     try {
       var j = JSON.parse(text);
@@ -112,7 +112,8 @@
       var h = withAuth
         ? headers()
         : { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
-      return fetch(base + '/' + path + '?ref=main', { headers: h })
+      var url = base + '/' + path + '?ref=main&_=' + Date.now();
+      return fetch(url, { headers: h, cache: 'no-store' })
         .then(function (r) {
           if (r.status === 401 && withAuth) return doFetch(false);
           if (r.status === 404) return null;
@@ -127,7 +128,7 @@
     return doFetch(true);
   }
 
-  function putFile(path, content, message, sha, apiBase, isBinaryBase64) {
+  function putFileOnce(path, content, message, sha, apiBase, isBinaryBase64) {
     var base = apiBase || C.API;
     var body = {
       message: message || 'CMS update',
@@ -138,26 +139,51 @@
     return fetch(base + '/' + path, {
       method: 'PUT',
       headers: headers(),
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      cache: 'no-store'
     }).then(function (r) {
-      if (!r.ok) {
-        return r.text().then(function (t) {
-          throw new Error(friendlyErr(t, r.status));
-        });
-      }
-      return r.json();
+      if (r.ok) return r.json().then(function (j) {
+        return { ok: true, json: j, status: r.status };
+      });
+      return r.text().then(function (t) {
+        return { ok: false, status: r.status, text: t };
+      });
     });
+  }
+
+  function putFile(path, content, message, sha, apiBase, isBinaryBase64, maxRetries) {
+    var retries = typeof maxRetries === 'number' ? maxRetries : 3;
+    var attempt = 0;
+    var currentSha = sha;
+
+    function tryOnce() {
+      attempt += 1;
+      return putFileOnce(path, content, message, currentSha, apiBase, isBinaryBase64)
+        .then(function (res) {
+          if (res.ok) return res.json;
+          if ((res.status === 409 || res.status === 422) && attempt <= retries) {
+            return getFile(path, apiBase).then(function (meta) {
+              currentSha = meta && meta.sha ? meta.sha : null;
+              return new Promise(function (resolve) {
+                setTimeout(resolve, 200 * attempt);
+              }).then(tryOnce);
+            });
+          }
+          throw new Error(friendlyErr(res.text, res.status));
+        });
+    }
+    return tryOnce();
   }
 
   function saveText(path, content, message, alsoBackup) {
     return getFile(path).then(function (meta) {
       var sha = meta && meta.sha ? meta.sha : null;
-      return putFile(path, content, message, sha);
+      return putFile(path, content, message, sha, C.API, false, 3);
     }).then(function (res) {
       if (!alsoBackup) return res;
       return getFile(path, C.BACKUP_API).then(function (bmeta) {
         var bsha = bmeta && bmeta.sha ? bmeta.sha : null;
-        return putFile(path, content, message, bsha, C.BACKUP_API).then(function () {
+        return putFile(path, content, message, bsha, C.BACKUP_API, false, 2).then(function () {
           return res;
         }).catch(function () { return res; });
       }).catch(function () { return res; });
@@ -168,7 +194,7 @@
     var b64 = encodeBinary(arrayBuffer);
     return getFile(path).then(function (meta) {
       var sha = meta && meta.sha ? meta.sha : null;
-      return putFile(path, b64, message, sha, C.API, true);
+      return putFile(path, b64, message, sha, C.API, true, 3);
     });
   }
 
