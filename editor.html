@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>編集 | Asobi Lab. CMS</title>
+  <link rel="stylesheet" href="src/css/pages/cms-common.css">
+  <link rel="stylesheet" href="src/css/pages/cms-editor.css">
+</head>
+<body class="cms-app cms-editor-page">
+  <header class="cms-topbar">
+    <div class="topbar-left">
+      <button type="button" id="btn-back" class="btn ghost">← 戻る</button>
+      <div class="ed-heading">
+        <h1 id="ed-title">読み込み中…</h1>
+        <p id="ed-path" class="mono muted">—</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="user-pill" class="user-pill">—</span>
+      <button type="button" id="btn-logout" class="btn ghost">ログアウト</button>
+    </div>
+  </header>
+
+  <main class="editor-main">
+    <aside class="editor-side">
+      <div class="side-card">
+        <h2>保存</h2>
+        <label class="field">
+          <span>コミットメッセージ</span>
+          <input id="commit-msg" placeholder="例: プロフィールを更新" required>
+        </label>
+        <button type="button" id="btn-save" class="btn primary block">保存する</button>
+        <p id="save-status" class="status-line">フォーム入力後に保存できます</p>
+        <p class="muted tiny">保存時は JSON と公開 HTML の両方を更新します（プロセスDで接続）。</p>
+      </div>
+      <div class="side-card tip">
+        <h3>ヒント</h3>
+        <ul>
+          <li>長文は太字・文字色を利用できます</li>
+          <li>グループの探求結果にはファイル添付ができます</li>
+          <li>氏名・メンバー一覧はロックされています</li>
+        </ul>
+      </div>
+    </aside>
+
+    <section class="editor-form-wrap">
+      <form id="form-member" class="cms-form hidden" data-type="member">
+        <fieldset class="form-block">
+          <legend>自己概要</legend>
+          <label class="field">
+            <span>クラス</span>
+            <select id="m-class"></select>
+          </label>
+          <label class="field">
+            <span>所属グループ</span>
+            <select id="m-group"></select>
+          </label>
+          <div class="field-row">
+            <label class="field grow">
+              <span>好きな色（短文）</span>
+              <input id="m-color" type="text" placeholder="例: 水色 / サイトカラー">
+            </label>
+            <label class="field color-field">
+              <span>ピッカー</span>
+              <input id="m-color-hex" type="color" value="#2ec4b6">
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-block">
+          <legend>私の遊び</legend>
+          <label class="field">
+            <span>趣味・遊び（複数は , または / で区切る）</span>
+            <input id="m-hobbies" type="text" placeholder="例: ゲーム, 音楽">
+          </label>
+          <label class="field">
+            <span>その趣味にハマったきっかけ</span>
+            <div class="rt-toolbar" data-for="m-hobby-trigger">
+              <button type="button" data-cmd="bold"><b>B</b></button>
+              <button type="button" data-cmd="foreColor" data-val="#ff6b6b">赤</button>
+              <button type="button" data-cmd="foreColor" data-val="#2ec4b6">緑</button>
+              <button type="button" data-cmd="foreColor" data-val="#2b2140">黒</button>
+            </div>
+            <div id="m-hobby-trigger" class="rt-area" contenteditable="true"></div>
+          </label>
+        </fieldset>
+
+        <fieldset class="form-block accent">
+          <legend>探求を通して</legend>
+          <label class="field">
+            <span>探究活動を通した感想・成長した点</span>
+            <div class="rt-toolbar" data-for="m-growth">
+              <button type="button" data-cmd="bold"><b>B</b></button>
+              <button type="button" data-cmd="foreColor" data-val="#ff6b6b">赤</button>
+              <button type="button" data-cmd="foreColor" data-val="#2ec4b6">緑</button>
+            </div>
+            <div id="m-growth" class="rt-area" contenteditable="true"></div>
+          </label>
+          <label class="field">
+            <span>私からのメッセージ</span>
+            <div class="rt-toolbar" data-for="m-message">
+              <button type="button" data-cmd="bold"><b>B</b></button>
+              <button type="button" data-cmd="foreColor" data-val="#ff6b6b">赤</button>
+              <button type="button" data-cmd="foreColor" data-val="#2ec4b6">緑</button>
+            </div>
+            <div id="m-message" class="rt-area" contenteditable="true"></div>
+          </label>
+        </fieldset>
+      </form>
+
+      <form id="form-group" class="cms-form hidden" data-type="group">
+        <fieldset class="form-block">
+          <legend>グループ目標</legend>
+          <div class="rt-toolbar" data-for="g-goal">
+            <button type="button" data-cmd="bold"><b>B</b></button>
+            <button type="button" data-cmd="foreColor" data-val="#ff6b6b">赤</button>
+            <button type="button" data-cmd="foreColor" data-val="#2ec4b6">緑</button>
+          </div>
+          <div id="g-goal" class="rt-area" contenteditable="true"></div>
+        </fieldset>
+
+        <fieldset class="form-block">
+          <legend><span class="deco-2">2</span>W<span class="deco-1">1</span>H</legend>
+          <label class="field">
+            <span>What — 何を解き明かすか</span>
+            <div class="rt-toolbar" data-for="g-what">
+              <button type="button" data-cmd="bold"><b>B</b></button>
+              <button type="button" data-cmd="foreColor" data-val="#2ec4b6">色</button>
+            </div>
+            <div id="g-what" class="rt-area" contenteditable="true"></div>
+          </label>
+          <label class="field">
+            <span>Why — なぜそのテーマにしたのか</span>
+            <div class="rt-toolbar" data-for="g-why">
+              <button type="button" data-cmd="bold"><b>B</b></button>
+              <button type="button" data-cmd="foreColor" data-val="#ff6b6b">色</button>
+            </div>
+            <div id="g-why" class="rt-area" contenteditable="true"></div>
+          </label>
+          <label class="field">
+            <span>How — どのように探求を進めるのか</span>
+            <div class="rt-toolbar" data-for="g-how">
+              <button type="button" data-cmd="bold"><b>B</b></button>
+              <button type="button" data-cmd="foreColor" data-val="#ffd166">色</button>
+            </div>
+            <div id="g-how" class="rt-area" contenteditable="true"></div>
+          </label>
+        </fieldset>
+
+        <fieldset class="form-block accent">
+          <legend>探求結果</legend>
+          <div class="rt-toolbar" data-for="g-result">
+            <button type="button" data-cmd="bold"><b>B</b></button>
+            <button type="button" data-cmd="foreColor" data-val="#7b2cbf">色</button>
+          </div>
+          <div id="g-result" class="rt-area" contenteditable="true"></div>
+          <div class="attach-box">
+            <h3>添付ファイル</h3>
+            <p class="muted tiny">pdf / 画像 / 音声 / 動画 / 文書 など（プロセスDでアップロード接続）</p>
+            <div class="attach-row">
+              <input type="file" id="g-file" multiple>
+              <select id="g-file-mode">
+                <option value="link">ダウンロードリンク</option>
+                <option value="inline">インライン表示</option>
+              </select>
+            </div>
+            <ul id="g-file-list" class="file-list"></ul>
+          </div>
+        </fieldset>
+      </form>
+
+      <p id="form-error" class="msg err hidden"></p>
+    </section>
+  </main>
+
+  <script src="src/js/cms/config.js"></script>
+  <script src="src/js/cms/session.js"></script>
+  <script src="src/js/cms/api.js"></script>
+  <script src="src/js/cms/editor.js"></script>
+</body>
+</html>
