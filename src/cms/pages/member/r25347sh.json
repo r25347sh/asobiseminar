@@ -5,13 +5,13 @@
   "displayName": "佐藤晴",
   "class": "5G",
   "groupKey": "site",
-  "favoriteColor": "サイトカラー",
+  "favoriteColor": "水色",
   "favoriteColorHex": "#2ec4b6",
   "hobbies": "Webページ開発・アプリケーション開発",
   "hobbyTriggerHtml": "<p>遊びの探求ゼミの紹介サイトづくりを通して、Webの仕組みと表現を探求している。</p>",
-  "growthHtml": "<p></p>",
+  "growthHtml": "完全無料でCMS環境を構築することがとても難しかったです。<div>今はGithubのPATを使用し、エディタ画面（editor.html）からPATを使用してGithub内の<i>JSONファイルに</i>、テキストを保存。それを各ページのHTML内でJavaScriptを働かせ、JSONの中身を動的に読み込ませることで、CMSの作成を行いました。</div>",
   "messageHtml": "<p></p>",
   "htmlPath": "pages/members/r25347sh.html",
-  "updatedAt": "2026-09-15T02:26:58.697Z",
+  "updatedAt": "2026-09-15T02:38:11.779Z",
   "updatedBy": "r25347sh"
 }
