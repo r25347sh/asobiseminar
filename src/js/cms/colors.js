@@ -85,12 +85,33 @@
 
   function resolveFromMember(data) {
     if (!data) return null;
-    if (data.favoriteColorHex) {
-      var h = resolve(data.favoriteColorHex);
-      if (h) return h;
+    if (data.favoriteColorHexes && data.favoriteColorHexes.length)
+      return resolve(data.favoriteColorHexes[0]) || data.favoriteColorHexes[0];
+    if (data.favoriteColorHex) return resolve(data.favoriteColorHex) || data.favoriteColorHex;
+    if (data.favoriteColor) {
+      var list = resolveList(data.favoriteColor);
+      if (list.hexes.length) return list.hexes[0];
+      return resolve(data.favoriteColor);
     }
-    return resolve(data.favoriteColor);
+    return null;
   }
+  function resolveAllFromMember(data) {
+    if (!data) return [];
+    if (data.favoriteColorHexes && data.favoriteColorHexes.length) {
+      return data.favoriteColorHexes.map(function (h) { return resolve(h) || h; }).filter(Boolean);
+    }
+    if (data.favoriteColor) {
+      var list = resolveList(data.favoriteColor);
+      if (list.hexes.length) return list.hexes;
+    }
+    if (data.favoriteColorHex) {
+      var h = resolve(data.favoriteColorHex) || data.favoriteColorHex;
+      return h ? [h] : [];
+    }
+    return [];
+  }
+
+
 
 
   function hexToRgb(hex) {
@@ -114,32 +135,117 @@
       a.b + (b.b - a.b) * t
     );
   }
-  function themeVars(hex) {
-    hex = resolve(hex);
-    if (!hex) return null;
+
+  function relativeLuminance(hex) {
     var rgb = hexToRgb(hex);
-    if (!rgb) return { accent: hex };
+    if (!rgb) return 0.5;
+    function lin(c) {
+      c = c / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    }
+    return 0.2126 * lin(rgb.r) + 0.7152 * lin(rgb.g) + 0.0722 * lin(rgb.b);
+  }
+  function contrastRatio(hexA, hexB) {
+    var L1 = relativeLuminance(hexA), L2 = relativeLuminance(hexB);
+    var hi = Math.max(L1, L2), lo = Math.min(L1, L2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+  /** 背景色の上で読める文字色（白 or ほぼ黒） */
+  function bestTextOn(bgHex) {
+    var w = contrastRatio(bgHex, '#ffffff');
+    var k = contrastRatio(bgHex, '#1a1520');
+    return w >= k ? '#ffffff' : '#1a1520';
+  }
+  /** 低コントラストなら少し暗く／明るくして視認性確保 */
+  function ensureReadableAccent(hex, onBg) {
+    onBg = onBg || '#fffaf3';
+    hex = resolve(hex) || hex;
+    if (!hex) return null;
+    if (contrastRatio(hex, onBg) >= 3) return hex;
+    // 背景が明るい前提で少し暗くする
+    var out = hex;
+    for (var i = 0; i < 6; i++) {
+      out = mixHex(out, '#111827', 0.18);
+      if (contrastRatio(out, onBg) >= 3) return out;
+    }
+    return out;
+  }
+  function parseColorList(raw) {
+    if (!raw) return [];
+    if (Array.isArray(raw)) {
+      return raw.map(function (x) { return String(x).trim(); }).filter(Boolean);
+    }
+    return String(raw).split(/[,\/|、／｜]+/).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+  function resolveList(raw) {
+    var parts = parseColorList(raw);
+    var hexes = [];
+    var labels = [];
+    parts.forEach(function (p) {
+      var h = resolve(p);
+      if (h) {
+        if (hexes.indexOf(h) < 0) hexes.push(h);
+        labels.push(p);
+      } else if (/^#/.test(p) || /^rgb/i.test(p) || /^hsl/i.test(p)) {
+        var r = resolve(p);
+        if (r && hexes.indexOf(r) < 0) hexes.push(r);
+        labels.push(p);
+      } else {
+        labels.push(p); // 非色テキストもラベルとして残す
+      }
+    });
+    return { labels: labels, hexes: hexes };
+  }
+  function themeVars(hexOrList) {
+    var list = Array.isArray(hexOrList) ? hexOrList : (hexOrList ? [hexOrList] : []);
+    list = list.map(function (h) { return resolve(h) || h; }).filter(Boolean);
+    if (!list.length) return null;
+    var primary = ensureReadableAccent(list[0]) || list[0];
+    var secondary = list[1] ? (ensureReadableAccent(list[1]) || list[1]) : mixHex(primary, '#7b68ee', 0.45);
+    var tertiary = list[2] ? (ensureReadableAccent(list[2]) || list[2]) : mixHex(primary, '#ff6b6b', 0.4);
+    function pack(hex) {
+      var rgb = hexToRgb(hex) || { r: 46, g: 196, b: 182 };
+      return {
+        hex: hex,
+        soft: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.14)',
+        softer: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.07)',
+        medium: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.28)',
+        strong: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.55)',
+        rgb: rgb.r + ', ' + rgb.g + ', ' + rgb.b,
+        light: mixHex(hex, '#ffffff', 0.35),
+        dark: mixHex(hex, '#111827', 0.38),
+        on: bestTextOn(hex)
+      };
+    }
+    var p = pack(primary), s = pack(secondary), t = pack(tertiary);
     return {
-      accent: hex,
-      soft: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.14)',
-      softer: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.07)',
-      medium: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.28)',
-      strong: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.55)',
-      rgb: rgb.r + ', ' + rgb.g + ', ' + rgb.b,
-      light: mixHex(hex, '#ffffff', 0.35),
-      dark: mixHex(hex, '#111827', 0.35)
+      accent: p.hex, secondary: s.hex, tertiary: t.hex,
+      soft: p.soft, softer: p.softer, medium: p.medium, strong: p.strong,
+      rgb: p.rgb, light: p.light, dark: p.dark, on: p.on,
+      secondarySoft: s.soft, tertiarySoft: t.soft,
+      onSecondary: s.on, onTertiary: t.on,
+      gradient: 'linear-gradient(115deg, ' + p.hex + ', ' + s.hex + ' 55%, ' + t.hex + ')'
     };
   }
 
   g.ASOBI_COLOR = {
+    NAMES: NAMES,
     resolve: resolve,
     resolveFromMember: resolveFromMember,
-    named: NAMED,
+    resolveAllFromMember: resolveAllFromMember,
+    parseRgb: parseRgb,
+    parseHsl: parseHsl,
+    parseCmyk: parseCmyk,
     rgbToHex: rgbToHex,
-    cmykToHex: cmykToHex,
     hslToHex: hslToHex,
     hexToRgb: hexToRgb,
     mixHex: mixHex,
+    relativeLuminance: relativeLuminance,
+    contrastRatio: contrastRatio,
+    bestTextOn: bestTextOn,
+    ensureReadableAccent: ensureReadableAccent,
+    parseColorList: parseColorList,
+    resolveList: resolveList,
     themeVars: themeVars
   };
 })(typeof window !== 'undefined' ? window : this);
