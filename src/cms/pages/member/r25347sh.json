@@ -6,12 +6,12 @@
   "class": "5G",
   "groupKey": "site",
   "favoriteColor": "水色",
-  "favoriteColorHex": "#2ec4b6",
+  "favoriteColorHex": "#00fbff",
   "hobbies": "Webページ開発・アプリケーション開発",
   "hobbyTriggerHtml": "<p>「麗探祭」、「遊びの探究ゼミ」の<b><u><i>サイト作成</i></u></b>を行っています。</p>",
   "growthHtml": "完全無料でCMS環境を構築することがとても難しかったです。<div>今はGithubのPATを使用し、エディタ画面（editor.html）からPATを使用してGithub内の<i>JSONファイルに</i>、テキストを保存。それを各ページのHTML内でJavaScriptを働かせ、JSONの中身を動的に読み込ませることで、CMSの作成を行いました。</div><div><br></div><div>また、編集した内容はすべてフルバックアップを施し、すぐにリストアを可能にしております。</div>",
   "messageHtml": "<p></p>",
   "htmlPath": "pages/members/r25347sh.html",
-  "updatedAt": "2026-09-15T02:48:16.566Z",
+  "updatedAt": "2026-09-15T03:12:30.075Z",
   "updatedBy": "r25347sh"
 }
