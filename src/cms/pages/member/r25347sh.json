@@ -9,9 +9,9 @@
   "favoriteColorHex": "#2ec4b6",
   "hobbies": "Webページ開発・アプリケーション開発",
   "hobbyTriggerHtml": "<p>遊びの探求ゼミの紹介サイトづくりを通して、Webの仕組みと表現を探求している。</p>",
-  "growthHtml": "完全無料でCMS環境を構築することがとても難しかったです。<div>今はGithubのPATを使用し、エディタ画面（editor.html）からPATを使用してGithub内の<i>JSONファイルに</i>、テキストを保存。それを各ページのHTML内でJavaScriptを働かせ、JSONの中身を動的に読み込ませることで、CMSの作成を行いました。</div>",
+  "growthHtml": "完全無料でCMS環境を構築することがとても難しかったです。<div>今はGithubのPATを使用し、エディタ画面（editor.html）からPATを使用してGithub内の<i>JSONファイルに</i>、テキストを保存。それを各ページのHTML内でJavaScriptを働かせ、JSONの中身を動的に読み込ませることで、CMSの作成を行いました。</div><div><br></div><div>また、編集した内容はすべてフルバックアップを施し、すぐにリストアを可能にしております。</div>",
   "messageHtml": "<p></p>",
   "htmlPath": "pages/members/r25347sh.html",
-  "updatedAt": "2026-09-15T02:38:11.779Z",
+  "updatedAt": "2026-09-15T02:47:10.190Z",
   "updatedBy": "r25347sh"
 }
