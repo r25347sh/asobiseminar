@@ -340,26 +340,209 @@
       showPendingFiles();
     });
   }
+
+  /* —— Teacher (松丸先生) —— */
+  function addHobbyRow(value) {
+    var host = $('t-hobbies');
+    if (!host) return;
+    var row = document.createElement('div');
+    row.className = 'dyn-row';
+    row.innerHTML = '<input type="text" class="t-hobby-input" placeholder="例: 読書">' +
+      '<button type="button" class="btn ghost small t-hobby-del" aria-label="削除">×</button>';
+    var input = row.querySelector('input');
+    if (value) input.value = value;
+    row.querySelector('.t-hobby-del').onclick = function () { row.remove(); };
+    host.appendChild(row);
+  }
+  function collectHobbies() {
+    var out = [];
+    document.querySelectorAll('#t-hobbies .t-hobby-input').forEach(function (inp) {
+      var v = inp.value.trim();
+      if (v) out.push(v);
+    });
+    return out;
+  }
+  function addCareerRow(row) {
+    var host = $('t-career');
+    if (!host) return;
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><input type="text" class="t-career-title" placeholder="役職・時期"></td>' +
+      '<td><input type="text" class="t-career-detail" placeholder="内容"></td>' +
+      '<td><button type="button" class="btn ghost small t-career-del">×</button></td>';
+    if (row) {
+      tr.querySelector('.t-career-title').value = row.title || '';
+      tr.querySelector('.t-career-detail').value = row.detail || '';
+    }
+    tr.querySelector('.t-career-del').onclick = function () { tr.remove(); };
+    host.appendChild(tr);
+  }
+  function collectCareer() {
+    var out = [];
+    document.querySelectorAll('#t-career tr').forEach(function (tr) {
+      var title = (tr.querySelector('.t-career-title') || {}).value || '';
+      var detail = (tr.querySelector('.t-career-detail') || {}).value || '';
+      title = title.trim(); detail = detail.trim();
+      if (title || detail) out.push({ title: title, detail: detail });
+    });
+    return out;
+  }
+  function getTeacherColorMode() {
+    var r = document.querySelector('input[name="t-color-mode"]:checked');
+    return r ? r.value : 'text';
+  }
+  function setTeacherColorMode(name) {
+    var radio = document.querySelector('input[name="t-color-mode"][value="' + name + '"]');
+    if (radio) radio.checked = true;
+    document.querySelectorAll('[data-t-color-panel]').forEach(function (p) {
+      var on = p.getAttribute('data-t-color-panel') === name;
+      p.classList.toggle('active', on);
+      if (on) p.removeAttribute('hidden'); else p.setAttribute('hidden', '');
+    });
+  }
+  function resolveTeacherColors() {
+    var Color = window.ASOBI_COLOR;
+    var mode = getTeacherColorMode();
+    if (mode === 'code') {
+      var code = $('t-color-code') && $('t-color-code').value.trim();
+      var pick = $('t-color-hex') && $('t-color-hex').value;
+      if (code && Color && Color.resolveList) {
+        var r = Color.resolveList(code);
+        if (r.hexes.length) return r.hexes;
+      }
+      return pick ? [pick] : [];
+    }
+    var text = $('t-color') && $('t-color').value.trim();
+    if (text && Color && Color.resolveList) return Color.resolveList(text).hexes || [];
+    return [];
+  }
+  function applyTeacherForm(j) {
+    state.data = j;
+    $('ed-title').textContent = j.displayName || '松丸先生';
+    $('ed-path').textContent = state.path;
+    if ($('t-name')) $('t-name').value = j.displayName || '';
+    if ($('t-hobbies')) $('t-hobbies').innerHTML = '';
+    (j.hobbies || []).forEach(function (h) { addHobbyRow(h); });
+    if (!(j.hobbies || []).length) addHobbyRow('');
+    if ($('t-career')) $('t-career').innerHTML = '';
+    (j.career || []).forEach(function (row) { addCareerRow(row); });
+    if (!(j.career || []).length) addCareerRow({ title: '', detail: '' });
+    if ($('t-color')) $('t-color').value = j.favoriteColor || '';
+    if (j.favoriteColorHex) {
+      if ($('t-color-hex')) $('t-color-hex').value = j.favoriteColorHex;
+      if ($('t-color-code')) $('t-color-code').value = (j.favoriteColorHexes && j.favoriteColorHexes.join(', ')) || j.favoriteColorHex;
+    }
+    var mode = j.favoriteColorMode || 'text';
+    if (mode === 'picker') mode = 'code';
+    setTeacherColorMode(mode);
+    if ($('t-play')) $('t-play').innerHTML = j.playMeaningHtml || '';
+    if ($('t-message')) $('t-message').innerHTML = j.messageHtml || '';
+    if ($('form-member')) $('form-member').classList.add('hidden');
+    if ($('form-group')) $('form-group').classList.add('hidden');
+    if ($('form-teacher')) $('form-teacher').classList.remove('hidden');
+    if (window.ASOBI_RT && window.ASOBI_RT.mountAll) window.ASOBI_RT.mountAll();
+  }
+  function collectTeacher() {
+    if (!San || !San.html) throw new Error('sanitize モジュール未読込');
+    var hexes = resolveTeacherColors();
+    return {
+      schemaVersion: 1,
+      type: 'teacher',
+      teacherId: 'matsumaru',
+      displayName: ($('t-name') && $('t-name').value.trim()) || '松丸先生',
+      favoriteColorMode: getTeacherColorMode(),
+      favoriteColor: (function () {
+        if (getTeacherColorMode() === 'code') return hexes[0] || (($('t-color-code') && $('t-color-code').value.trim()) || '');
+        return ($('t-color') && $('t-color').value.trim()) || '';
+      })(),
+      favoriteColorHex: hexes[0] || null,
+      favoriteColorHexes: hexes,
+      hobbies: collectHobbies(),
+      career: collectCareer(),
+      playMeaningHtml: San.html(($('t-play') && $('t-play').innerHTML) || ''),
+      messageHtml: San.html(($('t-message') && $('t-message').innerHTML) || ''),
+      htmlPath: 'pages/Matsumaru_T.html',
+      updatedAt: new Date().toISOString(),
+      updatedBy: (state.user && state.user.id) || ''
+    };
+  }
+  function bootstrapTeacherFromHtml(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var name = (doc.querySelector('[data-cms-slot="displayName"]') || {}).textContent || '松丸先生';
+    var hobbies = [];
+    doc.querySelectorAll('[data-cms-slot="hobbiesList"] li').forEach(function (li) {
+      var t = li.textContent.trim();
+      if (t && t !== '—') hobbies.push(t);
+    });
+    var career = [];
+    doc.querySelectorAll('[data-cms-slot="careerTable"] tr').forEach(function (tr) {
+      var th = tr.querySelector('th');
+      var td = tr.querySelector('td');
+      if (!th && !td) return;
+      var title = th ? th.textContent.trim() : '';
+      var detail = td ? td.textContent.trim() : '';
+      if (title === '—' || detail === '—') return;
+      if (title || detail) career.push({ title: title, detail: detail });
+    });
+    function slotHtml(name) {
+      var el = doc.querySelector('[data-cms-slot="' + name + '"]');
+      return el ? el.innerHTML : '';
+    }
+    return {
+      schemaVersion: 1, type: 'teacher', teacherId: 'matsumaru',
+      displayName: name.trim(),
+      favoriteColor: ((doc.querySelector('[data-cms-slot="favoriteColor"]') || {}).textContent || '').trim() || '',
+      favoriteColorHex: null, favoriteColorHexes: [], favoriteColorMode: 'text',
+      hobbies: hobbies, career: career,
+      playMeaningHtml: slotHtml('playMeaning'),
+      messageHtml: slotHtml('message'),
+      htmlPath: 'pages/Matsumaru_T.html',
+      updatedAt: new Date().toISOString(),
+      updatedBy: (state.user && state.user.id) || 'bootstrap'
+    };
+  }
+  function loadTeacher() {
+    state.path = 'pages/Matsumaru_T.html';
+    state.id = 'matsumaru';
+    var jsonPath = 'src/cms/pages/teacher/matsumaru.json';
+    return API.loadJson(jsonPath).then(function (j) {
+      applyTeacherForm(j);
+      setStatus('先生ページを読み込みました');
+    }).catch(function () {
+      setStatus('JSON未作成のため公開HTMLから読み込み中…');
+      return API.loadText(state.path).then(function (html) {
+        var j = bootstrapTeacherFromHtml(html);
+        applyTeacherForm(j);
+        setStatus('公開HTMLから初期化しました（初回保存でJSON作成）');
+      });
+    });
+  }
+
   function onSave() {
     if (state.saving) return;
     var cm = ($('commit-msg') && $('commit-msg').value.trim()) || '';
     if (!cm) { setStatus('コミットメッセージを入力してください', true); if ($('commit-msg')) $('commit-msg').focus(); return; }
     if (!S.canEditPath(state.user, state.path) && !(state.user.isAdmin || state.user.fullAccess)) { setStatus('権限がありません', true); return; }
-    if (!Render || !Render.member || !Render.group) { setStatus('render モジュール未読込', true); return; }
+    if (!Render || !Render.member || !Render.group || !Render.teacher) { setStatus('render モジュール未読込', true); return; }
     if (!API || !API.saveText) { setStatus('api モジュール未読込', true); return; }
     state.saving = true;
     if ($('btn-save')) $('btn-save').disabled = true;
     showErr('');
     uploadPendingIfAny()
       .then(function () {
-        var payload = state.type === 'member' ? collectMember() : collectGroup();
+        var payload = state.type === 'member' ? collectMember()
+          : state.type === 'teacher' ? collectTeacher()
+          : collectGroup();
         state.data = payload;
-        var jsonPath = state.type === 'member' ? 'src/cms/pages/member/' + state.id + '.json' : 'src/cms/pages/group/' + state.id + '.json';
+        var jsonPath = state.type === 'member' ? 'src/cms/pages/member/' + state.id + '.json'
+          : state.type === 'teacher' ? 'src/cms/pages/teacher/matsumaru.json'
+          : 'src/cms/pages/group/' + state.id + '.json';
         setStatus('JSON を保存中…');
         return API.saveText(jsonPath, JSON.stringify(payload, null, 2) + '\n', cm, true).then(function () {
           setStatus('公開HTMLを生成・保存中…');
           return API.loadText(state.path).then(function (baseHtml) {
-            var html = state.type === 'member' ? Render.member(baseHtml, payload) : Render.group(baseHtml, payload, state.path);
+            var html = state.type === 'member' ? Render.member(baseHtml, payload)
+              : state.type === 'teacher' ? Render.teacher(baseHtml, payload)
+              : Render.group(baseHtml, payload, state.path);
             return API.saveText(state.path, html, cm, true);
           });
         });
@@ -386,6 +569,18 @@
     if ($('btn-logout')) $('btn-logout').onclick = function () { S.clear(); location.href = C.PAGES.login; };
     if ($('btn-back')) $('btn-back').onclick = function () { location.href = C.PAGES.select; };
     if ($('btn-save')) $('btn-save').onclick = onSave;
+
+    if ($('t-hobby-add')) $('t-hobby-add').onclick = function () { addHobbyRow(''); };
+    if ($('t-career-add')) $('t-career-add').onclick = function () { addCareerRow({ title: '', detail: '' }); };
+    document.querySelectorAll('input[name="t-color-mode"]').forEach(function (r) {
+      r.addEventListener('change', function () { setTeacherColorMode(r.value); });
+    });
+    if ($('t-color-hex')) {
+      $('t-color-hex').addEventListener('input', function () {
+        if ($('t-color-code')) $('t-color-code').value = $('t-color-hex').value;
+      });
+    }
+
     document.querySelectorAll('input[name="color-mode"]').forEach(function (r) {
       r.addEventListener('change', function () { setColorMode(r.value); });
     });
@@ -412,7 +607,7 @@
     bindRtToolbars();
     state.type = qs('type');
     state.id = qs('id');
-    if (!state.type || !state.id || (state.type !== 'member' && state.type !== 'group')) {
+    if (!state.type || !state.id || (state.type !== 'member' && state.type !== 'group' && state.type !== 'teacher')) {
       showErr('不正なURLです。select から開き直してください。');
       setStatus('パラメータ不足', true);
       return;
@@ -422,7 +617,9 @@
       setStatus('API未読込', true);
       return;
     }
-    var loader = state.type === 'member' ? loadMember(state.id) : loadGroup(state.id);
+    var loader = state.type === 'member' ? loadMember(state.id)
+      : state.type === 'teacher' ? loadTeacher()
+      : loadGroup(state.id);
     loader.then(function () {
       if (!S.canEditPath(state.user, state.path) && !(state.user.isAdmin || state.user.fullAccess)) {
         showErr('このページを編集する権限がありません');
