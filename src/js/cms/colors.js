@@ -92,12 +92,54 @@
     return resolve(data.favoriteColor);
   }
 
+
+  function hexToRgb(hex) {
+    hex = resolve(hex) || hex;
+    if (!hex || hex[0] !== '#') return null;
+    var h = hex.slice(1);
+    if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    if (h.length !== 6) return null;
+    return {
+      r: parseInt(h.slice(0,2), 16),
+      g: parseInt(h.slice(2,4), 16),
+      b: parseInt(h.slice(4,6), 16)
+    };
+  }
+  function mixHex(hex, toward, t) {
+    var a = hexToRgb(hex), b = hexToRgb(toward);
+    if (!a || !b) return hex;
+    return rgbToHex(
+      a.r + (b.r - a.r) * t,
+      a.g + (b.g - a.g) * t,
+      a.b + (b.b - a.b) * t
+    );
+  }
+  function themeVars(hex) {
+    hex = resolve(hex);
+    if (!hex) return null;
+    var rgb = hexToRgb(hex);
+    if (!rgb) return { accent: hex };
+    return {
+      accent: hex,
+      soft: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.14)',
+      softer: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.07)',
+      medium: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.28)',
+      strong: 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.55)',
+      rgb: rgb.r + ', ' + rgb.g + ', ' + rgb.b,
+      light: mixHex(hex, '#ffffff', 0.35),
+      dark: mixHex(hex, '#111827', 0.35)
+    };
+  }
+
   g.ASOBI_COLOR = {
     resolve: resolve,
     resolveFromMember: resolveFromMember,
     named: NAMED,
     rgbToHex: rgbToHex,
     cmykToHex: cmykToHex,
-    hslToHex: hslToHex
+    hslToHex: hslToHex,
+    hexToRgb: hexToRgb,
+    mixHex: mixHex,
+    themeVars: themeVars
   };
 })(typeof window !== 'undefined' ? window : this);
