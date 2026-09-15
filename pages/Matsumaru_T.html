@@ -7,6 +7,7 @@
 <title>松丸先生 | Asobi Lab.</title>
 <link rel="icon" href="../src/img/favicons/teacher.png" type="image/png">
 <link rel="stylesheet" href="../src/css/common.css">
+<link rel="stylesheet" href="../src/css/cms-slots.css">
 <link rel="stylesheet" href="../MENU/MENU.css">
 </head>
 <body>
@@ -18,12 +19,40 @@
     <a href="about_This_Site.html">このサイトについて</a>
   </nav>
 </header>
-<main class="main">
-  <h1 class="page-title">🎯 松丸先生</h1>
-  <p class="page-sub">遊びの探究ゼミ · 全体管理</p>
-  <section class="article_by_teacher" id="article-matsumaru">
-    <h2>松丸先生より</h2>
-    <p>このセクションは CMS から編集できます。</p>
+<main class="main page-teacher" data-cms-page="teacher" data-cms-id="matsumaru">
+  <h1 class="page-title" data-lock="true" data-cms-slot="displayName">松丸先生</h1>
+  <p class="page-sub" data-lock="true">遊びの探究ゼミ · 全体管理</p>
+
+  <section class="cms-block cms-profile info-card">
+    <h2 data-lock="true">自己概要</h2>
+    <ul class="info-list">
+      <li><span>名前</span><strong data-cms-slot="displayName">松丸先生</strong></li>
+      <li><span>好きな色</span><strong data-cms-slot="favoriteColor" class="color-swatch">—</strong></li>
+    </ul>
+    <div class="field-block">
+      <h3 data-lock="true">趣味</h3>
+      <ul class="hobby-chips" data-cms-slot="hobbiesList"></ul>
+    </div>
+    <div class="field-block">
+      <h3 data-lock="true">経歴・役職</h3>
+      <table class="career-table">
+        <thead data-lock="true"><tr><th>役職・時期</th><th>内容</th></tr></thead>
+        <tbody data-cms-slot="careerTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="cms-block cms-play info-card">
+    <h2 data-lock="true">遊び</h2>
+    <div class="field-block">
+      <h3 data-lock="true">私にとっての「遊び」とは</h3>
+      <div class="cms-rich" data-cms-slot="playMeaning"><p></p></div>
+    </div>
+  </section>
+
+  <section class="cms-block cms-reflect cms-grad-frame">
+    <h2 data-lock="true">メッセージ</h2>
+    <div class="cms-rich" data-cms-slot="message"><p></p></div>
   </section>
 </main>
 <footer class="site-footer" data-lock="true">© 2026 Asobi Lab.</footer>
