@@ -256,7 +256,7 @@
     "canBackupRestore": true,
     "permissions": [
       "index.html",
-      "map.html",
+      "sitemap.html",
       "admin.html",
       "pages/Matsumaru_T.html",
       "pages/about_This_Site.html",
@@ -296,7 +296,7 @@
     "fullAccess": true,
     "permissions": [
       "index.html",
-      "map.html",
+      "sitemap.html",
       "admin.html",
       "pages/Matsumaru_T.html",
       "pages/about_This_Site.html",
@@ -335,7 +335,7 @@
     "fullAccess": true,
     "permissions": [
       "index.html",
-      "map.html",
+      "sitemap.html",
       "admin.html",
       "pages/Matsumaru_T.html",
       "pages/about_This_Site.html",
@@ -374,7 +374,7 @@
     "fullAccess": true,
     "permissions": [
       "index.html",
-      "map.html",
+      "sitemap.html",
       "admin.html",
       "pages/Matsumaru_T.html",
       "pages/about_This_Site.html",
