@@ -55,41 +55,54 @@
 
   function applyMemberTheme(doc, data) {
     var Color = g.ASOBI_COLOR;
-    var hex = null;
-    if (Color && Color.resolveFromMember) hex = Color.resolveFromMember(data);
-    else if (data && data.favoriteColorHex) hex = data.favoriteColorHex;
-    else if (data && data.favoriteColor && Color && Color.resolve) hex = Color.resolve(data.favoriteColor);
+    var hexes = [];
+    if (Color && Color.resolveAllFromMember) hexes = Color.resolveAllFromMember(data);
+    else if (Color && Color.resolveFromMember) {
+      var one = Color.resolveFromMember(data);
+      if (one) hexes = [one];
+    } else if (data && data.favoriteColorHexes) hexes = data.favoriteColorHexes;
+    else if (data && data.favoriteColorHex) hexes = [data.favoriteColorHex];
     var body = doc.body;
     if (!body) return;
-    if (hex) {
-      var tv = (Color && Color.themeVars) ? Color.themeVars(hex) : null;
+    var tv = (Color && Color.themeVars) ? Color.themeVars(hexes) : null;
+    var hex = tv ? tv.accent : (hexes[0] || null);
+    if (hex && tv) {
       body.setAttribute('data-theme-color', hex);
+      if (hexes[1]) body.setAttribute('data-theme-secondary', hexes[1]);
+      if (hexes[2]) body.setAttribute('data-theme-tertiary', hexes[2]);
       body.classList.add('has-member-theme');
-      body.style.setProperty('--member-accent', hex);
-      if (tv) {
-        body.style.setProperty('--member-accent-soft', tv.soft);
-        body.style.setProperty('--member-accent-softer', tv.softer);
-        body.style.setProperty('--member-accent-medium', tv.medium);
-        body.style.setProperty('--member-accent-strong', tv.strong);
-        body.style.setProperty('--member-accent-rgb', tv.rgb);
-        body.style.setProperty('--member-accent-light', tv.light);
-        body.style.setProperty('--member-accent-dark', tv.dark);
-      } else {
-        body.style.setProperty('--member-accent-soft', hex + '24');
-        body.style.setProperty('--member-accent-softer', hex + '12');
-      }
+      body.style.setProperty('--member-accent', tv.accent);
+      body.style.setProperty('--member-secondary', tv.secondary);
+      body.style.setProperty('--member-tertiary', tv.tertiary);
+      body.style.setProperty('--member-accent-soft', tv.soft);
+      body.style.setProperty('--member-accent-softer', tv.softer);
+      body.style.setProperty('--member-accent-medium', tv.medium);
+      body.style.setProperty('--member-accent-strong', tv.strong);
+      body.style.setProperty('--member-accent-rgb', tv.rgb);
+      body.style.setProperty('--member-accent-light', tv.light);
+      body.style.setProperty('--member-accent-dark', tv.dark);
+      body.style.setProperty('--member-on-accent', tv.on);
+      body.style.setProperty('--member-secondary-soft', tv.secondarySoft);
+      body.style.setProperty('--member-tertiary-soft', tv.tertiarySoft);
+      body.style.setProperty('--member-title-gradient', tv.gradient);
       var slot = doc.querySelector('[data-cms-slot="favoriteColor"]');
       if (slot) {
         slot.setAttribute('data-color', hex);
         slot.style.setProperty('--swatch', hex);
+        if (hexes[1]) slot.style.setProperty('--swatch-2', hexes[1]);
+        if (hexes[2]) slot.style.setProperty('--swatch-3', hexes[2]);
         slot.classList.add('color-swatch');
+        if (hexes.length > 1) slot.classList.add('color-swatch-multi');
       }
     } else {
       body.removeAttribute('data-theme-color');
+      body.removeAttribute('data-theme-secondary');
+      body.removeAttribute('data-theme-tertiary');
       body.classList.remove('has-member-theme');
-      ['--member-accent','--member-accent-soft','--member-accent-softer','--member-accent-medium',
-       '--member-accent-strong','--member-accent-rgb','--member-accent-light','--member-accent-dark'
-      ].forEach(function (p) { body.style.removeProperty(p); });
+      ['--member-accent','--member-secondary','--member-tertiary','--member-accent-soft','--member-accent-softer',
+       '--member-accent-medium','--member-accent-strong','--member-accent-rgb','--member-accent-light',
+       '--member-accent-dark','--member-on-accent','--member-secondary-soft','--member-tertiary-soft',
+       '--member-title-gradient'].forEach(function (p) { body.style.removeProperty(p); });
     }
   }
 
