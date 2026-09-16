@@ -6,7 +6,7 @@
   "class": "5G",
   "groupKey": "site",
   "favoriteColorMode": "text",
-  "favoriteColor": "水色",
+  "favoriteColor": "茶色",
   "favoriteColorHex": null,
   "favoriteColorHexes": [],
   "hobbies": "Webページ開発・アプリケーション開発",
@@ -14,6 +14,6 @@
   "growthHtml": "完全無料でCMS環境を構築することがとても難しかったです。<div>今はGithubのPATを使用し、エディタ画面（editor.html）からPATを使用してGithub内の<i>JSONファイルに</i>、テキストを保存。それを各ページのHTML内でJavaScriptを働かせ、JSONの中身を動的に読み込ませることで、CMSの作成を行いました。</div><div><br></div><div>また、編集した内容はすべてフルバックアップを施し、すぐにリストアを可能にしております。</div>",
   "messageHtml": "<p></p>",
   "htmlPath": "pages/members/r25347sh.html",
-  "updatedAt": "2026-09-16T05:51:56.815Z",
+  "updatedAt": "2026-09-16T06:10:12.196Z",
   "updatedBy": "r25347sh"
 }
