@@ -3,6 +3,20 @@
   var C = g.ASOBI_CMS;
   var San = g.ASOBI_SANITIZE;
 
+
+  function ensureAttachmentsHost(doc, afterSelector) {
+    var host = doc.querySelector('[data-cms-slot="attachments"]');
+    if (host) return host;
+    var sec = doc.createElement('section');
+    sec.className = 'cms-block cms-attachments';
+    sec.innerHTML = '<h2 data-lock="true">添付ファイル</h2><div data-cms-slot="attachments"></div>';
+    var main = doc.querySelector('main') || doc.body;
+    var after = afterSelector ? doc.querySelector(afterSelector) : null;
+    if (after && after.parentNode) after.parentNode.insertBefore(sec, after.nextSibling);
+    else main.appendChild(sec);
+    return sec.querySelector('[data-cms-slot="attachments"]');
+  }
+
   function setSlot(doc, name, htmlOrText, asText) {
     var els = doc.querySelectorAll('[data-cms-slot="' + name + '"]');
     els.forEach(function (el) {
@@ -116,6 +130,12 @@
     setSlot(doc, 'hobbyTrigger', San.html(data.hobbyTriggerHtml));
     setSlot(doc, 'growth', San.html(data.growthHtml));
     setSlot(doc, 'message', San.html(data.messageHtml));
+    var attHostT = ensureAttachmentsHost(doc, ".cms-reflect, .cms-block");
+    if (attHostT) {
+      attHostT.innerHTML = (g.ASOBI_ATTACH && g.ASOBI_ATTACH.publicRender)
+        ? g.ASOBI_ATTACH.publicRender(data.attachments, 1)
+        : '';
+    }
     applyMemberTheme(doc, data);
     var g = C.groupByKey(data.groupKey);
     if (g) {
@@ -140,6 +160,12 @@
     setSlot(doc, 'why', San.html(data.whyHtml));
     setSlot(doc, 'how', San.html(data.howHtml));
     setSlot(doc, 'result', San.html(data.resultHtml));
+    var attHostG = ensureAttachmentsHost(doc, ".cms-grad-frame, .cms-block");
+    if (attHostG) {
+      attHostG.innerHTML = (g.ASOBI_ATTACH && g.ASOBI_ATTACH.publicRender)
+        ? g.ASOBI_ATTACH.publicRender(data.attachments, 2)
+        : renderAttachments(data.attachments);
+    }
     var filesHost = doc.querySelector('[data-cms-slot="files"]') || doc.querySelector('.cms-files');
     if (filesHost) {
       filesHost.innerHTML = renderAttachments(data.attachments);
@@ -175,6 +201,13 @@
     if (car) car.innerHTML = renderCareerTable(data.career);
     setSlot(doc, 'playMeaning', San.html(data.playMeaningHtml));
     setSlot(doc, 'message', San.html(data.messageHtml));
+    var attHost = ensureAttachmentsHost(doc, ".cms-reflect, .cms-play, .cms-profile");
+    if (attHost) {
+      var html = (g.ASOBI_ATTACH && g.ASOBI_ATTACH.publicRender)
+        ? g.ASOBI_ATTACH.publicRender(data.attachments, 2)
+        : renderAttachments(data.attachments);
+      attHost.innerHTML = html || '';
+    }
     applyMemberTheme(doc, data);
     return serialize(doc);
   }
