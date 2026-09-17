@@ -132,3 +132,10 @@ body.cms-editor-page{background:
   width: 100%; border: 1px solid rgba(43,33,64,.15); border-radius: 6px; padding: .35rem .45rem;
 }
 .btn.small { font-size: .8rem; padding: .3rem .6rem; }
+
+.modal { position: fixed; inset: 0; background: rgba(20,16,30,.45); display: flex; align-items: center; justify-content: center; z-index: 80; padding: 1rem; }
+.modal.hidden { display: none; }
+.modal-card { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 80vh; overflow: auto; padding: 1rem 1.1rem 1.2rem; box-shadow: 0 20px 50px rgba(0,0,0,.2); }
+.modal-head { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.attach-lib-list { display: flex; flex-direction: column; gap: .45rem; margin-top: .75rem; }
+.lib-row { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .4rem .5rem; border-radius: 8px; border: 1px solid rgba(43,33,64,.08); }
