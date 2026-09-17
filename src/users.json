@@ -51,7 +51,8 @@
     "canDelete": true,
     "canBackupRestore": false,
     "permissions": [
-      "pages/members/r22497kk.html"
+      "pages/members/r22497kk.html",
+      "pages/groups/english.html"
     ],
     "pass_hash": "0848705cb63f6b01a6ea7fbbe327597414f488a7ceda33606cffedcc200beef1"
   },
@@ -264,6 +265,7 @@
       "pages/groups/skate.html",
       "pages/groups/arch.html",
       "pages/groups/fashion.html",
+      "pages/groups/english.html",
       "pages/members/r22289hh.html",
       "pages/members/r22321fs.html",
       "pages/members/r22497kk.html",
