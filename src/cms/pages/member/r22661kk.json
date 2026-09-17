@@ -5,13 +5,16 @@
   "displayName": "小林和輝",
   "class": "5A",
   "groupKey": "arch",
+  "favoriteColorMode": "text",
   "favoriteColor": "",
   "favoriteColorHex": null,
-  "hobbies": "撮り鉄",
-  "hobbyTriggerHtml": "<p></p>",
-  "growthHtml": "<p></p>",
-  "messageHtml": "<p></p>",
+  "favoriteColorHexes": [],
+  "hobbies": "風景写真家",
+  "hobbyTriggerHtml": "<b>素晴らしい景色を追い求めて・・・</b><p></p>",
+  "growthHtml": "<b>身近なところから探求が始まることを知れた。</b><p></p>",
+  "messageHtml": "<b>為せば成る</b>",
+  "attachments": [],
   "htmlPath": "pages/members/r22661kk.html",
-  "updatedAt": "2026-09-15T01:26:47+00:00",
-  "updatedBy": "system-process-e"
+  "updatedAt": "2026-09-17T06:31:03.684Z",
+  "updatedBy": "XRvj7"
 }
