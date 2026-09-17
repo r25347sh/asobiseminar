@@ -5,13 +5,16 @@
   "displayName": "齊藤絢太",
   "class": "5C",
   "groupKey": "arch",
+  "favoriteColorMode": "text",
   "favoriteColor": "あか",
   "favoriteColorHex": null,
-  "hobbies": "格闘技を見ること",
-  "hobbyTriggerHtml": "<p>友達が好きだったから見始めた。</p>",
+  "favoriteColorHexes": [],
+  "hobbies": "お菓子作り",
+  "hobbyTriggerHtml": "<p>友達が好きだったから始めた</p>",
   "growthHtml": "<p></p>",
   "messageHtml": "<p></p>",
+  "attachments": [],
   "htmlPath": "pages/members/r25321sa.html",
-  "updatedAt": "2026-09-15T01:26:47+00:00",
-  "updatedBy": "system-process-e"
+  "updatedAt": "2026-09-17T06:30:15.583Z",
+  "updatedBy": "YTH8x"
 }
