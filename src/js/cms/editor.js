@@ -7,7 +7,7 @@
   var Render = window.ASOBI_RENDER;
   var Attach = window.ASOBI_ATTACH;
   var $ = function (id) { return document.getElementById(id); };
-  var state = { user: null, type: null, id: null, path: null, data: null, saving: false };
+  var state = { pendingAttach: [], attachTarget: null, user: null, type: null, id: null, path: null, data: null, saving: false };
 
   function getColorMode() {
     var r = document.querySelector('input[name="color-mode"]:checked');
@@ -218,6 +218,8 @@
 
   function applyMemberForm(j) {
     state.data = j;
+    if (!state.data.attachments) state.data.attachments = [];
+    setTimeout(renderAttachList, 0);
     $('ed-title').textContent = j.displayName || state.id;
     $('ed-path').textContent = state.path;
     fillSelect($('m-class'), C.CLASSES, j.class);
@@ -241,6 +243,8 @@
   }
   function applyGroupForm(j) {
     state.data = j;
+    if (!state.data.attachments) state.data.attachments = (j.attachments || []).slice();
+    setTimeout(renderAttachList, 0);
     if (!state.data.attachments) state.data.attachments = [];
     $('ed-title').textContent = j.label || state.id;
     $('ed-path').textContent = state.path;
@@ -310,6 +314,7 @@
       hobbyTriggerHtml: San.html($('m-hobby-trigger').innerHTML),
       growthHtml: San.html($('m-growth').innerHTML),
       messageHtml: San.html($('m-message').innerHTML),
+      attachments: ensureAttachList().slice(),
       htmlPath: state.path,
       updatedAt: new Date().toISOString(), updatedBy: state.user.id
     };
@@ -417,6 +422,8 @@
   }
   function applyTeacherForm(j) {
     state.data = j;
+    if (!state.data.attachments) state.data.attachments = [];
+    setTimeout(renderAttachList, 0);
     $('ed-title').textContent = j.displayName || '松丸先生';
     $('ed-path').textContent = state.path;
     if ($('t-name')) $('t-name').value = j.displayName || '';
@@ -460,6 +467,7 @@
       career: collectCareer(),
       playMeaningHtml: San.html(($('t-play') && $('t-play').innerHTML) || ''),
       messageHtml: San.html(($('t-message') && $('t-message').innerHTML) || ''),
+      attachments: ensureAttachList().slice(),
       htmlPath: 'pages/Matsumaru_T.html',
       updatedAt: new Date().toISOString(),
       updatedBy: (state.user && state.user.id) || ''
@@ -515,6 +523,109 @@
         setStatus('公開HTMLから初期化しました（初回保存でJSON作成）');
       });
     });
+  }
+
+
+  function ensureAttachList() {
+    if (!state.data) state.data = {};
+    if (!state.data.attachments) state.data.attachments = [];
+    return state.data.attachments;
+  }
+  function renderAttachList() {
+    var lists = document.querySelectorAll('.attach-list, #g-file-list');
+    var items = ensureAttachList();
+    lists.forEach(function (ul) {
+      if (!ul) return;
+      ul.innerHTML = '';
+      items.forEach(function (a, idx) {
+        var li = document.createElement('li');
+        li.innerHTML = '<span class="mono">' + (a.name || a.path) + '</span> ' +
+          '<select data-att-mode="' + idx + '"><option value="link">リンク</option><option value="inline">インライン</option></select> ' +
+          '<button type="button" class="btn ghost sm" data-att-del="' + idx + '">削除</button>';
+        var sel = li.querySelector('select');
+        sel.value = a.mode || 'link';
+        sel.onchange = function () { items[idx].mode = sel.value; };
+        li.querySelector('[data-att-del]').onclick = function () {
+          items.splice(idx, 1);
+          renderAttachList();
+        };
+        ul.appendChild(li);
+      });
+    });
+  }
+  function openLibraryPicker() {
+    var modal = $('attach-lib-modal');
+    var list = $('attach-lib-list');
+    if (!modal || !list) return;
+    modal.classList.remove('hidden');
+    list.textContent = '読み込み中…';
+    var Attach = window.ASOBI_ATTACH;
+    var uid = state.user && state.user.id;
+    if (!Attach || !uid) { list.textContent = 'ユーザー情報がありません'; return; }
+    Attach.listUserFiles(uid).then(function (files) {
+      if (!files.length) {
+        list.innerHTML = '<p class="muted">ライブラリは空です。ファイルタブからアップロードしてください。</p>';
+        return;
+      }
+      list.innerHTML = '';
+      files.forEach(function (f) {
+        var row = document.createElement('div');
+        row.className = 'lib-row';
+        row.innerHTML = '<span>' + f.name + '</span>' +
+          '<button type="button" class="btn ghost sm">追加</button>';
+        row.querySelector('button').onclick = function () {
+          var modeEl = document.querySelector('.attach-mode') || $('g-file-mode');
+          var mode = modeEl ? modeEl.value : 'link';
+          ensureAttachList().push({
+            id: f.id || f.path,
+            name: f.name,
+            path: f.path,
+            ext: f.ext,
+            mode: mode,
+            size: f.size || 0
+          });
+          renderAttachList();
+        };
+        list.appendChild(row);
+      });
+    }).catch(function (e) {
+      list.textContent = e.message || String(e);
+    });
+  }
+  function closeLibraryPicker() {
+    var modal = $('attach-lib-modal');
+    if (modal) modal.classList.add('hidden');
+  }
+  function wireAttachUI() {
+    document.querySelectorAll('.attach-file-input, #g-file').forEach(function (input) {
+      if (!input || input._wired) return;
+      input._wired = true;
+      input.addEventListener('change', function () {
+        var pending = input.closest('.attach-box, .form-block');
+        var modeEl = (pending && pending.querySelector('.attach-mode')) || $('g-file-mode');
+        var mode = modeEl ? modeEl.value : 'link';
+        var status = (pending && pending.querySelector('.attach-pending')) || $('g-pending');
+        if (!input.files || !input.files.length) return;
+        if (status) { status.classList.remove('hidden'); status.textContent = 'アップロード中…'; }
+        var Attach = window.ASOBI_ATTACH;
+        var folder = 'users/' + (state.user && state.user.id ? state.user.id : '_shared');
+        if (state.type === 'group') folder = 'users/_groups/' + state.id;
+        Attach.uploadFiles(folder, input.files, mode).then(function (rows) {
+          rows.forEach(function (r) { ensureAttachList().push(r); });
+          renderAttachList();
+          if (status) status.textContent = rows.length + ' 件追加';
+          input.value = '';
+        }).catch(function (e) {
+          if (status) status.textContent = e.message || String(e);
+        });
+      });
+    });
+    document.querySelectorAll('.attach-from-lib, #g-from-lib').forEach(function (btn) {
+      if (!btn || btn._wired) return;
+      btn._wired = true;
+      btn.addEventListener('click', openLibraryPicker);
+    });
+    if ($('attach-lib-close')) $('attach-lib-close').onclick = closeLibraryPicker;
   }
 
   function onSave() {
