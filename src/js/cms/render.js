@@ -31,7 +31,7 @@
 
   function groupLabel(key) {
     var grp = C.groupByKey(key);
-    return grp ? grp.label : (key || \'\');
+    return grp ? grp.label : (key || '');
   }
 
   function renderAttachments(attachments) {
