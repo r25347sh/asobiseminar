@@ -105,30 +105,100 @@
     });
   }
 
+  
+  function filePreviewBlock(item) {
+    var href = '../' + item.path; // from select.html root is site root; path is users/...
+    // select is at root so href = item.path
+    href = item.path;
+    var ext = (item.ext || '').toLowerCase();
+    var box = document.createElement('div');
+    box.className = 'file-card';
+    var head = document.createElement('div');
+    head.className = 'file-card-head';
+    var a = document.createElement('a');
+    a.href = href;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = '📄 ' + item.name;
+    head.appendChild(a);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn ghost sm';
+    btn.textContent = 'プレビュー';
+    var body = document.createElement('div');
+    body.className = 'file-card-preview hidden';
+    btn.onclick = function () {
+      var open = !body.classList.contains('hidden');
+      if (open) {
+        body.classList.add('hidden');
+        body.innerHTML = '';
+        btn.textContent = 'プレビュー';
+        return;
+      }
+      body.classList.remove('hidden');
+      btn.textContent = '閉じる';
+      if (window.ASOBI_ATTACH && window.ASOBI_ATTACH.previewHtml) {
+        body.innerHTML = window.ASOBI_ATTACH.previewHtml(item, 0);
+      } else {
+        body.innerHTML = '<a href="' + href + '" target="_blank">開く</a>';
+      }
+    };
+    head.appendChild(btn);
+    box.appendChild(head);
+    box.appendChild(body);
+    return box;
+  }
+
   function loadFiles() {
     var box = $('files-list');
     if (!box || !user) return;
     box.textContent = '読み込み中…';
     var path = 'users/' + user.id;
+    if ($('files-path')) $('files-path').textContent = path + '/';
+    var uploadRow = document.createElement('div');
+    uploadRow.className = 'files-upload-row';
+    uploadRow.innerHTML = '<label class="btn ghost sm">端末から追加<input type="file" id="files-upload" multiple hidden></label><span id="files-upload-status" class="muted tiny"></span>';
     API.listDir(path).then(function (items) {
-      if (!items || !items.length) {
-        box.innerHTML = '<p class="muted">フォルダは空か、まだありません。<code>' + path + '/</code></p>';
+      box.innerHTML = '';
+      box.appendChild(uploadRow);
+      var input = uploadRow.querySelector('#files-upload');
+      var st = uploadRow.querySelector('#files-upload-status');
+      if (input) {
+        input.onchange = function () {
+          if (!input.files || !input.files.length) return;
+          st.textContent = 'アップロード中…';
+          var Attach = window.ASOBI_ATTACH;
+          if (!Attach || !Attach.uploadUserFiles) {
+            st.textContent = 'attachments 未読込';
+            return;
+          }
+          Attach.uploadUserFiles(user.id, input.files, 'link').then(function () {
+            st.textContent = '完了';
+            loadFiles();
+          }).catch(function (e) {
+            st.textContent = e.message || String(e);
+          });
+        };
+      }
+      var files = (items || []).filter(function (it) { return it.type === 'file' && it.name && it.name.charAt(0) !== '.'; });
+      if (!files.length) {
+        var p = document.createElement('p');
+        p.className = 'muted';
+        p.textContent = 'まだファイルがありません。上から追加できます。';
+        box.appendChild(p);
         return;
       }
-      var ul = document.createElement('ul');
-      ul.className = 'file-list';
-      items.forEach(function (it) {
-        var li = document.createElement('li');
-        var a = document.createElement('a');
-        a.href = (it.html_url || ('https://github.com/r25347sh/asobiseminar/blob/main/' + it.path));
-        a.target = '_blank';
-        a.rel = 'noopener';
-        a.textContent = (it.type === 'dir' ? '📁 ' : '📄 ') + (it.name || it.path);
-        li.appendChild(a);
-        ul.appendChild(li);
+      var grid = document.createElement('div');
+      grid.className = 'file-cards';
+      files.forEach(function (it) {
+        grid.appendChild(filePreviewBlock({
+          name: it.name,
+          path: it.path,
+          ext: (it.name.split('.').pop() || '').toLowerCase(),
+          size: it.size
+        }));
       });
-      box.innerHTML = '';
-      box.appendChild(ul);
+      box.appendChild(grid);
     }).catch(function (e) {
       box.textContent = '一覧を取得できません: ' + (e.message || e);
     });
