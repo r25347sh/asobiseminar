@@ -5,13 +5,16 @@
   "displayName": "奥村京太",
   "class": "5F",
   "groupKey": "skate",
-  "favoriteColor": "",
+  "favoriteColorMode": "text",
+  "favoriteColor": "青",
   "favoriteColorHex": null,
-  "hobbies": "スケボー、スキー",
-  "hobbyTriggerHtml": "<p></p>",
-  "growthHtml": "<p></p>",
-  "messageHtml": "<p></p>",
+  "favoriteColorHexes": [],
+  "hobbies": "スケボー、スキー、テニス",
+  "hobbyTriggerHtml": "<b>おもろいから。</b><p></p>",
+  "growthHtml": "自分のやりたいこと、好きなことを深め、探求することができた。<p></p>",
+  "messageHtml": "趣味は深めるべし<p></p>",
+  "attachments": [],
   "htmlPath": "pages/members/r25173ok.html",
-  "updatedAt": "2026-09-15T01:26:47+00:00",
-  "updatedBy": "system-process-e"
+  "updatedAt": "2026-09-17T06:28:14.710Z",
+  "updatedBy": "uff0L"
 }
