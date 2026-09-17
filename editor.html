@@ -105,6 +105,23 @@
             <div id="m-message" class="rt-area" contenteditable="true"></div>
           </label>
         </fieldset>
+      
+        <fieldset class="form-block">
+          <legend>添付ファイル</legend>
+          <p class="muted tiny">端末から追加するか、ファイルタブのライブラリから選べます。表示はリンク／インライン。</p>
+          <div class="attach-box" data-attach-for="member">
+            <div class="attach-row">
+              <input type="file" class="attach-file-input" multiple>
+              <select class="attach-mode">
+                <option value="link">ダウンロードリンク</option>
+                <option value="inline">インライン表示</option>
+              </select>
+              <button type="button" class="btn ghost sm attach-from-lib">ライブラリから</button>
+            </div>
+            <p class="pending-files muted tiny hidden attach-pending"></p>
+            <ul class="file-list attach-list"></ul>
+          </div>
+        </fieldset>
       </form>
 
       <form id="form-group" class="cms-form hidden" data-type="group">
@@ -209,7 +226,18 @@
 
       <p id="form-error" class="msg err hidden"></p>
     </section>
-  </main>
+  
+  <div id="attach-lib-modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <header class="modal-head">
+        <h2>ライブラリから選ぶ</h2>
+        <button type="button" id="attach-lib-close" class="btn ghost sm">閉じる</button>
+      </header>
+      <p class="muted tiny">ファイルタブ（個人フォルダ）の一覧です</p>
+      <div id="attach-lib-list" class="attach-lib-list">読み込み中…</div>
+    </div>
+  </div>
+</main>
 
   <script src="src/js/cms/config.js"></script>
   <script src="src/js/cms/session.js"></script>
