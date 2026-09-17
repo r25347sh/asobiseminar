@@ -30,8 +30,8 @@
   }
 
   function groupLabel(key) {
-    var g = C.groupByKey(key);
-    return g ? g.label : (key || '');
+    var grp = C.groupByKey(key);
+    return grp ? grp.label : (key || \'\');
   }
 
   function renderAttachments(attachments) {
@@ -132,13 +132,13 @@
     setSlot(doc, 'message', San.html(data.messageHtml));
     var attHostT = ensureAttachmentsHost(doc, ".cms-reflect, .cms-block");
     if (attHostT) {
-      attHostT.innerHTML = (g.ASOBI_ATTACH && g.ASOBI_ATTACH.publicRender)
-        ? g.ASOBI_ATTACH.publicRender(data.attachments, 1)
+      attHostT.innerHTML = (window.ASOBI_ATTACH && window.ASOBI_ATTACH.publicRender)
+        ? window.ASOBI_ATTACH.publicRender(data.attachments, 1)
         : '';
     }
     applyMemberTheme(doc, data);
-    var g = C.groupByKey(data.groupKey);
-    if (g) {
+    var grp = C.groupByKey(data.groupKey);
+    if (grp) {
       var cta = doc.querySelector('.cta-wrap a.btn-play');
       if (cta) {
         if (data.groupKey === 'site') {
@@ -162,8 +162,8 @@
     setSlot(doc, 'result', San.html(data.resultHtml));
     var attHostG = ensureAttachmentsHost(doc, ".cms-grad-frame, .cms-block");
     if (attHostG) {
-      attHostG.innerHTML = (g.ASOBI_ATTACH && g.ASOBI_ATTACH.publicRender)
-        ? g.ASOBI_ATTACH.publicRender(data.attachments, 2)
+      attHostG.innerHTML = (window.ASOBI_ATTACH && window.ASOBI_ATTACH.publicRender)
+        ? window.ASOBI_ATTACH.publicRender(data.attachments, 2)
         : renderAttachments(data.attachments);
     }
     var filesHost = doc.querySelector('[data-cms-slot="files"]') || doc.querySelector('.cms-files');
@@ -203,8 +203,8 @@
     setSlot(doc, 'message', San.html(data.messageHtml));
     var attHost = ensureAttachmentsHost(doc, ".cms-reflect, .cms-play, .cms-profile");
     if (attHost) {
-      var html = (g.ASOBI_ATTACH && g.ASOBI_ATTACH.publicRender)
-        ? g.ASOBI_ATTACH.publicRender(data.attachments, 2)
+      var html = (window.ASOBI_ATTACH && window.ASOBI_ATTACH.publicRender)
+        ? window.ASOBI_ATTACH.publicRender(data.attachments, 2)
         : renderAttachments(data.attachments);
       attHost.innerHTML = html || '';
     }
