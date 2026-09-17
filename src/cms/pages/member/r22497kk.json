@@ -5,13 +5,16 @@
   "displayName": "川端也大",
   "class": "5A",
   "groupKey": "english",
-  "favoriteColor": "",
+  "favoriteColorMode": "text",
+  "favoriteColor": "赤",
   "favoriteColorHex": null,
-  "hobbies": "アニメ",
+  "favoriteColorHexes": [],
+  "hobbies": "アニメ,ゲーム",
   "hobbyTriggerHtml": "<p>最初は友達に勧められて。気づいたらもうやめられなくなっていた。</p>",
   "growthHtml": "<p></p>",
   "messageHtml": "<p></p>",
+  "attachments": [],
   "htmlPath": "pages/members/r22497kk.html",
-  "updatedAt": "2026-09-15T01:26:46+00:00",
-  "updatedBy": "system-process-e"
+  "updatedAt": "2026-09-17T06:33:23.523Z",
+  "updatedBy": "nFbmO"
 }
