@@ -5,13 +5,16 @@
   "displayName": "柳原康希",
   "class": "5F",
   "groupKey": "skate",
+  "favoriteColorMode": "text",
   "favoriteColor": "",
   "favoriteColorHex": null,
+  "favoriteColorHexes": [],
   "hobbies": "ベース、音楽",
-  "hobbyTriggerHtml": "<p>自分のお気に入りのバンドができたこと、あるベーシストへの憧れ。</p>",
-  "growthHtml": "<p></p>",
-  "messageHtml": "<p></p>",
+  "hobbyTriggerHtml": "<b>辛い時に音楽に何度も救われたことが音楽が好きになったきっかけ。</b><div><b>自分にとってもっとも心地よい楽器がベースであったことが演奏を始めたきっかけ。</b></div>",
+  "growthHtml": "私ははっきりとしたアイデンティティを持たなかったことを今までの人生で気づき、このゼミをきっかけに自己表現をしたいと思ったのがこのゼミに入ったきっかけです。自分の得意分野でどのようにすれば自己表現をすればよいか、自分のアイデンティティとはなにか真剣に考えたことがこのゼミに入って成長した点です。<p></p>",
+  "messageHtml": "私にとっては自分のアイデンティティは意識して作っていかないといけないものでした。自分のアイデンティティで",
+  "attachments": [],
   "htmlPath": "pages/members/r25917yk.html",
-  "updatedAt": "2026-09-15T01:26:49+00:00",
-  "updatedBy": "system-process-e"
+  "updatedAt": "2026-09-17T07:07:34.616Z",
+  "updatedBy": "wmq6O"
 }
