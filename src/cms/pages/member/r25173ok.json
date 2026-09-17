@@ -10,11 +10,11 @@
   "favoriteColorHex": null,
   "favoriteColorHexes": [],
   "hobbies": "スケボー、スキー、テニス",
-  "hobbyTriggerHtml": "<b>おもろいから。</b><p></p>",
-  "growthHtml": "自分のやりたいこと、好きなことを深め、探求することができた。<p></p>",
-  "messageHtml": "趣味は深めるべし<p></p>",
+  "hobbyTriggerHtml": "<b>おもろいから</b><p></p>",
+  "growthHtml": "自分の好きなことを深めることができた。<p></p>",
+  "messageHtml": "<b>趣味は深めるべし</b><p></p>",
   "attachments": [],
   "htmlPath": "pages/members/r25173ok.html",
-  "updatedAt": "2026-09-17T06:28:14.710Z",
+  "updatedAt": "2026-09-17T06:29:24.810Z",
   "updatedBy": "uff0L"
 }
