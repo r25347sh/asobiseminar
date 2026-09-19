@@ -4,59 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Asobi Lab. — 麗澤高等学校 遊びの探究ゼミ">
-  <title>ホーム | Asobi Lab.</title>
-  <link rel="icon" href="src/img/favicons/home.png" type="image/png">
-  <link rel="stylesheet" href="src/css/common.css">
-  <link rel="stylesheet" href="src/css/pages/index.css">
-  <link rel="stylesheet" href="MENU/MENU.css">
+  <title>Asobi Lab. | 遊びの探究ゼミ</title>
+  <link rel="stylesheet" href="src/styles.css">
 </head>
-<body class="page-home">
-  <header class="site-header" data-lock="true">
-    <a class="site-logo" href="index.html" data-lock="true">🎮 Asobi Lab. <span>Play · Inquiry · Create</span></a>
-    <nav class="nav-desktop" data-lock="true">
-      <a href="index.html" class="is-active">HOME</a>
-      <a href="pages/about_asobi.html">Asobi Labとは</a>
-      <a href="pages/about_This_Site.html">このサイトについて</a>
-      <a href="login.html">CMS</a>
-    </nav>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">🎮 Asobi Lab. <span class="logo-sub">Play · Explore · Create</span></a>
+      <nav class="nav-desktop">
+        <a href="index.html">HOME</a>
+        <a href="pages/about_asobi.html">Asobi Labとは</a>
+        <a href="pages/about_This_Site.html">このサイトについて</a>
+        <a href="sitemap.html">地図</a>
+      </nav>
+    </div>
   </header>
 
-  <main class="main home-main">
+  <main>
     <section class="hero hero-v2">
       <div class="hero-badge">PLAYFUL INQUIRY LAB</div>
-      <h1>Asobi Lab.</h1>
-      <p class="lead">麗澤高等学校・遊びの探究ゼミ。<br>遊びを入り口に、問いを立て、形にするラボです。</p>
+      <h1 class="hero-title">Asobi Lab.</h1>
+      <p class="hero-lead">麗澤高等学校・遊びの探究ゼミ。<br>遊びを入り口に、問いを立て、形にするラボです。</p>
       <div class="hero-actions">
         <a class="btn-play" href="pages/about_asobi.html">ゼミについて</a>
-        <a class="btn-ghost" href="sitesitemap.html">サイトマップ</a>
+        <a class="btn-ghost" href="sitemap.html">サイトマップ</a>
       </div>
     </section>
 
     <section class="section">
       <h2 class="section-title">探究グループ</h2>
-      <div class="card-grid groups-grid">
-        <a class="card card-group" href="pages/groups/english.html">
-          <span class="card-emoji">🎮</span>
-          <h3>オンラインゲーム×英語</h3>
+      <div class="card-grid">
+        <a class="card" href="pages/groups/english.html">
+          <div class="card-icon">🎮</div>
+          <h3>オンラインゲーム英語</h3>
           <p>ゲームを通じた英語学習の可能性</p>
         </a>
-        <a class="card card-group" href="pages/groups/fashion.html">
-          <span class="card-emoji">👗</span>
+        <a class="card" href="pages/groups/fashion.html">
+          <div class="card-icon">👗</div>
           <h3>ファッションについて</h3>
           <p>装いと表現の探究</p>
         </a>
-        <a class="card card-group" href="pages/groups/skate.html">
-          <span class="card-emoji">🛹</span>
-          <h3>スケボーと俺等の青春</h3>
-          <p>技術向上と思考の探求</p>
+        <a class="card" href="pages/groups/skate.html">
+          <div class="card-icon">🛹</div>
+          <h3>スケボーと僕等の青春</h3>
+          <p>街の路上と思考の探求</p>
         </a>
-        <a class="card card-group" href="pages/groups/arch.html">
-          <span class="card-emoji">🏗️</span>
-          <h3>割り筵ビル</h3>
-          <p>脆さを強さに変える構造探求</p>
+        <a class="card" href="pages/groups/arch.html">
+          <div class="card-icon">🏗️</div>
+          <h3>街と建物</h3>
+          <p>街づくりについて考える構造設計</p>
         </a>
-        <a class="card card-group" href="pages/about_This_Site.html">
-          <span class="card-emoji">💻</span>
+        <a class="card" href="pages/about_This_Site.html">
+          <div class="card-icon">💻</div>
           <h3>サイト作成</h3>
           <p>このサイト自体をつくる探究</p>
         </a>
@@ -67,27 +66,33 @@
       <h2 class="section-title">その他</h2>
       <div class="card-grid">
         <a class="card" href="pages/about_asobi.html">
-          <h3>🎮 Asobi Labとは</h3>
+          <div class="card-icon">🎯</div>
+          <h3>Asobi Labとは</h3>
           <p>遊びの探究ゼミの紹介</p>
         </a>
         <a class="card" href="pages/about_This_Site.html">
-          <h3>ℹ️ このサイトについて</h3>
+          <div class="card-icon">📖</div>
+          <h3>このサイトについて</h3>
           <p>使い方・CMSのしくみ</p>
         </a>
         <a class="card" href="pages/Matsumaru_T.html">
-          <h3>🎯 松丸先生</h3>
+          <div class="card-icon">👨‍🏫</div>
+          <h3>松丸先生</h3>
           <p>担当教員ページ</p>
         </a>
-        <a class="card" href="sitesitemap.html">
-          <h3>🗺️ サイトマップ</h3>
+        <a class="card" href="sitemap.html">
+          <div class="card-icon">🗺️</div>
+          <h3>サイトマップ</h3>
           <p>ページ一覧</p>
         </a>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer" data-lock="true">© 2026 Asobi Lab. · 遊びの探究ゼミ</footer>
+  <footer class="site-footer">
+    <p>© 2025 Asobi Lab. — 遊びの探究ゼミ</p>
+  </footer>
+
   <script src="MENU/MENU.js"></script>
-  <script src="AI_CHAT/AI_CHAT.js"></script>
 </body>
 </html>
