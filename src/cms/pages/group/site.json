@@ -5,11 +5,11 @@
   "label": "サイト作成",
   "htmlPath": "pages/about_This_Site.html",
   "goalHtml": "<p>新たなWebページの可能性を広げる</p>",
-  "whatHtml": "<p><b>完全無料の範囲内でWebアプリの限界を探究する！</b></p><p>編集</p>",
+  "whatHtml": "<p><b>完全無料の範囲内でWebアプリの限界を探究する！</b></p>",
   "whyHtml": "<p>プログラミングやマークアップが好きだから。</p>",
   "howHtml": "<p>「<b><u>Asobi Lab.</u></b>」ならびに「<b><u>Reitansai</u></b>」のサイトを作成。</p><p><br></p><p>https://r25347sh.github.io/asobiseminar/index.html</p><p>https://r25347sh.github.io/reitansai/index.html</p>",
   "resultHtml": "<p><b>✧</b>完全無料となると、以下のことが難しいとわかった。</p><p>・AI（特にLLM(大規模言語モデル)）の作成や導入</p><p>　→できなくはないが、AIをゼロから作成するとなると、学習データが圧倒的に足りない。</p><p>　→外部モデルの無料プランだと、回数制限やアクセス制限により、実用性に欠ける。</p><p>・サイト内のP2Pで動的なアプリケーション作成</p>",
   "attachments": [],
-  "updatedAt": "2026-09-17T06:30:47.605Z",
+  "updatedAt": "2026-09-19T03:01:53.494Z",
   "updatedBy": "r25347sh"
 }
