@@ -52,8 +52,10 @@
       });
     }
     walk(root);
-    var out = root.innerHTML.trim();
-    return out || '<p></p>';
+    var out = root.innerHTML;
+    // 内側のコンテンツだけは trim() するが、空行情報を保持する
+    // つまり、先頭と末尾の改行だけ削除し、内部の改行は保持
+    return out.replace(/^\s*/, '').replace(/\s*$/, '') || '<p></p>';
   }
 
   function sanitizeText(s) {
