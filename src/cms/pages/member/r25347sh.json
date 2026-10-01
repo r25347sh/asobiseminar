@@ -5,15 +5,18 @@
   "displayName": "佐藤晴",
   "class": "5G",
   "groupKey": "site",
-  "favoriteColorMode": "text",
-  "favoriteColor": "黒色",
-  "favoriteColorHex": null,
-  "favoriteColorHexes": [],
-  "hobbies": "Webページ開発・アプリケーション開発",
+  "favoriteColorMode": "code",
+  "favoriteColor": "#00FF",
+  "favoriteColorHex": "#00FF",
+  "favoriteColorHexes": [
+    "#00FF"
+  ],
+  "hobbies": "Webページ開発・アプリケーション開発/フルート",
   "hobbyTriggerHtml": "<p>「麗探祭」、「遊びの探究ゼミ」の<b><u><i>サイト作成</i></u></b>を行っています。</p>",
-  "growthHtml": "完全無料でCMS環境を構築することがとても難しかったです。<div>今はGithubのPATを使用し、エディタ画面（editor.html）からPATを使用してGithub内の<i>JSONファイルに</i>、テキストを保存。それを各ページのHTML内でJavaScriptを働かせ、JSONの中身を動的に読み込ませることで、CMSの作成を行いました。</div><div><br></div><div>また、編集した内容はすべてフルバックアップを施し、すぐにリストアを可能にしております。</div>",
-  "messageHtml": "<p></p>",
+  "growthHtml": "完全無料でCMS環境を構築することがとても難しかったです。<div>今はGithubのPATを使用し、エディタ画面（editor.html）からPATを使用してGithub内の<i>JSONファイルに</i>、テキストを保存。それを各ページのHTML内でJavaScriptを働かせ、JSONの中身を動的に読み込ませることで、疑似CMSの作成を行いました。</div><div><br></div><div>また、編集した内容はすべてフルバックアップを施し、すぐにリストアを可能にしております。</div>",
+  "messageHtml": "高校生にとって、学生にとって、社会で生きるために最も重要なことは、<b>勤勉</b>であること、だと思います。<div>しかし、人間として生きるために最も重要なことは、<b>楽しむこと</b>、だとも思います。</div><div><br></div><div>僕が所属する「遊びの探究ゼミ」は、各個自由に自分たちの「好きなこと・気になること」を一所懸命に探究しております。</div><div>はじめは辿々しく、他のゼミとも毛色の違う私たちは、</div><div><br></div><div>私たちを導いてくださった松丸先生、大瀬講師に、格別の感謝を伝えたいと思います。</div>",
+  "attachments": [],
   "htmlPath": "pages/members/r25347sh.html",
-  "updatedAt": "2026-09-16T08:26:13.354Z",
+  "updatedAt": "2026-10-01T04:07:33.208Z",
   "updatedBy": "r25347sh"
 }
