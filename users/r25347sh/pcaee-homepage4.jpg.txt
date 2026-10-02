@@ -1,0 +1,6 @@
+このファイルはプレースホルダです。
+
+添付の「佐藤-晴　-ホームページ4級.png」を users/r25347sh/pcaee-homepage4.jpg としてアップロードしてください。
+（GitHub Web UI の Upload files、または asobiseminar の editor.html / CMS 添付機能から）
+
+アップロード後、この .txt は削除して構いません。
